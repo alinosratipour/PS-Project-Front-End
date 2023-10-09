@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { useQuery } from '@apollo/client';
-import {GET_PIZZAS_WITH_SIZES_AND_PRICES} from '../queries/queries';
+import { GET_PIZZAS_WITH_SIZES_AND_PRICES } from '../queries/queries';
+import PizzaSizeDropdown from './PizzaSizeDropdown'; // Import the new component
 
 // Define a type for the size and price mapping
 type SizeAndPriceMap = Record<string, number>;
-
-
 
 const PizzaList = () => {
   const { loading, error, data } = useQuery(GET_PIZZAS_WITH_SIZES_AND_PRICES);
@@ -23,7 +22,6 @@ const PizzaList = () => {
       sizeAndPriceMap[size.p_size] = size.price;
     });
   });
-  
 
   const uniqueSizes = Object.keys(sizeAndPriceMap);
 
@@ -35,17 +33,12 @@ const PizzaList = () => {
   return (
     <div>
       <h1>List of Pizzas</h1>
-      <div>
-        <label>Select Pizza Size:</label>
-        <select onChange={handleSizeChange}>
-          <option value="">Select a Size</option>
-          {uniqueSizes.map((size) => (
-            <option key={size} value={size}>
-              {size} - {sizeAndPriceMap[size]}
-            </option>
-          ))}
-        </select>
-      </div>
+      <PizzaSizeDropdown
+        sizes={uniqueSizes}
+        selectedSize={selectedSize}
+        handleSizeChange={handleSizeChange}
+        sizeAndPriceMap={sizeAndPriceMap}
+      />
 
       {selectedSize && (
         <div>
