@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { gql } from 'graphql-tag';
-import ListSizeWithBase from './ListSizeWithBase';
+import ListAllPizzas from './ListAllPizzas';
 
 const GET_PIZZAS = gql`
   query GetPizzas {
@@ -29,7 +29,7 @@ function PizzaList() {
             <h3>{pizza.name}</h3>
             <img src={pizza.image} alt={pizza.name}  width="250px" height="250px"/> {/* Render pizza image */}
             <p>{pizza.description}</p>
-            <ListSizeWithBase />
+            <ListAllPizzas/>
             <button>Add To Card</button>
           </li>
         ))}

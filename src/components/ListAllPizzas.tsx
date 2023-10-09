@@ -6,7 +6,7 @@ import PizzaSizeDropdown from './PizzaSizeDropdown'; // Import the new component
 // Define a type for the size and price mapping
 type SizeAndPriceMap = Record<string, number>;
 
-const PizzaList = () => {
+const ListAllPizzas = () => {
   const { loading, error, data } = useQuery(GET_PIZZAS_WITH_SIZES_AND_PRICES);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
@@ -39,6 +39,7 @@ const PizzaList = () => {
         handleSizeChange={handleSizeChange}
         sizeAndPriceMap={sizeAndPriceMap}
       />
+      
 
       {selectedSize && (
         <div>
@@ -50,4 +51,4 @@ const PizzaList = () => {
   );
 };
 
-export default PizzaList;
+export default ListAllPizzas;
