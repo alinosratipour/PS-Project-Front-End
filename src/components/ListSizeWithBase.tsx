@@ -1,40 +1,33 @@
-import  { useState } from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@apollo/client';
-import gql from 'graphql-tag';
+import {GET_PIZZAS_WITH_SIZES_AND_PRICES} from '../queries/queries';
 
-const GET_PIZZAS_WITH_SIZES_AND_PRICES = gql`
-  {
-    pizzasWithSizesAndPrices {
-      id_pizza
-      sizesWithPrices {
-        id_size
-        p_size
-        price
-      }
-    }
-  }
-`;
+// Define a type for the size and price mapping
+type SizeAndPriceMap = Record<string, number>;
+
+
 
 const PizzaList = () => {
   const { loading, error, data } = useQuery(GET_PIZZAS_WITH_SIZES_AND_PRICES);
-  const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
   const pizzas = data.pizzasWithSizesAndPrices;
 
-  const sizeAndPriceMap = {};
+  const sizeAndPriceMap: SizeAndPriceMap = {};
 
-  pizzas.forEach((pizza) => {
+  pizzas.forEach((pizza: { sizesWithPrices: { p_size: string; price: number }[] }) => {
     pizza.sizesWithPrices.forEach((size) => {
       sizeAndPriceMap[size.p_size] = size.price;
     });
   });
+  
 
   const uniqueSizes = Object.keys(sizeAndPriceMap);
 
-  const handleSizeChange = (event) => {
+  const handleSizeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const size = event.target.value;
     setSelectedSize(size);
   };
