@@ -1,27 +1,52 @@
-import React, { useState } from 'react';
-import { useQuery } from '@apollo/client';
-import { GET_PIZZAS_WITH_SIZES_AND_PRICES } from '../queries/queries';
-import PizzaSizeDropdown from './PizzaSizeDropdown'; // Import the new component
+import React, { useState } from "react";
+import { gql, useQuery } from "@apollo/client";
+import PizzaSizeDropdown from "./PizzaSizeDropdown";
+import PizzaBaseDropdown from "./PizzaBaseDropdown";
+import {
+  GET_PIZZAS_WITH_SIZES_AND_PRICES,
+  GET_ALL_SIZES_WITH_RELATED_BASES,
+} from "../queries/queries";
 
-// Define a type for the size and price mapping
 type SizeAndPriceMap = Record<string, number>;
+
+interface BaseWithPrice {
+  base: string;
+
+}
+
+type SizeWithRelatedBases = {
+  bases: BaseWithPrice[];
+};
+
 
 const ListAllPizzas = () => {
   const { loading, error, data } = useQuery(GET_PIZZAS_WITH_SIZES_AND_PRICES);
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const {
+    loading: baseLoading,
+    error: baseError,
+    data: baseData,
+  } = useQuery(GET_ALL_SIZES_WITH_RELATED_BASES, {
+    fetchPolicy: "cache-and-network",
+  });
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [selectedBase, setSelectedBase] = useState<string | null>(null);
+
+  if (loading || baseLoading) return <p>Loading...</p>;
+  if (error || baseError)
+    return <p>Error: {error?.message || baseError?.message}</p>;
 
   const pizzas = data.pizzasWithSizesAndPrices;
 
   const sizeAndPriceMap: SizeAndPriceMap = {};
 
-  pizzas.forEach((pizza: { sizesWithPrices: { p_size: string; price: number }[] }) => {
-    pizza.sizesWithPrices.forEach((size) => {
-      sizeAndPriceMap[size.p_size] = size.price;
-    });
-  });
+  pizzas.forEach(
+    (pizza: { sizesWithPrices: { p_size: string; price: number }[] }) => {
+      pizza.sizesWithPrices.forEach((size) => {
+        sizeAndPriceMap[size.p_size] = size.price;
+      });
+    }
+  );
 
   const uniqueSizes = Object.keys(sizeAndPriceMap);
 
@@ -29,6 +54,23 @@ const ListAllPizzas = () => {
     const size = event.target.value;
     setSelectedSize(size);
   };
+
+  const handleBaseChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const base = event.target.value;
+    setSelectedBase(base);
+  };
+
+  const availableBaseNames: string[] = [];
+
+  // Dynamically populate available bases
+  baseData.getAllSizesWithRelatedBases.forEach((sizeWithBases: SizeWithRelatedBases) => {
+    sizeWithBases.bases.forEach((base: BaseWithPrice) => {
+      const baseName = base.base;
+      if (!availableBaseNames.includes(baseName)) {
+        availableBaseNames.push(baseName);
+      }
+    });
+  });
 
   return (
     <div>
@@ -39,12 +81,22 @@ const ListAllPizzas = () => {
         handleSizeChange={handleSizeChange}
         sizeAndPriceMap={sizeAndPriceMap}
       />
-      
+      <PizzaBaseDropdown
+        bases={availableBaseNames}
+        selectedBase={selectedBase}
+        handleBaseChange={handleBaseChange}
+      />
 
       {selectedSize && (
         <div>
           <h2>Selected Size: {selectedSize}</h2>
           <h3>Price: {sizeAndPriceMap[selectedSize]}</h3>
+        </div>
+      )}
+
+      {selectedBase && (
+        <div>
+          <h2>Selected Base: {selectedBase}</h2>
         </div>
       )}
     </div>

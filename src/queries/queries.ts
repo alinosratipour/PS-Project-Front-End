@@ -17,9 +17,11 @@ export const GET_PIZZAS_WITH_SIZES_AND_PRICES = gql`
 export const GET_ALL_SIZES_WITH_RELATED_BASES = gql`
   {
     getAllSizesWithRelatedBases {
+      size
       bases {
         base
       }
     }
   }
 `;
+
