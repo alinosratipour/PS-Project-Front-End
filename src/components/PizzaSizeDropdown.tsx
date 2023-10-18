@@ -1,11 +1,12 @@
-// PizzaSizeDropdown.tsx
 import React from "react";
+
 type SizeAndPriceMap = Record<string, { price: number }>;
+
 type PizzaSizeDropdownProps = {
   sizes: string[];
   selectedSize: string | null;
   handleSizeChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-  sizeAndPriceMap: SizeAndPriceMap; // Update this type
+  sizeAndPriceMap: SizeAndPriceMap;
 };
 
 const PizzaSizeDropdown: React.FC<PizzaSizeDropdownProps> = ({

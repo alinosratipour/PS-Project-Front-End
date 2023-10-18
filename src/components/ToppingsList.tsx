@@ -1,6 +1,5 @@
-import { useState } from 'react';
-import { useQuery ,gql} from '@apollo/client';
-
+import { useState, useEffect } from "react";
+import { useQuery, gql } from "@apollo/client";
 
 interface ToppingType {
   id_size: number;
@@ -8,25 +7,78 @@ interface ToppingType {
   price: number;
 }
 
-const GET_TOPPING_PRICES = gql`
-query GetToppingPricesBySize($id_size: Int) {
-  getToppingPricesBySize(id_size: $id_size) {
-    id_size
-    name
-    price
-  }
+interface SizeType {
+  id_size: number;
+  p_size: string; // Assuming the size name is a string
+  price_topping: number;
+  price: number;
 }
 
+const GET_TOPPING_PRICES = gql`
+  query GetToppingPricesBySize($id_size: Int) {
+    getToppingPricesBySize(id_size: $id_size) {
+      id_size
+      name
+      price
+    }
+  }
+`;
+
+const GET_PIZZAS_WITH_SIZES_AND_PRICES = gql`
+  {
+    getpizzasWithSizesAndPrices {
+      id_pizza
+      sizesWithPrices {
+        id_size
+        p_size
+        price_topping
+        price
+      }
+    }
+  }
 `;
 
 function ToppingPrices() {
   const [selectedSize, setSelectedSize] = useState(1);
+  const [sizes, setSizes] = useState<SizeType[]>([]); // Specify the type
+  const [selectedSizePrice, setSelectedSizePrice] = useState<number>(0); // Store selected size price
 
-  const { loading, error, data = { getToppingPricesBySize: [] } } = useQuery<{ getToppingPricesBySize: ToppingType[] }>(GET_TOPPING_PRICES, {
+  const {
+    loading: sizesLoading,
+    error: sizesError,
+    data: sizesData,
+  } = useQuery(GET_PIZZAS_WITH_SIZES_AND_PRICES);
+
+  const {
+    loading,
+    error,
+    data = { getToppingPricesBySize: [] },
+  } = useQuery<{ getToppingPricesBySize: ToppingType[] }>(GET_TOPPING_PRICES, {
     variables: { id_size: selectedSize },
   });
 
-  if (loading) return 'Loading...';
+  useEffect(() => {
+    if (!sizesLoading && sizesData) {
+      // Extract the available sizes and their names from the query response
+      const availableSizes = sizesData.getpizzasWithSizesAndPrices[0].sizesWithPrices;
+      setSizes(availableSizes);
+    }
+  }, [sizesLoading, sizesData]);
+
+  useEffect(() => {
+    // Update the selected size price whenever the selected size changes
+    if (sizes.length > 0) {
+      const selectedSizeData = sizes.find((sizeData) => sizeData.id_size === selectedSize);
+      if (selectedSizeData) {
+        setSelectedSizePrice(selectedSizeData.price);
+      }
+    }
+  }, [selectedSize, sizes]);
+
+  if (sizesLoading) return "Loading sizes...";
+  if (sizesError) return `Error! ${sizesError.message}`;
+
+  if (loading) return "Loading...";
   if (error) return `Error! ${error.message}`;
 
   const toppingPrices = data.getToppingPricesBySize;
@@ -40,11 +92,15 @@ function ToppingPrices() {
           value={selectedSize}
           onChange={(e) => setSelectedSize(parseInt(e.target.value))}
         >
-          <option value={1}>Small</option>
-          <option value={2}>Medium</option>
-          <option value={3}>Large</option>
-          <option value={4}>X-Large</option>
+          {sizes.map((sizeData) => (
+            <option key={sizeData.id_size} value={sizeData.id_size}>
+               {sizeData.p_size} - £{sizeData.price} 
+            </option>
+          ))}
         </select>
+      </div>
+      <div>
+        <p>Selected Size Price: £{selectedSizePrice}</p>
       </div>
       <ul>
         {toppingPrices.map((topping, index) => (
