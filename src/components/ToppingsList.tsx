@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery, gql } from "@apollo/client";
+import Dropdown from "../components/UI-Liberary/DropDown/DropDown";
 
 interface ToppingType {
   id_size: number;
@@ -9,7 +10,7 @@ interface ToppingType {
 
 interface SizeType {
   id_size: number;
-  p_size: string; // Assuming the size name is a string
+  p_size: string;
   price_topping: number;
   price: number;
 }
@@ -39,9 +40,11 @@ const GET_PIZZAS_WITH_SIZES_AND_PRICES = gql`
 `;
 
 function ToppingPrices() {
-  const [selectedSize, setSelectedSize] = useState(1);
-  const [sizes, setSizes] = useState<SizeType[]>([]); // Specify the type
-  const [selectedSizePrice, setSelectedSizePrice] = useState<number>(0); // Store selected size price
+  const [sizes, setSizes] = useState<SizeType[]>([]);
+  const [selectedSizePrice, setSelectedSizePrice] = useState<
+    number | undefined
+  >(0);
+  const [selectedSize, setSelectedSize] = useState<number>(1);
 
   const {
     loading: sizesLoading,
@@ -52,62 +55,69 @@ function ToppingPrices() {
   const {
     loading,
     error,
-    data = { getToppingPricesBySize: [] },
+    data: toppingData,
   } = useQuery<{ getToppingPricesBySize: ToppingType[] }>(GET_TOPPING_PRICES, {
-    variables: { id_size: selectedSize },
+    variables: { id_size: Number(selectedSize) },
   });
 
   useEffect(() => {
     if (!sizesLoading && sizesData) {
-      // Extract the available sizes and their names from the query response
-      const availableSizes = sizesData.getpizzasWithSizesAndPrices[0].sizesWithPrices;
+      const availableSizes =
+        sizesData.getpizzasWithSizesAndPrices[0].sizesWithPrices;
       setSizes(availableSizes);
-    }
-  }, [sizesLoading, sizesData]);
 
-  useEffect(() => {
-    // Update the selected size price whenever the selected size changes
-    if (sizes.length > 0) {
-      const selectedSizeData = sizes.find((sizeData) => sizeData.id_size === selectedSize);
-      if (selectedSizeData) {
-        setSelectedSizePrice(selectedSizeData.price);
+      // Update the selected size price based on the initial selected size
+      const initialSelectedSizeData = availableSizes.find(
+        (sizeData: SizeType) => sizeData.id_size === selectedSize
+      );
+      if (initialSelectedSizeData) {
+        setSelectedSizePrice(initialSelectedSizeData.price);
       }
     }
-  }, [selectedSize, sizes]);
+  }, [sizesLoading, sizesData, selectedSize]);
+
+  const handleSizeChange = (newSize: number) => {
+    setSelectedSize(newSize);
+
+    const newSizeInt = parseInt(newSize.toString(), 10); // Ensure newSize is an integer
+    // Update the selected size price based on the newly selected size
+    const newSelectedSizeData = sizes.find(
+      (sizeData) => sizeData.id_size === newSizeInt
+    );
+    if (newSelectedSizeData) {
+      setSelectedSizePrice(newSelectedSizeData.price);
+    }
+  };
 
   if (sizesLoading) return "Loading sizes...";
   if (sizesError) return `Error! ${sizesError.message}`;
-
   if (loading) return "Loading...";
   if (error) return `Error! ${error.message}`;
-
-  const toppingPrices = data.getToppingPricesBySize;
 
   return (
     <div>
       <h1>Topping Prices</h1>
       <div>
         <label>Select Size: </label>
-        <select
-          value={selectedSize}
-          onChange={(e) => setSelectedSize(parseInt(e.target.value))}
-        >
-          {sizes.map((sizeData) => (
-            <option key={sizeData.id_size} value={sizeData.id_size}>
-               {sizeData.p_size} - £{sizeData.price} 
-            </option>
-          ))}
-        </select>
+        <Dropdown
+          options={sizes.map((sizeData) => ({
+            value: sizeData.id_size,
+            label: `${sizeData.p_size} - £${sizeData.price}`,
+          }))}
+          selectedValue={selectedSize}
+          onOptionChange={handleSizeChange}
+        />
       </div>
       <div>
-        <p>Selected Size Price: £{selectedSizePrice}</p>
+        <p>Selected Size Price: £{selectedSizePrice || 0}</p>
       </div>
       <ul>
-        {toppingPrices.map((topping, index) => (
-          <li key={index}>
-            {topping.name}: £{topping.price}
-          </li>
-        ))}
+        {toppingData &&
+          toppingData.getToppingPricesBySize.map((topping, index) => (
+            <li key={index}>
+              {topping.name}: £{topping.price}
+            </li>
+          ))}
       </ul>
     </div>
   );
