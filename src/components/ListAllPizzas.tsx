@@ -1,26 +1,31 @@
 import React, { useState } from "react";
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import PizzaSizeDropdown from "./PizzaSizeDropdown";
 import PizzaBaseDropdown from "./PizzaBaseDropdown";
+
 import {
   GET_PIZZAS_WITH_SIZES_AND_PRICES,
   GET_ALL_SIZES_WITH_RELATED_BASES,
 } from "../queries/queries";
 
-type SizeAndPriceMap = Record<string, number>;
+type SizeAndPrice = {
+  price: number;
+  price_topping: number;
+};
+
+type SizeAndPriceMap = Record<string, SizeAndPrice>;
 
 interface BaseWithPrice {
   base: string;
-
 }
 
 type SizeWithRelatedBases = {
   bases: BaseWithPrice[];
 };
 
-
 const ListAllPizzas = () => {
   const { loading, error, data } = useQuery(GET_PIZZAS_WITH_SIZES_AND_PRICES);
+
   const {
     loading: baseLoading,
     error: baseError,
@@ -36,14 +41,22 @@ const ListAllPizzas = () => {
   if (error || baseError)
     return <p>Error: {error?.message || baseError?.message}</p>;
 
-  const pizzas = data.pizzasWithSizesAndPrices;
-
+  const pizzas = data.getpizzasWithSizesAndPrices;
   const sizeAndPriceMap: SizeAndPriceMap = {};
 
   pizzas.forEach(
-    (pizza: { sizesWithPrices: { p_size: string; price: number }[] }) => {
+    (pizza: {
+      sizesWithPrices: {
+        p_size: string;
+        price: number;
+        price_topping: number;
+      }[];
+    }) => {
       pizza.sizesWithPrices.forEach((size) => {
-        sizeAndPriceMap[size.p_size] = size.price;
+        sizeAndPriceMap[size.p_size] = {
+          price: size.price,
+          price_topping: size.price_topping,
+        };
       });
     }
   );
@@ -63,7 +76,7 @@ const ListAllPizzas = () => {
   const availableBaseNames: string[] = [];
 
   // Dynamically populate available bases
-  baseData.getAllSizesWithRelatedBases.forEach((sizeWithBases: SizeWithRelatedBases) => {
+  baseData.getSizesWithBases.forEach((sizeWithBases: SizeWithRelatedBases) => {
     sizeWithBases.bases.forEach((base: BaseWithPrice) => {
       const baseName = base.base;
       if (!availableBaseNames.includes(baseName)) {
@@ -74,13 +87,14 @@ const ListAllPizzas = () => {
 
   return (
     <div>
-      <h1>List of Pizzas</h1>
+      <h1>Choose one</h1>
       <PizzaSizeDropdown
         sizes={uniqueSizes}
         selectedSize={selectedSize}
         handleSizeChange={handleSizeChange}
         sizeAndPriceMap={sizeAndPriceMap}
       />
+
       <PizzaBaseDropdown
         bases={availableBaseNames}
         selectedBase={selectedBase}
@@ -90,7 +104,8 @@ const ListAllPizzas = () => {
       {selectedSize && (
         <div>
           <h2>Selected Size: {selectedSize}</h2>
-          <h3>Price: {sizeAndPriceMap[selectedSize]}</h3>
+          <h3>Price: {sizeAndPriceMap[selectedSize].price}</h3>
+          <h3>Price Topping: {sizeAndPriceMap[selectedSize].price_topping}</h3>
         </div>
       )}
 

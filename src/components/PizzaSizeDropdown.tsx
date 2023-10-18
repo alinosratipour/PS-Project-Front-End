@@ -1,10 +1,11 @@
-import React from 'react';
-
+// PizzaSizeDropdown.tsx
+import React from "react";
+type SizeAndPriceMap = Record<string, { price: number }>;
 type PizzaSizeDropdownProps = {
   sizes: string[];
   selectedSize: string | null;
   handleSizeChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-  sizeAndPriceMap: Record<string, number>;
+  sizeAndPriceMap: SizeAndPriceMap; // Update this type
 };
 
 const PizzaSizeDropdown: React.FC<PizzaSizeDropdownProps> = ({
@@ -15,12 +16,12 @@ const PizzaSizeDropdown: React.FC<PizzaSizeDropdownProps> = ({
 }) => {
   return (
     <div>
-      <label>Select Pizza Size:</label>
-      <select onChange={handleSizeChange} value={selectedSize || ''}>
-        <option value="">Select a Size</option>
+      <label>Select Size:</label>
+      <select value={selectedSize || ""} onChange={handleSizeChange}>
+        <option value="">Select a size</option>
         {sizes.map((size) => (
           <option key={size} value={size}>
-            {size} - {sizeAndPriceMap[size]}
+            {size} - Price: {sizeAndPriceMap[size].price}
           </option>
         ))}
       </select>
