@@ -2,13 +2,10 @@
 import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import ListAllPizzas from "./ListAllPizzas";
-import ListToppings from "./ToppingsList";
+import ListToppingAndPrices from "./ListToppingAndPrices";
 
 import Modal from "./UI-Liberary/Modal";
-import {
-  GET_ALL_PIZZAS_LIST,
-} from "../queries/queries";
-
+import { GET_ALL_PIZZAS_LIST } from "../queries/queries";
 
 function PizzaList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,18 +22,20 @@ function PizzaList() {
 
   return (
     <div>
-
       <ul>
         {data.getAllPizzasList.map((pizza: any) => (
+          
           <li key={pizza.id_pizza}>
+
             <img
               src={pizza.image}
               alt={pizza.name}
               width="250px"
               height="250px"
             />
+            <h1>{pizza.name}</h1>
             <p>{pizza.description}</p>
-           
+
             <button onClick={() => openModal(pizza)}>Customize</button>
           </li>
         ))}
@@ -53,10 +52,7 @@ function PizzaList() {
               height="250px"
             />
             <ListAllPizzas />
-            <ListToppings/>
-          
-        
-            
+            <ListToppingAndPrices />
           </>
         )}
       </Modal>

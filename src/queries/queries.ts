@@ -14,6 +14,17 @@ export const GET_PIZZAS_WITH_SIZES_AND_PRICES = gql`
   }
 `;
 
+
+export  const GET_TOPPING_PRICES = gql`
+query GetToppingPricesBySize($id_size: Int) {
+  getToppingPricesBySize(id_size: $id_size) {
+    id_size
+    name
+    price
+  }
+}
+`;
+
 export const GET_ALL_SIZES_WITH_RELATED_BASES = gql`
   {
    
@@ -40,22 +51,22 @@ export const GET_ALL_SIZES_WITH_RELATED_BASES = gql`
 //   }
 // `;
 
-export const GET_TOPPING_PRICES_FOR_SIZES = gql`
- {
-  getToppingPricesForSizes {
-    size
-    toppingPrices {
-      topping {
-        id
-        name  
+// export const GET_TOPPING_PRICES_FOR_SIZES = gql`
+//  {
+//   getToppingPricesForSizes {
+//     size
+//     toppingPrices {
+//       topping {
+//         id
+//         name  
         
-      }
-      price_topping
-    }
-  }
-}
+//       }
+//       price_topping
+//     }
+//   }
+// }
 
-`
+// `
 
 
 export const LIST_PIZZAS_WITH_TOPPINGS = gql`

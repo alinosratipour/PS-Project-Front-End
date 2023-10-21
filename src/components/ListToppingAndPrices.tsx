@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
-import { useQuery, gql } from "@apollo/client";
-import Dropdown from "../components/UI-Liberary/DropDown/DropDown";
+import { useQuery } from "@apollo/client";
+import Dropdown from "./UI-Liberary/DropDown/DropDown";
+import {
+  GET_PIZZAS_WITH_SIZES_AND_PRICES,
+  GET_TOPPING_PRICES,
+} from "../queries/queries";
 
 interface ToppingType {
   id_size: number;
@@ -15,31 +19,7 @@ interface SizeType {
   price: number;
 }
 
-const GET_TOPPING_PRICES = gql`
-  query GetToppingPricesBySize($id_size: Int) {
-    getToppingPricesBySize(id_size: $id_size) {
-      id_size
-      name
-      price
-    }
-  }
-`;
-
-const GET_PIZZAS_WITH_SIZES_AND_PRICES = gql`
-  {
-    getpizzasWithSizesAndPrices {
-      id_pizza
-      sizesWithPrices {
-        id_size
-        p_size
-        price_topping
-        price
-      }
-    }
-  }
-`;
-
-function ToppingPrices() {
+function ListToppingAndPrices() {
   const [sizes, setSizes] = useState<SizeType[]>([]);
   const [selectedSizePrice, setSelectedSizePrice] = useState<
     number | undefined
@@ -51,6 +31,7 @@ function ToppingPrices() {
     error: sizesError,
     data: sizesData,
   } = useQuery(GET_PIZZAS_WITH_SIZES_AND_PRICES);
+console.log(sizesData);
 
   const {
     loading,
@@ -109,7 +90,7 @@ function ToppingPrices() {
         />
       </div>
       <div>
-        <p>Selected Size Price: £{selectedSizePrice || 0}</p>
+        <p>£{selectedSizePrice || 0}</p>
       </div>
       <ul>
         {toppingData &&
@@ -123,4 +104,4 @@ function ToppingPrices() {
   );
 }
 
-export default ToppingPrices;
+export default ListToppingAndPrices;
