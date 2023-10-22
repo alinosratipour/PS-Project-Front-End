@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import Dropdown from "./UI-Liberary/DropDown/DropDown";
-import { GET_PIZZAS_WITH_SIZES_AND_PRICES, GET_TOPPING_PRICES } from "../queries/queries";
+import {
+  GET_PIZZAS_WITH_SIZES_AND_PRICES,
+  GET_TOPPING_PRICES,
+} from "../queries/queries";
 
 interface ToppingType {
   id_size: number;
@@ -22,9 +25,10 @@ interface ListToppingAndPricesProps {
 
 function ListToppingAndPrices({ pizzaId }: ListToppingAndPricesProps) {
   const [sizes, setSizes] = useState<SizeType[]>([]);
-  const [selectedSizePrice, setSelectedSizePrice] = useState<number | undefined>(0);
+  const [selectedSizePrice, setSelectedSizePrice] = useState<
+    number | undefined
+  >(0);
   const [selectedSize, setSelectedSize] = useState<number | undefined>(pizzaId);
-
 
   const {
     loading: sizesLoading,
@@ -42,7 +46,9 @@ function ListToppingAndPrices({ pizzaId }: ListToppingAndPricesProps) {
 
   useEffect(() => {
     if (!sizesLoading && sizesData) {
-      const pizzaSizesData = sizesData.getpizzasWithSizesAndPrices.find((pizza: any) => pizza.id_pizza === pizzaId);
+      const pizzaSizesData = sizesData.getpizzasWithSizesAndPrices.find(
+        (pizza: any) => pizza.id_pizza === pizzaId
+      );
 
       if (pizzaSizesData) {
         const availableSizes = pizzaSizesData.sizesWithPrices;
@@ -59,7 +65,9 @@ function ListToppingAndPrices({ pizzaId }: ListToppingAndPricesProps) {
 
   const handleSizeChange = (newSize: number) => {
     setSelectedSize(newSize);
-    const newSelectedSizeData = sizes.find((sizeData) => sizeData.id_size === newSize);
+    const newSelectedSizeData = sizes.find(
+      (sizeData) => sizeData.id_size === newSize
+    );
     if (newSelectedSizeData) {
       setSelectedSizePrice(newSelectedSizeData.price);
     }
