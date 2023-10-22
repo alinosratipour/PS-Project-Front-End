@@ -1,10 +1,18 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
-import Dropdown from "./UI-Liberary/DropDown/DropDown";
 import {
   GET_PIZZAS_WITH_SIZES_AND_PRICES,
   GET_TOPPING_PRICES,
 } from "../queries/queries";
+
+// Import the subcomponents
+import SizeDropdown from "./SizeDropdown";
+import SizePrice from "./SizePrice";
+import ToppingsList from "./ToppingsList";
+
+interface ListToppingAndPricesProps {
+  pizzaId: number;
+}
 
 interface ToppingType {
   id_size: number;
@@ -19,28 +27,16 @@ interface SizeType {
   price: number;
 }
 
-interface ListToppingAndPricesProps {
-  pizzaId: number; // Pass the pizza ID as a prop
-}
-
 function ListToppingAndPrices({ pizzaId }: ListToppingAndPricesProps) {
   const [sizes, setSizes] = useState<SizeType[]>([]);
-  const [selectedSizePrice, setSelectedSizePrice] = useState<
-    number | undefined
-  >(0);
-  const [selectedSize, setSelectedSize] = useState<number | undefined>(pizzaId);
+  const [selectedSize, setSelectedSize] = useState<number>(1);
+   const [selectedSizePrice, setSelectedSizePrice] = useState<number | undefined>(0);
 
-  const {
-    loading: sizesLoading,
-    error: sizesError,
-    data: sizesData,
-  } = useQuery(GET_PIZZAS_WITH_SIZES_AND_PRICES);
+  // Query for sizes data if it's not available
+  const { loading: sizesLoading, data: sizesData } = useQuery(GET_PIZZAS_WITH_SIZES_AND_PRICES);
 
-  const {
-    loading,
-    error,
-    data: toppingData,
-  } = useQuery<{ getToppingPricesBySize: ToppingType[] }>(GET_TOPPING_PRICES, {
+  // Query for topping data
+  const { loading, error, data: toppingData } = useQuery<{ getToppingPricesBySize: ToppingType[] }>(GET_TOPPING_PRICES, {
     variables: { id_size: Number(selectedSize) },
   });
 
@@ -54,7 +50,7 @@ function ListToppingAndPrices({ pizzaId }: ListToppingAndPricesProps) {
         const availableSizes = pizzaSizesData.sizesWithPrices;
         setSizes(availableSizes);
 
-        const initialSelectedSizeData = availableSizes[0]; // Default to the first size
+        const initialSelectedSizeData = availableSizes[0];
         if (initialSelectedSizeData) {
           setSelectedSize(initialSelectedSizeData.id_size);
           setSelectedSizePrice(initialSelectedSizeData.price);
@@ -65,44 +61,28 @@ function ListToppingAndPrices({ pizzaId }: ListToppingAndPricesProps) {
 
   const handleSizeChange = (newSize: number) => {
     setSelectedSize(newSize);
-    const newSelectedSizeData = sizes.find(
-      (sizeData) => sizeData.id_size === newSize
-    );
+    const newSelectedSizeData = sizes.find((sizeData) => sizeData.id_size === newSize);
+
     if (newSelectedSizeData) {
       setSelectedSizePrice(newSelectedSizeData.price);
     }
   };
 
   if (sizesLoading) return "Loading sizes...";
-  if (sizesError) return `Error! ${sizesError.message}`;
-  if (loading) return "Loading...";
   if (error) return `Error! ${error.message}`;
 
   return (
     <div>
       <h1>Topping Prices</h1>
-      <div>
-        <label>Select Size: </label>
-        <Dropdown
-          options={sizes.map((sizeData) => ({
-            value: sizeData.id_size,
-            label: `${sizeData.p_size} - £${sizeData.price}`,
-          }))}
-          selectedValue={selectedSize}
-          onOptionChange={handleSizeChange}
-        />
-      </div>
-      <div>
-        <p>£{selectedSizePrice || 0}</p>
-      </div>
-      <ul>
-        {toppingData &&
-          toppingData.getToppingPricesBySize.map((topping, index) => (
-            <li key={index}>
-              {topping.name}: £{topping.price}
-            </li>
-          ))}
-      </ul>
+
+      {/* Render the SizeDropdown subcomponent */}
+      <SizeDropdown sizes={sizes} selectedSize={selectedSize} onSizeChange={handleSizeChange} />
+
+      {/* Render the SizePrice subcomponent */}
+      <SizePrice selectedSizePrice={selectedSizePrice} />
+
+      {/* Render the ToppingsList subcomponent */}
+      <ToppingsList toppingData={toppingData?.getToppingPricesBySize} />
     </div>
   );
 }

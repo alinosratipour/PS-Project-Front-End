@@ -1,21 +1,27 @@
 // PizzaList.tsx
+
 import { useState } from "react";
 import { useQuery } from "@apollo/client";
-import ListAllPizzas from "./ListAllPizzas";
+import Modal from "../components/UI-Liberary/Modal"; // Make sure to import your Modal component
+import { GET_ALL_PIZZAS_LIST } from "../queries/queries"; // Import your queries
 import ListToppingAndPrices from "./ListToppingAndPrices";
 
-import Modal from "./UI-Liberary/Modal";
-import { GET_ALL_PIZZAS_LIST } from "../queries/queries";
+interface Pizza {
+  id_pizza: number;
+  name: string;
+  description: string;
+  image: string;
+}
 
 function PizzaList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPizza, setSelectedPizza] = useState<any>(null); // Use 'any' type for now
-  const { loading, error, data } = useQuery(GET_ALL_PIZZAS_LIST);
+  const [selectedPizza, setSelectedPizza] = useState<Pizza | null>(null);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  const { loading, error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(
+    GET_ALL_PIZZAS_LIST
+  );
 
-  const openModal = (pizza: any) => {
+  const openModal = (pizza: Pizza) => {
     setSelectedPizza(pizza);
     setIsModalOpen(true);
   };
@@ -23,22 +29,20 @@ function PizzaList() {
   return (
     <div>
       <ul>
-        {data.getAllPizzasList.map((pizza: any) => (
-          
-          <li key={pizza.id_pizza}>
-
-            <img
-              src={pizza.image}
-              alt={pizza.name}
-              width="250px"
-              height="250px"
-            />
-            <h1>{pizza.name}</h1>
-            <p>{pizza.description}</p>
-
-            <button onClick={() => openModal(pizza)}>Customize</button>
-          </li>
-        ))}
+        {data &&
+          data.getAllPizzasList.map((pizza) => (
+            <li key={pizza.id_pizza}>
+              <img
+                src={pizza.image}
+                alt={pizza.name}
+                width="250px"
+                height="250px"
+              />
+              <h1>{pizza.name}</h1>
+              <p>{pizza.description}</p>
+              <button onClick={() => openModal(pizza)}>Customize</button>
+            </li>
+          ))}
       </ul>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         {selectedPizza && (
@@ -51,8 +55,7 @@ function PizzaList() {
               width="250px"
               height="250px"
             />
-            {/* <ListAllPizzas /> */}
-            <ListToppingAndPrices pizzaId={selectedPizza.id_pizza}  />
+            <ListToppingAndPrices pizzaId={selectedPizza.id_pizza} />
           </>
         )}
       </Modal>
