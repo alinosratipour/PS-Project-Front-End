@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
-import Dropdown from "./UI-Liberary/DropDown/DropDown";
+import Dropdown from "../UI-Liberary/DropDown/DropDown";
 import {
   GET_PIZZAS_WITH_SIZES_AND_PRICES,
   GET_TOPPING_PRICES,
-} from "../queries/queries";
+} from "../../queries/queries";
 
 interface ToppingType {
   id_size: number;

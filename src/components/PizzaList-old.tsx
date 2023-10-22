@@ -1,7 +1,7 @@
 // PizzaList.tsx
 import { useState } from "react";
 import { useQuery } from "@apollo/client";
-import ListAllPizzas from "./ListAllPizzas";
+import ListAllPizzas from "./olds/ListAllPizzas-old";
 import Modal from "./UI-Liberary/Modal";
 import {
   GET_ALL_PIZZAS_LIST,
