@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import Dropdown from "./UI-Liberary/DropDown/DropDown";
-import {
-  GET_PIZZAS_WITH_SIZES_AND_PRICES,
-  GET_TOPPING_PRICES,
-} from "../queries/queries";
+import { GET_PIZZAS_WITH_SIZES_AND_PRICES, GET_TOPPING_PRICES } from "../queries/queries";
 
 interface ToppingType {
   id_size: number;
@@ -19,19 +16,21 @@ interface SizeType {
   price: number;
 }
 
-function ListToppingAndPrices() {
+interface ListToppingAndPricesProps {
+  pizzaId: number; // Pass the pizza ID as a prop
+}
+
+function ListToppingAndPrices({ pizzaId }: ListToppingAndPricesProps) {
   const [sizes, setSizes] = useState<SizeType[]>([]);
-  const [selectedSizePrice, setSelectedSizePrice] = useState<
-    number | undefined
-  >(0);
-  const [selectedSize, setSelectedSize] = useState<number>(1);
+  const [selectedSizePrice, setSelectedSizePrice] = useState<number | undefined>(0);
+  const [selectedSize, setSelectedSize] = useState<number | undefined>(pizzaId);
+
 
   const {
     loading: sizesLoading,
     error: sizesError,
     data: sizesData,
   } = useQuery(GET_PIZZAS_WITH_SIZES_AND_PRICES);
-console.log(sizesData);
 
   const {
     loading,
@@ -43,28 +42,24 @@ console.log(sizesData);
 
   useEffect(() => {
     if (!sizesLoading && sizesData) {
-      const availableSizes =
-        sizesData.getpizzasWithSizesAndPrices[0].sizesWithPrices;
-      setSizes(availableSizes);
+      const pizzaSizesData = sizesData.getpizzasWithSizesAndPrices.find((pizza: any) => pizza.id_pizza === pizzaId);
 
-      // Update the selected size price based on the initial selected size
-      const initialSelectedSizeData = availableSizes.find(
-        (sizeData: SizeType) => sizeData.id_size === selectedSize
-      );
-      if (initialSelectedSizeData) {
-        setSelectedSizePrice(initialSelectedSizeData.price);
+      if (pizzaSizesData) {
+        const availableSizes = pizzaSizesData.sizesWithPrices;
+        setSizes(availableSizes);
+
+        const initialSelectedSizeData = availableSizes[0]; // Default to the first size
+        if (initialSelectedSizeData) {
+          setSelectedSize(initialSelectedSizeData.id_size);
+          setSelectedSizePrice(initialSelectedSizeData.price);
+        }
       }
     }
-  }, [sizesLoading, sizesData, selectedSize]);
+  }, [sizesLoading, sizesData, pizzaId]);
 
   const handleSizeChange = (newSize: number) => {
     setSelectedSize(newSize);
-
-    const newSizeInt = parseInt(newSize.toString(), 10); // Ensure newSize is an integer
-    // Update the selected size price based on the newly selected size
-    const newSelectedSizeData = sizes.find(
-      (sizeData) => sizeData.id_size === newSizeInt
-    );
+    const newSelectedSizeData = sizes.find((sizeData) => sizeData.id_size === newSize);
     if (newSelectedSizeData) {
       setSelectedSizePrice(newSelectedSizeData.price);
     }

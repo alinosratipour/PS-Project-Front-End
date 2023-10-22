@@ -51,8 +51,8 @@ function PizzaList() {
               width="250px"
               height="250px"
             />
-            <ListAllPizzas />
-            <ListToppingAndPrices />
+            {/* <ListAllPizzas /> */}
+            <ListToppingAndPrices pizzaId={selectedPizza.id_pizza}  />
           </>
         )}
       </Modal>
