@@ -8,10 +8,10 @@ interface BasketItem {
 interface BasketProps {
   basket: BasketItem[]; // Update the type to BasketItem
   selectedSizePrice: number | undefined;
-  removeFromBasket: (item: BasketItem) => void; // Update the type here as well
+ // removeFromBasket: (item: BasketItem) => void; // Update the type here as well
 }
 
-function Basket({ basket, selectedSizePrice, removeFromBasket}: BasketProps) {
+function Basket({ basket, selectedSizePrice}: BasketProps) {
   console.log(selectedSizePrice);
 
   const calculateTotalPrice = () => {
@@ -28,7 +28,7 @@ function Basket({ basket, selectedSizePrice, removeFromBasket}: BasketProps) {
         {basket.map((item, index) => (
           <li key={index}>
             {item.name}: £{item.price}
-            <button onClick={() => removeFromBasket(item)}>Remove</button>
+            {/* <button onClick={() => removeFromBasket(item)}>Remove</button> */}
           </li>
         ))}
       </ul>
