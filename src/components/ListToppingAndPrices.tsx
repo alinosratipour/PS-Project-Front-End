@@ -14,6 +14,12 @@ interface ListToppingAndPricesProps {
   pizzaId: number;
 }
 
+interface ListToppingAndPricesProps {
+  pizzaId: number;
+  onSizePriceChange: (price: number | undefined) => void;
+}
+
+
 interface ToppingType {
   id_size: number;
   name: string;
@@ -27,7 +33,7 @@ interface SizeType {
   price: number;
 }
 
-function ListToppingAndPrices({ pizzaId }: ListToppingAndPricesProps) {
+function ListToppingAndPrices({ pizzaId, onSizePriceChange }: ListToppingAndPricesProps)  {
   const [sizes, setSizes] = useState<SizeType[]>([]);
   const [selectedSize, setSelectedSize] = useState<number>(1);
    const [selectedSizePrice, setSelectedSizePrice] = useState<number | undefined>(0);
@@ -65,8 +71,9 @@ function ListToppingAndPrices({ pizzaId }: ListToppingAndPricesProps) {
 
     if (newSelectedSizeData) {
       setSelectedSizePrice(newSelectedSizeData.price);
+      onSizePriceChange(newSelectedSizeData.price); // Pass the selected size price back to the parent
     }
-  };
+  }
 
   if (sizesLoading) return "Loading sizes...";
   if (error) return `Error! ${error.message}`;

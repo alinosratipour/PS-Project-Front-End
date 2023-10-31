@@ -1,7 +1,5 @@
-interface SizePriceProps {
-    selectedSizePrice: number | undefined;
-  }
-  
+import { SizePriceProps  } from "./SharedTypes";
+
   function SizePrice({ selectedSizePrice }: SizePriceProps) {
     return (
       <div>

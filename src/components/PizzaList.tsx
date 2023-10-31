@@ -1,22 +1,30 @@
 // PizzaList.tsx
-
-import { useState } from "react";
+import React, { useState } from "react";
 import { useQuery } from "@apollo/client";
 import Modal from "../components/UI-Liberary/Modal";
 import { GET_ALL_PIZZAS_LIST } from "../queries/queries";
 import ListToppingAndPrices from "./ListToppingAndPrices";
-
-interface Pizza {
+import Basket from "./Basket";
+import { Pizza,SizePriceProps } from "./SharedTypes"; // Import the shared type
+import SizePrice from "./SizePrice";
+// interface Pizza {
+//   id_pizza: number;
+//   name: string;
+//   description: string;
+//   image: string;
+//   price: number;
+// }
+interface BasketItem {
   id_pizza: number;
   name: string;
-  description: string;
-  image: string;
+  price: number | undefined;
 }
-
 function PizzaList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPizza, setSelectedPizza] = useState<Pizza | null>(null);
-
+  const [basket, setBasket] = useState<BasketItem[]>([]);  // State to manage the basket
+  const [selectedSize, setSelectedSize] = useState<SizePriceProps | null>(null);
+  const [selectedSizePrice, setSelectedSizePrice] = useState<number | undefined>(0);
   const { loading, error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(
     GET_ALL_PIZZAS_LIST
   );
@@ -26,6 +34,24 @@ function PizzaList() {
     setIsModalOpen(true);
   };
 
+  const addToBasket = (pizza: Pizza) => {
+    // Add the selected pizza to the basket with its price
+    const pizzaWithPrice = { ...pizza, price: selectedSizePrice || 0 };
+    setBasket([...basket, pizzaWithPrice]);
+  };
+  
+  
+  // const removeFromBasket = (basketItem: BasketItem) => {
+  //   const updatedItems = basket.filter((item) => item.id_pizza !== basketItem.id_pizza);
+  //   setBasket(updatedItems);
+  // };
+
+const calculateTotalPrice = () => {
+  return basket.reduce((total, pizza) => total + (pizza.price || 0), 0);
+};
+
+
+ 
   return (
     <div>
       <ul>
@@ -40,6 +66,7 @@ function PizzaList() {
               />
               <h1>{pizza.name}</h1>
               <p>{pizza.description}</p>
+              
               <button onClick={() => openModal(pizza)}>Customize</button>
             </li>
           ))}
@@ -55,10 +82,16 @@ function PizzaList() {
               width="250px"
               height="250px"
             />
-            <ListToppingAndPrices pizzaId={selectedPizza.id_pizza} />
+            <ListToppingAndPrices 
+            pizzaId={selectedPizza.id_pizza}  
+            onSizePriceChange={(price) => setSelectedSizePrice(price)}
+               />
+            <button onClick={() => addToBasket(selectedPizza)}>Add to Basket</button>
           </>
         )}
       </Modal>
+      
+      <Basket basket={basket} selectedSizePrice={calculateTotalPrice()}   />
     </div>
   );
 }
