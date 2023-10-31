@@ -18,6 +18,7 @@ interface BasketItem {
   id_pizza: number;
   name: string;
   price: number | undefined;
+  quantity: number; // Add quantity property
 }
 function PizzaList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -35,9 +36,18 @@ function PizzaList() {
   };
 
   const addToBasket = (pizza: Pizza) => {
-    // Add the selected pizza to the basket with its price
-    const pizzaWithPrice = { ...pizza, price: selectedSizePrice || 0 };
-    setBasket([...basket, pizzaWithPrice]);
+    const existingItemIndex = basket.findIndex((item) => item.id_pizza === pizza.id_pizza);
+  
+    if (existingItemIndex !== -1) {
+      // If the item is already in the basket, increase its quantity
+      const updatedBasket = [...basket];
+      updatedBasket[existingItemIndex].quantity += 1;
+      setBasket(updatedBasket);
+    } else {
+      // If it's not in the basket, add it with a quantity of 1
+      const pizzaWithPrice = { ...pizza, price: selectedSizePrice || 0, quantity: 1 };
+      setBasket([...basket, pizzaWithPrice]);
+    }
   };
   
   
@@ -50,7 +60,27 @@ const calculateTotalPrice = () => {
   return basket.reduce((total, pizza) => total + (pizza.price || 0), 0);
 };
 
+const increaseQuantity = (basketItem: BasketItem) => {
+  const updatedBasket = basket.map((item) => {
+    if (item.id_pizza === basketItem.id_pizza) {
+      return { ...item, quantity: item.quantity + 1 };
+    }
+    return item;
+  });
+  setBasket(updatedBasket);
+};
 
+const decreaseQuantity = (basketItem: BasketItem) => {
+  if (basketItem.quantity > 1) {
+    const updatedBasket = basket.map((item) => {
+      if (item.id_pizza === basketItem.id_pizza) {
+        return { ...item, quantity: item.quantity - 1 };
+      }
+      return item;
+    });
+    setBasket(updatedBasket);
+  }
+};
  
   return (
     <div>
@@ -91,7 +121,7 @@ const calculateTotalPrice = () => {
         )}
       </Modal>
       
-      <Basket basket={basket} selectedSizePrice={calculateTotalPrice()}   />
+      <Basket basket={basket} selectedSizePrice={calculateTotalPrice()} increaseQuantity={increaseQuantity} decreaseQuantity={decreaseQuantity} />
     </div>
   );
 }
