@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useQuery } from "@apollo/client";
-import Modal from "../components/UI-Liberary/Modal"; // Make sure to import your Modal component
-import { GET_ALL_PIZZAS_LIST } from "../queries/queries"; // Import your queries
+import Modal from "../components/UI-Liberary/Modal";
+import { GET_ALL_PIZZAS_LIST } from "../queries/queries";
 import ListToppingAndPrices from "./ListToppingAndPrices";
 
 interface Pizza {
