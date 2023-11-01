@@ -1,29 +1,23 @@
-// PizzaList.tsx
 import React, { useState } from "react";
 import { useQuery } from "@apollo/client";
 import Modal from "../components/UI-Liberary/Modal";
 import { GET_ALL_PIZZAS_LIST } from "../queries/queries";
 import ListToppingAndPrices from "./ListToppingAndPrices";
 import Basket from "./Basket";
-import { Pizza,SizePriceProps } from "./SharedTypes"; // Import the shared type
-import SizePrice from "./SizePrice";
-// interface Pizza {
+import { Pizza, SizePriceProps,BasketItem } from "./SharedTypes";
+
+// interface BasketItem {
 //   id_pizza: number;
 //   name: string;
-//   description: string;
-//   image: string;
-//   price: number;
+//   price: number | undefined;
+//   quantity: number;
+//   size: string; // Add a size property
 // }
-interface BasketItem {
-  id_pizza: number;
-  name: string;
-  price: number | undefined;
-  quantity: number; // Add quantity property
-}
+
 function PizzaList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPizza, setSelectedPizza] = useState<Pizza | null>(null);
-  const [basket, setBasket] = useState<BasketItem[]>([]);  // State to manage the basket
+  const [basket, setBasket] = useState<BasketItem[]>([]);
   const [selectedSize, setSelectedSize] = useState<SizePriceProps | null>(null);
   const [selectedSizePrice, setSelectedSizePrice] = useState<number | undefined>(0);
   const { loading, error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(
@@ -36,7 +30,11 @@ function PizzaList() {
   };
 
   const addToBasket = (pizza: Pizza) => {
-    const existingItemIndex = basket.findIndex((item) => item.id_pizza === pizza.id_pizza);
+    // Check if an item with the same id_pizza and selectedSizePrice exists in the basket
+    const existingItemIndex = basket.findIndex(
+      (item) =>
+        item.id_pizza === pizza.id_pizza && item.price === selectedSizePrice
+    );
   
     if (existingItemIndex !== -1) {
       // If the item is already in the basket, increase its quantity
@@ -44,44 +42,43 @@ function PizzaList() {
       updatedBasket[existingItemIndex].quantity += 1;
       setBasket(updatedBasket);
     } else {
-      // If it's not in the basket, add it with a quantity of 1
-      const pizzaWithPrice = { ...pizza, price: selectedSizePrice || 0, quantity: 1 };
+      // If it's not in the basket, add it as a new item with a quantity of 1
+      const pizzaWithPrice = {
+        id_pizza: pizza.id_pizza,
+        name: pizza.name,
+        price: selectedSizePrice || 0,
+        quantity: 1,
+      };
       setBasket([...basket, pizzaWithPrice]);
     }
   };
   
-  
-  // const removeFromBasket = (basketItem: BasketItem) => {
-  //   const updatedItems = basket.filter((item) => item.id_pizza !== basketItem.id_pizza);
-  //   setBasket(updatedItems);
-  // };
+  const calculateTotalPrice = () => {
+    return basket.reduce((total, item) => (item.price || 0) * item.quantity + total, 0);
+  };
 
-const calculateTotalPrice = () => {
-  return basket.reduce((total, pizza) => total + (pizza.price || 0), 0);
-};
-
-const increaseQuantity = (basketItem: BasketItem) => {
-  const updatedBasket = basket.map((item) => {
-    if (item.id_pizza === basketItem.id_pizza) {
-      return { ...item, quantity: item.quantity + 1 };
-    }
-    return item;
-  });
-  setBasket(updatedBasket);
-};
-
-const decreaseQuantity = (basketItem: BasketItem) => {
-  if (basketItem.quantity > 1) {
+  const increaseQuantity = (basketItem: BasketItem) => {
     const updatedBasket = basket.map((item) => {
-      if (item.id_pizza === basketItem.id_pizza) {
-        return { ...item, quantity: item.quantity - 1 };
+      if (item.id_pizza === basketItem.id_pizza && item.size === basketItem.size) {
+        return { ...item, quantity: item.quantity + 1 };
       }
       return item;
     });
     setBasket(updatedBasket);
-  }
-};
- 
+  };
+
+  const decreaseQuantity = (basketItem: BasketItem) => {
+    if (basketItem.quantity > 1) {
+      const updatedBasket = basket.map((item) => {
+        if (item.id_pizza === basketItem.id_pizza) {
+          return { ...item, quantity: item.quantity - 1 };
+        }
+        return item;
+      });
+      setBasket(updatedBasket);
+    }
+  };
+
   return (
     <div>
       <ul>
@@ -96,7 +93,7 @@ const decreaseQuantity = (basketItem: BasketItem) => {
               />
               <h1>{pizza.name}</h1>
               <p>{pizza.description}</p>
-              
+
               <button onClick={() => openModal(pizza)}>Customize</button>
             </li>
           ))}
@@ -112,16 +109,21 @@ const decreaseQuantity = (basketItem: BasketItem) => {
               width="250px"
               height="250px"
             />
-            <ListToppingAndPrices 
-            pizzaId={selectedPizza.id_pizza}  
-            onSizePriceChange={(price) => setSelectedSizePrice(price)}
-               />
+            <ListToppingAndPrices
+              pizzaId={selectedPizza.id_pizza}
+              onSizePriceChange={(price) => setSelectedSizePrice(price)}
+            />
             <button onClick={() => addToBasket(selectedPizza)}>Add to Basket</button>
           </>
         )}
       </Modal>
-      
-      <Basket basket={basket} selectedSizePrice={calculateTotalPrice()} increaseQuantity={increaseQuantity} decreaseQuantity={decreaseQuantity} />
+
+      <Basket
+        basket={basket}
+        selectedSizePrice={calculateTotalPrice()}
+        increaseQuantity={increaseQuantity}
+        decreaseQuantity={decreaseQuantity}
+      />
     </div>
   );
 }

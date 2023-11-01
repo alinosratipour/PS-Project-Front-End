@@ -1,30 +1,22 @@
-// Define a new type for items in the basket
-interface BasketItem {
-  id_pizza: number; // Add id_pizza property
-  name: string;
-  price: number | undefined;
-  quantity: number; // Add a quantity property
-}
+import { BasketItem } from "./SharedTypes";
 
 interface BasketProps {
-  basket: BasketItem[]; // Update the type to BasketItem
+  basket: BasketItem[];
   selectedSizePrice: number | undefined;
-  // removeFromBasket: (item: BasketItem) => void; // Update the type here as well
   increaseQuantity: (item: BasketItem) => void;
   decreaseQuantity: (item: BasketItem) => void;
-  
 }
 
 function Basket({
   basket,
-  selectedSizePrice,
   increaseQuantity,
   decreaseQuantity,
 }: BasketProps) {
-  console.log(selectedSizePrice);
-
   const calculateTotalPrice = () => {
-    return basket.reduce((total, item) => total + (item.price || 0) * item.quantity, 0);
+    return basket.reduce(
+      (total, item) => (item.price || 0) * item.quantity + total,
+      0
+    );
   };
 
   return (
@@ -37,10 +29,9 @@ function Basket({
           <ul>
             {basket.map((item) => (
               <li key={item.id_pizza}>
-                {item.name} (Quantity: {item.quantity}) - £{(item.price as number || 0) * item.quantity} 
-                
-                <button onClick={() => increaseQuantity(item)}>Increase</button>
-                <button onClick={() => decreaseQuantity(item)}>Decrease</button>
+                {item.name} (Quantity: {item.quantity}) - £{(item.price || 0) * item.quantity}
+                <button onClick={() => increaseQuantity(item)}>+</button>
+                <button onClick={() => decreaseQuantity(item)}>-</button>
               </li>
             ))}
           </ul>
@@ -52,9 +43,3 @@ function Basket({
 }
 
 export default Basket;
-
-
-
-
-
-
