@@ -1,44 +1,114 @@
-// PizzaList.tsx
-import { useState } from "react";
+import React, { useState } from "react";
 import { useQuery } from "@apollo/client";
-import ListAllPizzas from "./ListAllPizzas";
-import ListToppingAndPrices from "./ListToppingAndPrices";
-
-import Modal from "./UI-Liberary/Modal";
+import Modal from "../components/UI-Liberary/Modal";
 import { GET_ALL_PIZZAS_LIST } from "../queries/queries";
+import ListToppingAndPrices from "./ListToppingAndPrices";
+import Basket from "./Basket";
+import { Pizza, BasketItem } from "./SharedTypes";
 
 function PizzaList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPizza, setSelectedPizza] = useState<any>(null); // Use 'any' type for now
-  const { loading, error, data } = useQuery(GET_ALL_PIZZAS_LIST);
+  const [selectedPizza, setSelectedPizza] = useState<Pizza | null>(null);
+  const [basket, setBasket] = useState<BasketItem[]>([]);
+  const [selectedSizePrice, setSelectedSizePrice] = useState<number | undefined>(0);
+  const [selectedSizeName, setSelectedSizeName] = useState<string | undefined>("");
+  const [sizeSelected, setSizeSelected] = useState(false);
+  const [errors, setErrors] = useState<string>("");
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  const { loading, error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(
+    GET_ALL_PIZZAS_LIST
+  );
 
-  const openModal = (pizza: any) => {
+  const openModal = (pizza: Pizza) => {
     setSelectedPizza(pizza);
     setIsModalOpen(true);
+    setSizeSelected(false);
+    setErrors(""); // Reset any previous error messages
+  };
+
+  const addToBasket = (pizza: Pizza) => {
+    if (selectedSizeName !== undefined) {
+      // Proceed with adding to the basket
+      const existingItemIndex = basket.findIndex(
+        (item) =>
+          item.id_pizza === pizza.id_pizza && item.price === selectedSizePrice
+      );
+
+      if (existingItemIndex !== -1) {
+        const updatedBasket = [...basket];
+        updatedBasket[existingItemIndex].quantity += 1;
+        setBasket(updatedBasket);
+      } else {
+        const pizzaWithPrice = {
+          id_pizza: pizza.id_pizza,
+          name: pizza.name,
+          price: selectedSizePrice || 0,
+          quantity: 1,
+          size: selectedSizeName,
+        };
+
+        setBasket([...basket, pizzaWithPrice]);
+      }
+    } else {
+      // Display an error message
+      setErrors("Please select a size before adding the item to the basket.");
+    }
+  };
+
+  const calculateTotalPrice = () => {
+    return basket.reduce(
+      (total, item) => (item.price || 0) * item.quantity + total,
+      0
+    );
+  };
+
+  const increaseQuantity = (basketItem: BasketItem) => {
+    const updatedBasket = basket.map((item) => {
+      if (
+        item.id_pizza === basketItem.id_pizza &&
+        item.price === basketItem.price
+      ) {
+        return { ...item, quantity: item.quantity + 1 };
+      }
+      return item;
+    });
+    setBasket(updatedBasket);
+  };
+
+  const decreaseQuantity = (basketItem: BasketItem) => {
+    const updatedBasket = basket.map((item) => {
+      if (
+        item.id_pizza === basketItem.id_pizza &&
+        item.price === basketItem.price
+      ) {
+        if (item.quantity > 1) {
+          return { ...item, quantity: item.quantity - 1 };
+        }
+        return null as unknown as BasketItem;
+      }
+      return item;
+    });
+
+    setBasket(updatedBasket.filter((item) => item !== null));
   };
 
   return (
     <div>
       <ul>
-        {data.getAllPizzasList.map((pizza: any) => (
-          
-          <li key={pizza.id_pizza}>
-
-            <img
-              src={pizza.image}
-              alt={pizza.name}
-              width="250px"
-              height="250px"
-            />
-            <h1>{pizza.name}</h1>
-            <p>{pizza.description}</p>
-
-            <button onClick={() => openModal(pizza)}>Customize</button>
-          </li>
-        ))}
+        {data &&
+          data.getAllPizzasList.map((pizza) => (
+            <li key={pizza.id_pizza}>
+              <img
+                src={pizza.image}
+                alt={pizza.name}
+                width="250px"
+                height="250px"
+              />
+              <h1>{pizza.name}</h1>
+              <p>{pizza.description}</p>
+              <button onClick={() => openModal(pizza)}>Customize</button>
+            </li>
+          ))}
       </ul>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         {selectedPizza && (
@@ -51,11 +121,32 @@ function PizzaList() {
               width="250px"
               height="250px"
             />
-            {/* <ListAllPizzas /> */}
-            <ListToppingAndPrices pizzaId={selectedPizza.id_pizza}  />
+            <ListToppingAndPrices
+              pizzaId={selectedPizza.id_pizza}
+              onSizePriceChange={(price, sizeName) => {
+                setSelectedSizePrice(price);
+                setSelectedSizeName(sizeName);
+                setSizeSelected(sizeName !== "--Please Select Size--" );
+                setErrors(""); // Reset any previous error messages
+           
+              }}
+            />
+            {errors && <p className="error">{errors}</p>}
+            <button
+              onClick={() => addToBasket(selectedPizza)}
+              disabled={!sizeSelected}
+            >
+              Add to Basket
+            </button>
           </>
         )}
       </Modal>
+      <Basket
+        basket={basket}
+        selectedSizePrice={calculateTotalPrice()}
+        increaseQuantity={increaseQuantity}
+        decreaseQuantity={decreaseQuantity}
+      />
     </div>
   );
 }

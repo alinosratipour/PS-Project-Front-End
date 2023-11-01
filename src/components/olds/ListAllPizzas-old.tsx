@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useQuery } from "@apollo/client";
-import PizzaSizeDropdown from "./PizzaSizeDropdown";
-import PizzaBaseDropdown from "./PizzaBaseDropdown";
+import PizzaSizeDropdown from "../PizzaSizeDropdown";
+import PizzaBaseDropdown from "../PizzaBaseDropdown";
 
 import {
   GET_PIZZAS_WITH_SIZES_AND_PRICES,
   GET_ALL_SIZES_WITH_RELATED_BASES,
-} from "../queries/queries";
+} from "../../queries/queries";
 
 type SizeAndPrice = {
   price: number;
