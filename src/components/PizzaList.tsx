@@ -4,21 +4,14 @@ import Modal from "../components/UI-Liberary/Modal";
 import { GET_ALL_PIZZAS_LIST } from "../queries/queries";
 import ListToppingAndPrices from "./ListToppingAndPrices";
 import Basket from "./Basket";
-import { Pizza, SizePriceProps,BasketItem } from "./SharedTypes";
+import { Pizza,BasketItem } from "./SharedTypes";
 
-// interface BasketItem {
-//   id_pizza: number;
-//   name: string;
-//   price: number | undefined;
-//   quantity: number;
-//   size: string; // Add a size property
-// }
+
 
 function PizzaList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPizza, setSelectedPizza] = useState<Pizza | null>(null);
   const [basket, setBasket] = useState<BasketItem[]>([]);
-  const [selectedSize, setSelectedSize] = useState<SizePriceProps | null>(null);
   const [selectedSizePrice, setSelectedSizePrice] = useState<number | undefined>(0);
   const { loading, error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(
     GET_ALL_PIZZAS_LIST
@@ -49,6 +42,8 @@ function PizzaList() {
         price: selectedSizePrice || 0,
         quantity: 1,
       };
+
+      
       setBasket([...basket, pizzaWithPrice]);
     }
   };
@@ -71,16 +66,22 @@ function PizzaList() {
   };
   
 
+  
+ 
   const decreaseQuantity = (basketItem: BasketItem) => {
     const updatedBasket = basket.map((item) => {
       if (item.id_pizza === basketItem.id_pizza && item.price === basketItem.price) {
         if (item.quantity > 1) {
           return { ...item, quantity: item.quantity - 1 };
         }
+        // If quantity is 1, return null to indicate that it should be removed
+        return (null as unknown) as BasketItem;
       }
       return item;
     });
-    setBasket(updatedBasket.filter((item) => item.quantity > 0));
+  
+    // Filter out null items to remove them from the basket
+    setBasket(updatedBasket.filter((item) => item !== null));
   };
   
 

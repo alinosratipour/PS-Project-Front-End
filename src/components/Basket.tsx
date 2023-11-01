@@ -19,6 +19,7 @@ function Basket({
       0
     );
   };
+console.log(basket);
 
   return (
     <div>
