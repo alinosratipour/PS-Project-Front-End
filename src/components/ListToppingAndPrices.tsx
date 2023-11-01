@@ -34,7 +34,7 @@ function ListToppingAndPrices({ pizzaId, onSizePriceChange }: ListToppingAndPric
   const [sizes, setSizes] = useState<SizeType[]>([]);
   const [selectedSize, setSelectedSize] = useState<number>(1);
    const [selectedSizePrice, setSelectedSizePrice] = useState<number | undefined>(0);
-
+   
   // Query for sizes data if it's not available
   const { loading: sizesLoading, data: sizesData } = useQuery(GET_PIZZAS_WITH_SIZES_AND_PRICES);
 
@@ -69,7 +69,8 @@ function ListToppingAndPrices({ pizzaId, onSizePriceChange }: ListToppingAndPric
     if (newSelectedSizeData) {
       setSelectedSizePrice(newSelectedSizeData.price);
       onSizePriceChange(newSelectedSizeData.price, newSelectedSizeData.p_size);
-
+    
+    
     }
   }
 
@@ -81,7 +82,7 @@ function ListToppingAndPrices({ pizzaId, onSizePriceChange }: ListToppingAndPric
       <h1>Topping Prices</h1>
 
       {/* Render the SizeDropdown subcomponent */}
-      <SizeDropdown sizes={sizes} selectedSize={selectedSize} onSizeChange={handleSizeChange} />
+      <SizeDropdown initialMessage="--Please Select Size--" sizes={sizes} selectedSize={selectedSize} onSizeChange={handleSizeChange}  />
 
       {/* Render the SizePrice subcomponent */}
       <SizePrice selectedSizePrice={selectedSizePrice}  size="" />

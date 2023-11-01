@@ -12,8 +12,13 @@ function PizzaList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPizza, setSelectedPizza] = useState<Pizza | null>(null);
   const [basket, setBasket] = useState<BasketItem[]>([]);
-  const [selectedSizePrice, setSelectedSizePrice] = useState<number | undefined>(0);
-  const [selectedSizeName, setSelectedSizeName] = useState<string | undefined>("");
+  const [selectedSizePrice, setSelectedSizePrice] = useState<
+    number | undefined
+  >(0);
+  const [selectedSizeName, setSelectedSizeName] = useState<string | undefined>(
+    ""
+  );
+
   const { loading, error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(
     GET_ALL_PIZZAS_LIST
   );
@@ -24,30 +29,36 @@ function PizzaList() {
   };
 
   const addToBasket = (pizza: Pizza) => {
-    const existingItemIndex = basket.findIndex(
-      (item) =>
-        item.id_pizza === pizza.id_pizza && item.price === selectedSizePrice
-    );
+    if (selectedSizeName !== undefined) {
+      // Proceed with adding to the basket
+      const existingItemIndex = basket.findIndex(
+        (item) =>
+          item.id_pizza === pizza.id_pizza && item.price === selectedSizePrice
+      );
 
-    if (existingItemIndex !== -1) {
-      const updatedBasket = [...basket];
-      updatedBasket[existingItemIndex].quantity += 1;
-      setBasket(updatedBasket);
-    } else {
-      const pizzaWithPrice = {
-        id_pizza: pizza.id_pizza,
-        name: pizza.name,
-        price: selectedSizePrice || 0,
-        quantity: 1,
-        size: selectedSizeName,
-      };
+      if (existingItemIndex !== -1) {
+        const updatedBasket = [...basket];
+        updatedBasket[existingItemIndex].quantity += 1;
+        setBasket(updatedBasket);
+      } else {
+        const pizzaWithPrice = {
+          id_pizza: pizza.id_pizza,
+          name: pizza.name,
+          price: selectedSizePrice || 0,
+          quantity: 1,
+          size: selectedSizeName,
+        };
 
-      setBasket([...basket, pizzaWithPrice]);
+        setBasket([...basket, pizzaWithPrice]);
+      }
     }
   };
 
   const calculateTotalPrice = () => {
-    return basket.reduce((total, item) => (item.price || 0) * item.quantity + total, 0);
+    return basket.reduce(
+      (total, item) => (item.price || 0) * item.quantity + total,
+      0
+    );
   };
 
   const increaseQuantity = (basketItem: BasketItem) => {
@@ -65,11 +76,14 @@ function PizzaList() {
 
   const decreaseQuantity = (basketItem: BasketItem) => {
     const updatedBasket = basket.map((item) => {
-      if (item.id_pizza === basketItem.id_pizza && item.price === basketItem.price) {
+      if (
+        item.id_pizza === basketItem.id_pizza &&
+        item.price === basketItem.price
+      ) {
         if (item.quantity > 1) {
           return { ...item, quantity: item.quantity - 1 };
         }
-        return (null as unknown) as BasketItem;
+        return null as unknown as BasketItem;
       }
       return item;
     });
@@ -113,7 +127,10 @@ function PizzaList() {
                 setSelectedSizeName(sizeName);
               }}
             />
-            <button onClick={() => addToBasket(selectedPizza)}>Add to Basket</button>
+
+            <button onClick={() => addToBasket(selectedPizza)}>
+              Add to Basket
+            </button>
           </>
         )}
       </Modal>

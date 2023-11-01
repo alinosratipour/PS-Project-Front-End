@@ -1,3 +1,4 @@
+import React from "react";
 
 interface SizeType {
   id_size: number;
@@ -8,22 +9,26 @@ interface SizeDropdownProps {
   sizes: SizeType[];
   selectedSize: number;
   onSizeChange: (newSize: number) => void;
+  initialMessage: string;
 }
 
 const SizeDropdown: React.FC<SizeDropdownProps> = ({
   sizes,
-  selectedSize,
   onSizeChange,
+  initialMessage,
 }) => {
   return (
     <div>
       <label>Select Size: </label>
       <select
-        value={selectedSize}
+      
         onChange={(e) => onSizeChange(Number(e.target.value))}
       >
+        <option value="" disabled selected>
+          {initialMessage}
+        </option>
         {sizes.map((sizeData) => (
-          <option key={sizeData.id_size} value={sizeData.id_size}>
+          <option key={sizeData.id_size} value={sizeData.id_size.toString()}>
             {sizeData.p_size}
           </option>
         ))}
