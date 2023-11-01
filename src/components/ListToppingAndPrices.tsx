@@ -5,11 +5,9 @@ import {
   GET_TOPPING_PRICES,
 } from "../queries/queries";
 
-// Import the subcomponents
-import SizeDropdown from "./SizeDropdown";
 import SizePrice from "./SizePrice";
 import ToppingsList from "./ToppingsList";
-
+import SizeRadioButtons from "./SizeRadioButtons";
 
 interface ListToppingAndPricesProps {
   pizzaId: number;
@@ -34,7 +32,7 @@ function ListToppingAndPrices({ pizzaId, onSizePriceChange }: ListToppingAndPric
   const [sizes, setSizes] = useState<SizeType[]>([]);
   const [selectedSize, setSelectedSize] = useState<number>(1);
    const [selectedSizePrice, setSelectedSizePrice] = useState<number | undefined>(0);
-   const [sizeSelected, setSizeSelected] = useState(false);
+   
   // Query for sizes data if it's not available
   const { loading: sizesLoading, data: sizesData } = useQuery(GET_PIZZAS_WITH_SIZES_AND_PRICES);
 
@@ -69,8 +67,6 @@ function ListToppingAndPrices({ pizzaId, onSizePriceChange }: ListToppingAndPric
     if (newSelectedSizeData) {
       setSelectedSizePrice(newSelectedSizeData.price);
       onSizePriceChange(newSelectedSizeData.price, newSelectedSizeData.p_size);
-      setSizeSelected(true);
-      setSizeSelected(true); 
     }
   }
 
@@ -81,13 +77,11 @@ function ListToppingAndPrices({ pizzaId, onSizePriceChange }: ListToppingAndPric
     <div>
       <h1>Topping Prices</h1>
 
-      {/* Render the SizeDropdown subcomponent */}
-      <SizeDropdown initialMessage="--Please Select Size--" sizes={sizes} selectedSize={selectedSize} onSizeChange={handleSizeChange}  />
-
-      {/* Render the SizePrice subcomponent */}
+     
+      <SizeRadioButtons sizes={sizes} selectedSize={selectedSize} onSizeChange={handleSizeChange} />
+    
       <SizePrice selectedSizePrice={selectedSizePrice}  size="" />
 
-      {/* Render the ToppingsList subcomponent */}
       <ToppingsList toppingData={toppingData?.getToppingPricesBySize} />
     </div>
   );
