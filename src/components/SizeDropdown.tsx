@@ -12,6 +12,9 @@ interface SizeDropdownProps {
   initialMessage: string;
 }
 
+
+
+
 const SizeDropdown: React.FC<SizeDropdownProps> = ({
   sizes,
   onSizeChange,
@@ -24,7 +27,7 @@ const SizeDropdown: React.FC<SizeDropdownProps> = ({
       
         onChange={(e) => onSizeChange(Number(e.target.value))}
       >
-        <option value="" disabled selected>
+        <option value=""  selected>
           {initialMessage}
         </option>
         {sizes.map((sizeData) => (

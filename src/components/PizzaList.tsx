@@ -1,6 +1,4 @@
-// PizzaList.tsx
-
-import { useState } from "react";
+import React, { useState } from "react";
 import { useQuery } from "@apollo/client";
 import Modal from "../components/UI-Liberary/Modal";
 import { GET_ALL_PIZZAS_LIST } from "../queries/queries";
@@ -12,12 +10,10 @@ function PizzaList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPizza, setSelectedPizza] = useState<Pizza | null>(null);
   const [basket, setBasket] = useState<BasketItem[]>([]);
-  const [selectedSizePrice, setSelectedSizePrice] = useState<
-    number | undefined
-  >(0);
-  const [selectedSizeName, setSelectedSizeName] = useState<string | undefined>(
-    ""
-  );
+  const [selectedSizePrice, setSelectedSizePrice] = useState<number | undefined>(0);
+  const [selectedSizeName, setSelectedSizeName] = useState<string | undefined>("");
+  const [sizeSelected, setSizeSelected] = useState(false);
+  const [errors, setErrors] = useState<string>("");
 
   const { loading, error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(
     GET_ALL_PIZZAS_LIST
@@ -26,6 +22,8 @@ function PizzaList() {
   const openModal = (pizza: Pizza) => {
     setSelectedPizza(pizza);
     setIsModalOpen(true);
+    setSizeSelected(false);
+    setErrors(""); // Reset any previous error messages
   };
 
   const addToBasket = (pizza: Pizza) => {
@@ -51,6 +49,9 @@ function PizzaList() {
 
         setBasket([...basket, pizzaWithPrice]);
       }
+    } else {
+      // Display an error message
+      setErrors("Please select a size before adding the item to the basket.");
     }
   };
 
@@ -125,10 +126,16 @@ function PizzaList() {
               onSizePriceChange={(price, sizeName) => {
                 setSelectedSizePrice(price);
                 setSelectedSizeName(sizeName);
+                setSizeSelected(sizeName !== "--Please Select Size--" );
+                setErrors(""); // Reset any previous error messages
+           
               }}
             />
-
-            <button onClick={() => addToBasket(selectedPizza)}>
+            {errors && <p className="error">{errors}</p>}
+            <button
+              onClick={() => addToBasket(selectedPizza)}
+              disabled={!sizeSelected}
+            >
               Add to Basket
             </button>
           </>
