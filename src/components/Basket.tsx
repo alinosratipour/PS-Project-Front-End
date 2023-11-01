@@ -1,8 +1,9 @@
+import React from "react";
 import { BasketItem } from "./SharedTypes";
 
 interface BasketProps {
+  selectedSizePrice:number;
   basket: BasketItem[];
-  selectedSizePrice: number | undefined;
   increaseQuantity: (item: BasketItem) => void;
   decreaseQuantity: (item: BasketItem) => void;
 }
@@ -29,7 +30,8 @@ function Basket({
           <ul>
             {basket.map((item) => (
               <li key={item.id_pizza}>
-                {item.name} (Quantity: {item.quantity}) - £{(item.price || 0) * item.quantity}
+                {item.name} (Size: {item.size}) - Quantity: {item.quantity} - £
+                {(item.price || 0) * item.quantity}
                 <button onClick={() => increaseQuantity(item)}>+</button>
                 <button onClick={() => decreaseQuantity(item)}>-</button>
               </li>

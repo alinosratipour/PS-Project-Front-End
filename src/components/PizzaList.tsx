@@ -59,25 +59,30 @@ function PizzaList() {
 
   const increaseQuantity = (basketItem: BasketItem) => {
     const updatedBasket = basket.map((item) => {
-      if (item.id_pizza === basketItem.id_pizza && item.size === basketItem.size) {
+      if (
+        item.id_pizza === basketItem.id_pizza &&
+        item.price === basketItem.price
+      ) {
         return { ...item, quantity: item.quantity + 1 };
       }
       return item;
     });
     setBasket(updatedBasket);
   };
+  
 
   const decreaseQuantity = (basketItem: BasketItem) => {
-    if (basketItem.quantity > 1) {
-      const updatedBasket = basket.map((item) => {
-        if (item.id_pizza === basketItem.id_pizza) {
+    const updatedBasket = basket.map((item) => {
+      if (item.id_pizza === basketItem.id_pizza && item.price === basketItem.price) {
+        if (item.quantity > 1) {
           return { ...item, quantity: item.quantity - 1 };
         }
-        return item;
-      });
-      setBasket(updatedBasket);
-    }
+      }
+      return item;
+    });
+    setBasket(updatedBasket.filter((item) => item.quantity > 0));
   };
+  
 
   return (
     <div>
