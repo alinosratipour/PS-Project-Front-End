@@ -2,7 +2,7 @@ import React from "react";
 import { BasketItem } from "./SharedTypes";
 
 interface BasketProps {
-  selectedSizePrice:number;
+  selectedSizePrice: number;
   basket: BasketItem[];
   increaseQuantity: (item: BasketItem) => void;
   decreaseQuantity: (item: BasketItem) => void;
@@ -19,7 +19,6 @@ function Basket({
       0
     );
   };
-console.log(basket);
 
   return (
     <div>

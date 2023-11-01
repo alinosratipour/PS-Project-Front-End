@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import {
   GET_PIZZAS_WITH_SIZES_AND_PRICES,
@@ -10,13 +10,10 @@ import SizeDropdown from "./SizeDropdown";
 import SizePrice from "./SizePrice";
 import ToppingsList from "./ToppingsList";
 
-interface ListToppingAndPricesProps {
-  pizzaId: number;
-}
 
 interface ListToppingAndPricesProps {
   pizzaId: number;
-  onSizePriceChange: (price: number | undefined) => void;
+  onSizePriceChange: (price: number | undefined, sizeName: string | undefined) => void;
 }
 
 
@@ -71,7 +68,8 @@ function ListToppingAndPrices({ pizzaId, onSizePriceChange }: ListToppingAndPric
 
     if (newSelectedSizeData) {
       setSelectedSizePrice(newSelectedSizeData.price);
-      onSizePriceChange(newSelectedSizeData.price); // Pass the selected size price back to the parent
+      onSizePriceChange(newSelectedSizeData.price, newSelectedSizeData.p_size);
+
     }
   }
 

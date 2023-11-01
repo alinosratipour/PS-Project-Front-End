@@ -15,7 +15,6 @@ export interface SizePriceProps {
 
 
  export interface BasketItem {
- // id: string; // Add a unique identifier
   id_pizza: number;
   name: string;
   price: number | undefined;
