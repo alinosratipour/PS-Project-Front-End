@@ -1,4 +1,3 @@
-import React from "react";
 import { BasketItem } from "./SharedTypes";
 
 interface BasketProps {
@@ -8,11 +7,7 @@ interface BasketProps {
   decreaseQuantity: (item: BasketItem) => void;
 }
 
-function Basket({
-  basket,
-  increaseQuantity,
-  decreaseQuantity,
-}: BasketProps) {
+function Basket({ basket, increaseQuantity, decreaseQuantity }: BasketProps) {
   const calculateTotalPrice = () => {
     return basket.reduce(
       (total, item) => (item.price || 0) * item.quantity + total,

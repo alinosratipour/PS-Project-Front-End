@@ -84,7 +84,7 @@ function ListToppingAndPrices({ pizzaId, onSizePriceChange }: ListToppingAndPric
       <SizeDropdown sizes={sizes} selectedSize={selectedSize} onSizeChange={handleSizeChange} />
 
       {/* Render the SizePrice subcomponent */}
-      <SizePrice selectedSizePrice={selectedSizePrice} />
+      <SizePrice selectedSizePrice={selectedSizePrice}  size="" />
 
       {/* Render the ToppingsList subcomponent */}
       <ToppingsList toppingData={toppingData?.getToppingPricesBySize} />
