@@ -17,6 +17,7 @@ interface ListToppingAndPricesProps {
     price: number | undefined,
     sizeName: string | undefined
   ) => void;
+  onBaseChange: (base: string | undefined) => void;
 }
 
 interface ToppingType {
@@ -35,10 +36,13 @@ interface SizeType {
 function ListToppingAndPrices({
   pizzaId,
   onSizePriceChange,
+
 }: ListToppingAndPricesProps) {
   const [sizes, setSizes] = useState<SizeType[]>([]);
   const [selectedSize, setSelectedSize] = useState<number>(1);
   const [isSizeSelected, setIsSizeSelected] = useState(false);
+ 
+
   const [selectedSizePrice, setSelectedSizePrice] = useState<
     number | undefined
   >(0);

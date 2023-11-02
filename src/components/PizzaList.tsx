@@ -13,6 +13,10 @@ function PizzaList() {
   const [selectedSize, setSelectedSize] = useState<string | undefined>(
     undefined
   );
+  const [selectedBase, setSelectedBase] = useState<string | undefined>(
+    undefined
+  );
+
   const [selectedSizePrice, setSelectedSizePrice] = useState<
     number | undefined
   >(0);
@@ -31,7 +35,10 @@ function PizzaList() {
     if (selectedSize !== undefined) {
       // Proceed with adding to the basket
       const existingItemIndex = basket.findIndex(
-        (item) => item.id_pizza === pizza.id_pizza && item.size === selectedSize
+        (item) =>
+          item.id_pizza === pizza.id_pizza &&
+          item.size === selectedSize &&
+          item.base === selectedBase
       );
 
       if (existingItemIndex !== -1) {
@@ -45,6 +52,7 @@ function PizzaList() {
           price: selectedSizePrice || 0,
           quantity: 1,
           size: selectedSize,
+          base: selectedBase,
         };
 
         setBasket([...basket, pizzaWithPrice]);
@@ -124,6 +132,7 @@ function PizzaList() {
                 setSelectedSize(size);
                 setSelectedSizePrice(price);
               }}
+              onBaseChange={(base) => setSelectedBase(base)}
             />
 
             <button
