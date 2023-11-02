@@ -10,6 +10,7 @@ interface BaseListProps {
 
 type BaseWithPrice = {
   base: string;
+  price: number; // Add the price property
 };
 
 type SizeWithRelatedBases = {
@@ -22,21 +23,20 @@ const BaseList: React.FC<BaseListProps> = ({ onBaseChange }) => {
   if (loading) return <p>Loading bases...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
-  const availableBaseNames: string[] = [];
+const availableBases: { base: string; price: number }[] = [];
 
   data.getSizesWithBases.forEach((sizeWithBases: SizeWithRelatedBases) => {
     sizeWithBases.bases.forEach((base: BaseWithPrice) => {
       const baseName = base.base;
-      if (!availableBaseNames.includes(baseName)) {
-        availableBaseNames.push(baseName);
-      }
+      const basePrice = base.price;
+      availableBases.push({ base: baseName, price: basePrice });
     });
   });
 
   return (
     <div>
       <h1>Select a Base</h1>
-      <BaseRadioButtons bases={availableBaseNames} onBaseChange={onBaseChange} />
+      <BaseRadioButtons bases={availableBases} onBaseChange={onBaseChange} />
     </div>
   );
 };
