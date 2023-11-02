@@ -31,6 +31,7 @@ function PizzaList() {
     setIsModalOpen(true);
   };
 
+
   const addToBasket = (pizza: Pizza) => {
     if (selectedSize !== undefined) {
       // Proceed with adding to the basket
@@ -54,8 +55,7 @@ function PizzaList() {
           size: selectedSize,
           base: selectedBase,
         };
-console.log("pizzaWithPrice",pizzaWithPrice);
-console.log(basket);
+
 
         setBasket([...basket, pizzaWithPrice]);
       }
@@ -135,6 +135,7 @@ console.log(basket);
                 setSelectedSizePrice(price);
               }}
               onBaseChange={(base) => setSelectedBase(base)}
+             
             />
 
             <button

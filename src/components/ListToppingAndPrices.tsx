@@ -3,7 +3,7 @@ import { useQuery } from "@apollo/client";
 import {
   GET_PIZZAS_WITH_SIZES_AND_PRICES,
   GET_TOPPING_PRICES,
-  GET_ALL_SIZES_WITH_RELATED_BASES,
+ 
 } from "../queries/queries";
 
 import SizePrice from "./SizePrice";
@@ -43,6 +43,7 @@ function ListToppingAndPrices({
   const [selectedSize, setSelectedSize] = useState<number>(1);
   const [isSizeSelected, setIsSizeSelected] = useState(false);
  
+
 
   const [selectedSizePrice, setSelectedSizePrice] = useState<
     number | undefined
@@ -85,6 +86,7 @@ function ListToppingAndPrices({
 
   const handleSizeChange = (newSize: number) => {
     setSelectedSize(newSize);
+    
     const newSelectedSizeData = sizes.find(
       (sizeData) => sizeData.id_size === newSize
     );
@@ -94,6 +96,7 @@ function ListToppingAndPrices({
       onSizePriceChange(newSelectedSizeData.price, newSelectedSizeData.p_size);
       setIsSizeSelected(true);
     }
+  
   };
   const handleBaseChange = (newBase: string) => {
     setSelectedBase(newBase);
@@ -109,7 +112,7 @@ function ListToppingAndPrices({
       <SizeRadioButtons sizes={sizes} onSizeChange={handleSizeChange} />
 
       <If condition={isSizeSelected}>
-        <BaseList onBaseChange={handleBaseChange} selectedBase={selectedBase} />
+        <BaseList onBaseChange={handleBaseChange} selectedBase={selectedBase} selectedSize={selectedSize}/>
       </If>
 
       <SizePrice selectedSizePrice={selectedSizePrice} size="" />

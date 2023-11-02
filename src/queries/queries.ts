@@ -31,6 +31,7 @@ export const GET_ALL_SIZES_WITH_RELATED_BASES = gql`
     getSizesWithBases {
       size
       bases {
+        id_base
         price
         base
         
