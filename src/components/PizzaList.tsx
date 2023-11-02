@@ -10,8 +10,12 @@ function PizzaList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPizza, setSelectedPizza] = useState<Pizza | null>(null);
   const [basket, setBasket] = useState<BasketItem[]>([]);
-  const [selectedSize, setSelectedSize] = useState<string | undefined>(undefined);
-  const [selectedSizePrice, setSelectedSizePrice] = useState<number | undefined>(0);
+  const [selectedSize, setSelectedSize] = useState<string | undefined>(
+    undefined
+  );
+  const [selectedSizePrice, setSelectedSizePrice] = useState<
+    number | undefined
+  >(0);
 
   const { loading, error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(
     GET_ALL_PIZZAS_LIST
@@ -21,15 +25,13 @@ function PizzaList() {
     setSelectedPizza(pizza);
     setSelectedSize(undefined); // Deselect size when opening the modal
     setIsModalOpen(true);
-   
   };
 
   const addToBasket = (pizza: Pizza) => {
     if (selectedSize !== undefined) {
       // Proceed with adding to the basket
       const existingItemIndex = basket.findIndex(
-        (item) =>
-          item.id_pizza === pizza.id_pizza && item.size === selectedSize
+        (item) => item.id_pizza === pizza.id_pizza && item.size === selectedSize
       );
 
       if (existingItemIndex !== -1) {
@@ -47,9 +49,8 @@ function PizzaList() {
 
         setBasket([...basket, pizzaWithPrice]);
       }
-    } 
+    }
   };
-
 
   const increaseQuantity = (basketItem: BasketItem) => {
     const updatedBasket = basket.map((item) => {
@@ -81,16 +82,12 @@ function PizzaList() {
     setBasket(updatedBasket.filter((item) => item !== null));
   };
 
-
   const calculateTotalPrice = () => {
     return basket.reduce(
       (total, item) => (item.price || 0) * item.quantity + total,
       0
     );
   };
-
-
-
 
   return (
     <div>
@@ -126,11 +123,9 @@ function PizzaList() {
               onSizePriceChange={(price, size) => {
                 setSelectedSize(size);
                 setSelectedSizePrice(price);
-              
               }}
-           
             />
-           
+
             <button
               onClick={() => addToBasket(selectedPizza)}
               disabled={selectedSize === undefined}

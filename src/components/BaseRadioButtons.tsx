@@ -2,7 +2,7 @@ import React from "react";
 
 interface BaseRadioButtonsProps {
   bases: string[];
-  selectedBase: string ;
+
   onBaseChange: (base: string) => void;
 }
 
@@ -16,7 +16,6 @@ const BaseRadioButtons: React.FC<BaseRadioButtonsProps> = ({ bases, selectedBase
             type="radio"
             name="base"
             value={base}
-            checked={selectedBase === base}
             onChange={(e) => onBaseChange(e.target.value)}
           />
           {base}

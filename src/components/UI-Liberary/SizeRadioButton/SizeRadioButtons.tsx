@@ -10,14 +10,13 @@ interface SizeType {
   
 interface SizeRadioButtonsProps {
   sizes: SizeType[];
-  selectedSize: number;
   onSizeChange: (newSize: number) => void;
 }
 
 const SizeRadioButtons: React.FC<SizeRadioButtonsProps> = ({
   sizes,
   onSizeChange,
-  selectedSize,
+ 
 }) => {
   return (
     <div>
@@ -28,7 +27,6 @@ const SizeRadioButtons: React.FC<SizeRadioButtonsProps> = ({
             type="radio"
             name="size"
             value={sizeData.id_size.toString()}
-            checked={sizeData.id_size === selectedSize}
             onChange={() => onSizeChange(sizeData.id_size)}
           />
           {sizeData.p_size}

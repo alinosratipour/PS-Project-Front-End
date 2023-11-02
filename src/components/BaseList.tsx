@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useQuery } from "@apollo/client";
 import { GET_ALL_SIZES_WITH_RELATED_BASES } from "../queries/queries";
 import BaseRadioButtons from "./BaseRadioButtons";
@@ -16,7 +16,7 @@ type SizeWithRelatedBases = {
   bases: BaseWithPrice[];
 };
 
-const BaseList: React.FC<BaseListProps> = ({ onBaseChange, selectedBase = "" }) => {
+const BaseList: React.FC<BaseListProps> = ({ onBaseChange }) => {
   const { loading, error, data } = useQuery(GET_ALL_SIZES_WITH_RELATED_BASES);
 
   if (loading) return <p>Loading bases...</p>;
@@ -36,7 +36,7 @@ const BaseList: React.FC<BaseListProps> = ({ onBaseChange, selectedBase = "" }) 
   return (
     <div>
       <h1>Select a Base</h1>
-      <BaseRadioButtons bases={availableBaseNames} onBaseChange={onBaseChange} selectedBase={selectedBase} />
+      <BaseRadioButtons bases={availableBaseNames} onBaseChange={onBaseChange} />
     </div>
   );
 };

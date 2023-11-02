@@ -10,7 +10,7 @@ import SizePrice from "./SizePrice";
 import ToppingsList from "./ToppingsList";
 import SizeRadioButtons from "./UI-Liberary/SizeRadioButton/SizeRadioButtons";
 import BaseList from "./BaseList";
-
+import { If } from "tsx-control-statements/components";
 interface ListToppingAndPricesProps {
   pizzaId: number;
   onSizePriceChange: (
@@ -38,6 +38,7 @@ function ListToppingAndPrices({
 }: ListToppingAndPricesProps) {
   const [sizes, setSizes] = useState<SizeType[]>([]);
   const [selectedSize, setSelectedSize] = useState<number>(1);
+  const [isSizeSelected, setIsSizeSelected] = useState(false);
   const [selectedSizePrice, setSelectedSizePrice] = useState<
     number | undefined
   >(0);
@@ -86,24 +87,24 @@ function ListToppingAndPrices({
     if (newSelectedSizeData) {
       setSelectedSizePrice(newSelectedSizeData.price);
       onSizePriceChange(newSelectedSizeData.price, newSelectedSizeData.p_size);
+      setIsSizeSelected(true);
     }
   };
   const handleBaseChange = (newBase: string) => {
     setSelectedBase(newBase);
-  }
-  
+  };
+
   if (sizesLoading) return "Loading sizes...";
   if (error) return `Error! ${error.message}`;
 
   return (
     <div>
       <h1>Topping Prices</h1>
-      <SizeRadioButtons
-        sizes={sizes}
-        selectedSize={selectedSize}
-        onSizeChange={handleSizeChange}
-      />
-      <BaseList onBaseChange={handleBaseChange} selectedBase={selectedBase} />
+      <SizeRadioButtons sizes={sizes} onSizeChange={handleSizeChange} />
+
+      <If condition={isSizeSelected}>
+        <BaseList onBaseChange={handleBaseChange} selectedBase={selectedBase} />
+      </If>
 
       <SizePrice selectedSizePrice={selectedSizePrice} size="" />
       <ToppingsList toppingData={toppingData?.getToppingPricesBySize} />
