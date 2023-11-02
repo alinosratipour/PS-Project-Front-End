@@ -54,6 +54,8 @@ function PizzaList() {
           size: selectedSize,
           base: selectedBase,
         };
+console.log("pizzaWithPrice",pizzaWithPrice);
+console.log(basket);
 
         setBasket([...basket, pizzaWithPrice]);
       }

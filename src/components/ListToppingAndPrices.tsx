@@ -36,6 +36,7 @@ interface SizeType {
 function ListToppingAndPrices({
   pizzaId,
   onSizePriceChange,
+  onBaseChange,
 
 }: ListToppingAndPricesProps) {
   const [sizes, setSizes] = useState<SizeType[]>([]);
@@ -96,6 +97,7 @@ function ListToppingAndPrices({
   };
   const handleBaseChange = (newBase: string) => {
     setSelectedBase(newBase);
+    onBaseChange(newBase);
   };
 
   if (sizesLoading) return "Loading sizes...";
