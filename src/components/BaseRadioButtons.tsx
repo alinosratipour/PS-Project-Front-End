@@ -1,5 +1,3 @@
-// BaseRadioButtons.tsx
-
 import React from "react";
 
 interface BaseRadioButtonsProps {
@@ -18,9 +16,8 @@ const BaseRadioButtons: React.FC<BaseRadioButtonsProps> = ({ bases, onBaseChange
             name="base"
             value={base.base}
             onChange={() => onBaseChange(base.base, base.price)} // Pass both base and price
-          
           />
-          {base.base}£{base.price}
+          {base.base} £{base.price}
         </label>
       ))}
     </div>

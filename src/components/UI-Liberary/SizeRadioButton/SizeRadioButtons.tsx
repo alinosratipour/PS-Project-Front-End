@@ -1,13 +1,12 @@
 import React from "react";
 
-
 interface SizeType {
-    id_size: number;
-    p_size: string;
-    price_topping: number;
-    price: number;
-  }
-  
+  id_size: number;
+  p_size: string;
+  price_topping: number;
+  price: number;
+}
+
 interface SizeRadioButtonsProps {
   sizes: SizeType[];
   onSizeChange: (newSize: number) => void;
@@ -16,7 +15,6 @@ interface SizeRadioButtonsProps {
 const SizeRadioButtons: React.FC<SizeRadioButtonsProps> = ({
   sizes,
   onSizeChange,
- 
 }) => {
   return (
     <div>
