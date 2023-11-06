@@ -1,21 +1,25 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import {
   GET_PIZZAS_WITH_SIZES_AND_PRICES,
   GET_TOPPING_PRICES,
+  GET_ALL_SIZES_WITH_RELATED_BASES,
 } from "../queries/queries";
-
-// Import the subcomponents
-import SizeDropdown from "./SizeDropdown";
 import SizePrice from "./SizePrice";
 import ToppingsList from "./ToppingsList";
+import SizeRadioButtons from "./UI-Liberary/SizeRadioButton/SizeRadioButtons";
 
+import { If } from "tsx-control-statements/components";
+import BaseRadioButtons from "./BaseRadioButtons";
 
 interface ListToppingAndPricesProps {
   pizzaId: number;
-  onSizePriceChange: (price: number | undefined, sizeName: string | undefined) => void;
+  onSizePriceChange: (
+    price: number | undefined,
+    sizeName: string | undefined
+  ) => void;
+  onBaseChange: (base: string | undefined) => void;
 }
-
 
 interface ToppingType {
   id_size: number;
@@ -28,18 +32,47 @@ interface SizeType {
   p_size: string;
   price_topping: number;
   price: number;
+  bases: {
+    id_base: number;
+    price: number;
+    base: string;
+  }[];
 }
-
-function ListToppingAndPrices({ pizzaId, onSizePriceChange }: ListToppingAndPricesProps)  {
+type BaseWithPrice = {
+  id_base: number;
+  price: number;
+  base: string;
+};
+function ListToppingAndPrices({
+  pizzaId,
+  onSizePriceChange,
+  onBaseChange,
+}: ListToppingAndPricesProps) {
   const [sizes, setSizes] = useState<SizeType[]>([]);
   const [selectedSize, setSelectedSize] = useState<number>(1);
-   const [selectedSizePrice, setSelectedSizePrice] = useState<number | undefined>(0);
-   const [sizeSelected, setSizeSelected] = useState(false);
-  // Query for sizes data if it's not available
-  const { loading: sizesLoading, data: sizesData } = useQuery(GET_PIZZAS_WITH_SIZES_AND_PRICES);
+  const [isSizeSelected, setIsSizeSelected] = useState(false);
+  const [selectedSizePrice, setSelectedSizePrice] = useState<
+    number | undefined
+  >(0);
+
+  const { loading: sizesLoading, data: sizesData } = useQuery(
+    GET_PIZZAS_WITH_SIZES_AND_PRICES
+  );
+  const [basePrices, setBasePrices] = useState<BaseWithPrice[]>([]);
 
   // Query for topping data
-  const { loading, error, data: toppingData } = useQuery<{ getToppingPricesBySize: ToppingType[] }>(GET_TOPPING_PRICES, {
+  const {
+    loading,
+    error,
+    data: toppingData,
+  } = useQuery<{ getToppingPricesBySize: ToppingType[] }>(GET_TOPPING_PRICES, {
+    variables: { id_size: Number(selectedSize) },
+  });
+
+  // Use refetch function for bases data
+  const { data: Bases } = useQuery<{
+    getBasesPricesBySize: BaseWithPrice[];
+  }>(GET_ALL_SIZES_WITH_RELATED_BASES, {
     variables: { id_size: Number(selectedSize) },
   });
 
@@ -62,17 +95,28 @@ function ListToppingAndPrices({ pizzaId, onSizePriceChange }: ListToppingAndPric
     }
   }, [sizesLoading, sizesData, pizzaId]);
 
+  useEffect(() => {
+    if (Bases && Bases.getBasesPricesBySize) {
+      setBasePrices(Bases.getBasesPricesBySize);
+    }
+  }, [Bases]);
+
   const handleSizeChange = (newSize: number) => {
     setSelectedSize(newSize);
-    const newSelectedSizeData = sizes.find((sizeData) => sizeData.id_size === newSize);
+    const newSelectedSizeData = sizes.find(
+      (sizeData) => sizeData.id_size === newSize
+    );
 
     if (newSelectedSizeData) {
       setSelectedSizePrice(newSelectedSizeData.price);
       onSizePriceChange(newSelectedSizeData.price, newSelectedSizeData.p_size);
-      setSizeSelected(true);
-      setSizeSelected(true); 
+      setIsSizeSelected(true);
     }
-  }
+  };
+
+  const handleBaseChange = (newBase: string) => {
+    onBaseChange(newBase);
+  };
 
   if (sizesLoading) return "Loading sizes...";
   if (error) return `Error! ${error.message}`;
@@ -80,14 +124,17 @@ function ListToppingAndPrices({ pizzaId, onSizePriceChange }: ListToppingAndPric
   return (
     <div>
       <h1>Topping Prices</h1>
+      <SizeRadioButtons sizes={sizes} onSizeChange={handleSizeChange} />
 
-      {/* Render the SizeDropdown subcomponent */}
-      <SizeDropdown initialMessage="--Please Select Size--" sizes={sizes} selectedSize={selectedSize} onSizeChange={handleSizeChange}  />
+      <If condition={isSizeSelected}>
+        <BaseRadioButtons
+          bases={basePrices}
+          onBaseChange={handleBaseChange}
+          selectedSize={selectedSize}
+        />
+      </If>
 
-      {/* Render the SizePrice subcomponent */}
-      <SizePrice selectedSizePrice={selectedSizePrice}  size="" />
-
-      {/* Render the ToppingsList subcomponent */}
+      <SizePrice selectedSizePrice={selectedSizePrice} size="" />
       <ToppingsList toppingData={toppingData?.getToppingPricesBySize} />
     </div>
   );

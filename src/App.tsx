@@ -1,5 +1,5 @@
 import PizzaList from "./components/PizzaList";
-
+import { AvailableBasesProvider } from "./components/Context/AvailableBasesContext";
 function App() {
   return (
     <div className="App">
@@ -7,7 +7,11 @@ function App() {
         <h1>Pizza Shop</h1>
       </header>
       <main>
-        <PizzaList />
+      <AvailableBasesProvider> 
+
+         <PizzaList />
+      </AvailableBasesProvider>
+       
       </main>
     </div>
   );

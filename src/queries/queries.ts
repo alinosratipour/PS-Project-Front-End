@@ -25,20 +25,31 @@ query GetToppingPricesBySize($id_size: Int) {
 }
 `;
 
-export const GET_ALL_SIZES_WITH_RELATED_BASES = gql`
-  {
+// export const GET_ALL_SIZES_WITH_RELATED_BASES = gql`
+//   {
    
-    getSizesWithBases {
-      size
-      bases {
-        base
+//     getSizesWithBases {
+//       id_size
+//       size
+//       bases {
+//         id_base
+//         price
+//         base
         
-      }
-    }
+//       }
+//     }
 
+//   }
+// `;
+export const GET_ALL_SIZES_WITH_RELATED_BASES = gql`
+  query GetBasesPricesBySize($id_size: Int) {
+    getBasesPricesBySize(id_size: $id_size) {
+      id_base
+      base
+      price
+    }
   }
 `;
-
 
 
 

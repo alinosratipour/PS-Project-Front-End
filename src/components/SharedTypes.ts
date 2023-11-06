@@ -20,4 +20,5 @@ export interface SizePriceProps {
   price: number | undefined;
   quantity: number;
   size?: string; // Add the 'size' property
+  base: string | undefined;
 }

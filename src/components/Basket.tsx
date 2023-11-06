@@ -25,7 +25,7 @@ function Basket({ basket, increaseQuantity, decreaseQuantity }: BasketProps) {
           <ul>
             {basket.map((item) => (
               <li key={item.id_pizza}>
-                {item.name} (Size: {item.size}) - Quantity: {item.quantity} - £
+                {item.name} (Size: {item.size} Base: {item.base})    - Quantity: {item.quantity} - £
                 {(item.price || 0) * item.quantity}
                 <button onClick={() => increaseQuantity(item)}>+</button>
                 <button onClick={() => decreaseQuantity(item)}>-</button>

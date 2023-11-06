@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import Modal from "../components/UI-Liberary/Modal";
 import { GET_ALL_PIZZAS_LIST } from "../queries/queries";
@@ -10,10 +10,16 @@ function PizzaList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPizza, setSelectedPizza] = useState<Pizza | null>(null);
   const [basket, setBasket] = useState<BasketItem[]>([]);
-  const [selectedSizePrice, setSelectedSizePrice] = useState<number | undefined>(0);
-  const [selectedSizeName, setSelectedSizeName] = useState<string | undefined>("");
-  const [sizeSelected, setSizeSelected] = useState(false);
-  const [errors, setErrors] = useState<string>("");
+  const [selectedSize, setSelectedSize] = useState<string | undefined>(
+    undefined
+  );
+  const [selectedBase, setSelectedBase] = useState<string | undefined>(
+    undefined
+  );
+
+  const [selectedSizePrice, setSelectedSizePrice] = useState<
+    number | undefined
+  >(0);
 
   const { loading, error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(
     GET_ALL_PIZZAS_LIST
@@ -21,17 +27,19 @@ function PizzaList() {
 
   const openModal = (pizza: Pizza) => {
     setSelectedPizza(pizza);
+    setSelectedSize(undefined); // Deselect size when opening the modal
     setIsModalOpen(true);
-    setSizeSelected(false);
-    setErrors(""); // Reset any previous error messages
   };
 
+
   const addToBasket = (pizza: Pizza) => {
-    if (selectedSizeName !== undefined) {
+    if (selectedSize !== undefined) {
       // Proceed with adding to the basket
       const existingItemIndex = basket.findIndex(
         (item) =>
-          item.id_pizza === pizza.id_pizza && item.price === selectedSizePrice
+          item.id_pizza === pizza.id_pizza &&
+          item.size === selectedSize &&
+          item.base === selectedBase
       );
 
       if (existingItemIndex !== -1) {
@@ -44,22 +52,14 @@ function PizzaList() {
           name: pizza.name,
           price: selectedSizePrice || 0,
           quantity: 1,
-          size: selectedSizeName,
+          size: selectedSize,
+          base: selectedBase,
         };
+
 
         setBasket([...basket, pizzaWithPrice]);
       }
-    } else {
-      // Display an error message
-      setErrors("Please select a size before adding the item to the basket.");
     }
-  };
-
-  const calculateTotalPrice = () => {
-    return basket.reduce(
-      (total, item) => (item.price || 0) * item.quantity + total,
-      0
-    );
   };
 
   const increaseQuantity = (basketItem: BasketItem) => {
@@ -90,6 +90,13 @@ function PizzaList() {
     });
 
     setBasket(updatedBasket.filter((item) => item !== null));
+  };
+
+  const calculateTotalPrice = () => {
+    return basket.reduce(
+      (total, item) => (item.price || 0) * item.quantity + total,
+      0
+    );
   };
 
   return (
@@ -123,18 +130,17 @@ function PizzaList() {
             />
             <ListToppingAndPrices
               pizzaId={selectedPizza.id_pizza}
-              onSizePriceChange={(price, sizeName) => {
+              onSizePriceChange={(price, size) => {
+                setSelectedSize(size);
                 setSelectedSizePrice(price);
-                setSelectedSizeName(sizeName);
-                setSizeSelected(sizeName !== "--Please Select Size--" );
-                setErrors(""); // Reset any previous error messages
-           
               }}
+              onBaseChange={(base) => setSelectedBase(base)}
+             
             />
-            {errors && <p className="error">{errors}</p>}
+
             <button
               onClick={() => addToBasket(selectedPizza)}
-              disabled={!sizeSelected}
+              disabled={selectedSize === undefined}
             >
               Add to Basket
             </button>
