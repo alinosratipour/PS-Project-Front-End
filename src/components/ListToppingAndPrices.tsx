@@ -3,7 +3,7 @@ import { useQuery } from "@apollo/client";
 import {
   GET_PIZZAS_WITH_SIZES_AND_PRICES,
   GET_TOPPING_PRICES,
-  GET_ALL_SIZES_WITH_RELATED_BASES2,
+  GET_ALL_SIZES_WITH_RELATED_BASES,
 } from "../queries/queries";
 import SizePrice from "./SizePrice";
 import ToppingsList from "./ToppingsList";
@@ -54,12 +54,11 @@ function ListToppingAndPrices({
   const [selectedSizePrice, setSelectedSizePrice] = useState<
     number | undefined
   >(0);
- 
+
   const { loading: sizesLoading, data: sizesData } = useQuery(
     GET_PIZZAS_WITH_SIZES_AND_PRICES
   );
   const [basePrices, setBasePrices] = useState<BaseWithPrice[]>([]);
-
 
   // Query for topping data
   const {
@@ -70,12 +69,12 @@ function ListToppingAndPrices({
     variables: { id_size: Number(selectedSize) },
   });
 
-    // Use refetch function for bases data
-    const { data: Bases, refetch: refetchBases } = useQuery<{
-      getBasesPricesBySize: BaseWithPrice[];
-    }>(GET_ALL_SIZES_WITH_RELATED_BASES2,{
-      variables: { id_size: Number(selectedSize) }, 
-    });
+  // Use refetch function for bases data
+  const { data: Bases } = useQuery<{
+    getBasesPricesBySize: BaseWithPrice[];
+  }>(GET_ALL_SIZES_WITH_RELATED_BASES, {
+    variables: { id_size: Number(selectedSize) },
+  });
 
   useEffect(() => {
     if (!sizesLoading && sizesData) {
@@ -113,7 +112,6 @@ function ListToppingAndPrices({
       onSizePriceChange(newSelectedSizeData.price, newSelectedSizeData.p_size);
       setIsSizeSelected(true);
     }
-
   };
 
   const handleBaseChange = (newBase: string) => {
@@ -138,7 +136,6 @@ function ListToppingAndPrices({
 
       <SizePrice selectedSizePrice={selectedSizePrice} size="" />
       <ToppingsList toppingData={toppingData?.getToppingPricesBySize} />
-
     </div>
   );
 }
