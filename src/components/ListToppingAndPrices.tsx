@@ -1,17 +1,16 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import {
   GET_PIZZAS_WITH_SIZES_AND_PRICES,
   GET_TOPPING_PRICES,
-  GET_ALL_SIZES_WITH_RELATED_BASES,
+  GET_ALL_SIZES_WITH_RELATED_BASES2,
 } from "../queries/queries";
-
 import SizePrice from "./SizePrice";
 import ToppingsList from "./ToppingsList";
 import SizeRadioButtons from "./UI-Liberary/SizeRadioButton/SizeRadioButtons";
-import BaseList from "./BaseList";
+
 import { If } from "tsx-control-statements/components";
-import { useAvailableBases } from "./Context/AvailableBasesContext";
+import BaseRadioButtons from "./BaseRadioButtons";
 
 interface ListToppingAndPricesProps {
   pizzaId: number;
@@ -39,7 +38,11 @@ interface SizeType {
     base: string;
   }[];
 }
-
+type BaseWithPrice = {
+  id_base: number;
+  price: number;
+  base: string;
+};
 function ListToppingAndPrices({
   pizzaId,
   onSizePriceChange,
@@ -48,21 +51,15 @@ function ListToppingAndPrices({
   const [sizes, setSizes] = useState<SizeType[]>([]);
   const [selectedSize, setSelectedSize] = useState<number>(1);
   const [isSizeSelected, setIsSizeSelected] = useState(false);
- 
-  const [selectedBasePrice, setSelectedBasePrice] = useState<number | undefined>(0); // Initialize with 0
   const [selectedSizePrice, setSelectedSizePrice] = useState<
     number | undefined
   >(0);
-
-  const [selectedBase, setSelectedBase] = useState<string | undefined>("");
-  const { availableBases } = useAvailableBases();
-
-  // Query for sizes data if it's not available
+ 
   const { loading: sizesLoading, data: sizesData } = useQuery(
     GET_PIZZAS_WITH_SIZES_AND_PRICES
   );
+  const [basePrices, setBasePrices] = useState<BaseWithPrice[]>([]);
 
-  const { data: baseData } = useQuery(GET_ALL_SIZES_WITH_RELATED_BASES);
 
   // Query for topping data
   const {
@@ -72,6 +69,13 @@ function ListToppingAndPrices({
   } = useQuery<{ getToppingPricesBySize: ToppingType[] }>(GET_TOPPING_PRICES, {
     variables: { id_size: Number(selectedSize) },
   });
+
+    // Use refetch function for bases data
+    const { data: Bases, refetch: refetchBases } = useQuery<{
+      getBasesPricesBySize: BaseWithPrice[];
+    }>(GET_ALL_SIZES_WITH_RELATED_BASES2,{
+      variables: { id_size: Number(selectedSize) }, 
+    });
 
   useEffect(() => {
     if (!sizesLoading && sizesData) {
@@ -87,19 +91,16 @@ function ListToppingAndPrices({
         if (initialSelectedSizeData) {
           setSelectedSize(initialSelectedSizeData.id_size);
           setSelectedSizePrice(initialSelectedSizeData.price);
-          
-
-          if (initialSelectedSizeData.bases && initialSelectedSizeData.bases.length > 0) {
-            setSelectedBasePrice(initialSelectedSizeData.bases[0].price);
-          } else {
-            setSelectedBasePrice(0); // Handle the case when no bases are available for the selected size.
-          }
-
-
         }
       }
     }
   }, [sizesLoading, sizesData, pizzaId]);
+
+  useEffect(() => {
+    if (Bases && Bases.getBasesPricesBySize) {
+      setBasePrices(Bases.getBasesPricesBySize);
+    }
+  }, [Bases]);
 
   const handleSizeChange = (newSize: number) => {
     setSelectedSize(newSize);
@@ -111,35 +112,11 @@ function ListToppingAndPrices({
       setSelectedSizePrice(newSelectedSizeData.price);
       onSizePriceChange(newSelectedSizeData.price, newSelectedSizeData.p_size);
       setIsSizeSelected(true);
-
-      if (baseData && baseData.getSizesWithBases) {
-        const selectedSizeData = baseData.getSizesWithBases.find(
-          (sizeWithBases) => sizeWithBases.id_size === String(newSize)
-        );
-        
-        if (selectedSizeData) {
-          const basesForSelectedSize = selectedSizeData.bases;
-         // console.log("Bases for Selected Size:", basesForSelectedSize);
-//console.log("selectedBasePrice",selectedBasePrice);
-
-          // You can process the bases for the selected size here if needed.
-          // For now, I'll assume you want to get the base price of the first base.
-          if (basesForSelectedSize.length > 0) {
-           
-            setSelectedBasePrice(basesForSelectedSize[0].price);
-          
-          } else {
-            setSelectedBasePrice(0); // Handle the case when no bases are available for the selected size.
-          }
-        } else {
-          setSelectedBasePrice(0); // Handle the case when the size is not found.
-        }
-      }
     }
+
   };
 
   const handleBaseChange = (newBase: string) => {
-    setSelectedBase(newBase);
     onBaseChange(newBase);
   };
 
@@ -152,15 +129,16 @@ function ListToppingAndPrices({
       <SizeRadioButtons sizes={sizes} onSizeChange={handleSizeChange} />
 
       <If condition={isSizeSelected}>
-        <BaseList
+        <BaseRadioButtons
+          bases={basePrices}
           onBaseChange={handleBaseChange}
-          selectedBase={selectedBase}
           selectedSize={selectedSize}
         />
       </If>
 
       <SizePrice selectedSizePrice={selectedSizePrice} size="" />
       <ToppingsList toppingData={toppingData?.getToppingPricesBySize} />
+
     </div>
   );
 }

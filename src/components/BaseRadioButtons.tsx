@@ -3,9 +3,11 @@ import React from "react";
 interface BaseRadioButtonsProps {
   bases: { base: string; price: number }[];
   onBaseChange: (base: string, price: number) => void; // Pass both base and price
+  selectedSize:number;
+
 }
 
-const BaseRadioButtons: React.FC<BaseRadioButtonsProps> = ({ bases, onBaseChange }) => {
+const BaseRadioButtons: React.FC<BaseRadioButtonsProps> = ({ bases, onBaseChange,selectedSize}) => {
   return (
     <div>
       <h2>Select a base:</h2>

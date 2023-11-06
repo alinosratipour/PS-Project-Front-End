@@ -41,7 +41,15 @@ export const GET_ALL_SIZES_WITH_RELATED_BASES = gql`
 
   }
 `;
-
+export const GET_ALL_SIZES_WITH_RELATED_BASES2 = gql`
+  query GetBasesPricesBySize($id_size: Int) {
+    getBasesPricesBySize(id_size: $id_size) {
+      id_base
+      base
+      price
+    }
+  }
+`;
 
 
 
