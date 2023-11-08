@@ -123,10 +123,6 @@ function ListToppingAndPrices({
 
   const selectedBase = Bases?.getBasesPricesBySize.find((item) => item.base === newBase);
   const basePrice = selectedBase ? selectedBase.price : 0;
-
-console.log("ss",basePrice);
-
-  
   onBaseChange(newBase, basePrice);
   // const selectedBaseData = basePrices.find((base) => base.base === newBase);
   //   if (selectedBaseData) {
