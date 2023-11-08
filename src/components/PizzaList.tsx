@@ -16,10 +16,13 @@ function PizzaList() {
   const [selectedBase, setSelectedBase] = useState<string | undefined>(
     undefined
   );
-  const [selectedSizePrice, setSelectedSizePrice] = useState<number | undefined>(0);
+  const [selectedSizePrice, setSelectedSizePrice] = useState<
+    number | undefined
+  >(0);
 
-  const [selectedBasePrice, setSelectedBasePrice] = useState<number | undefined>(0);
-
+  const [selectedBasePrice, setSelectedBasePrice] = useState<
+    number | undefined
+  >(0);
 
   const { loading, error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(
     GET_ALL_PIZZAS_LIST
@@ -34,8 +37,8 @@ function PizzaList() {
   const addToBasket = (pizza: Pizza) => {
     if (selectedSize !== undefined) {
       // Proceed with adding to the basket
-      console.log("basket",basket);
-      
+      console.log("basket", basket);
+
       const existingItemIndex = basket.findIndex(
         (item) =>
           item.id_pizza === pizza.id_pizza &&
@@ -95,7 +98,10 @@ function PizzaList() {
 
   const calculateTotalPrice = () => {
     return basket.reduce(
-      (total, item) => (item.price || 0) * item.quantity + (item.basePrice || 0) * item.quantity + total,
+      (total, item) =>
+        (item.price || 0) * item.quantity +
+        (item.basePrice || 0) * item.quantity +
+        total,
       0
     );
   };
@@ -135,7 +141,7 @@ function PizzaList() {
                 setSelectedSize(size);
                 setSelectedSizePrice(price);
               }}
-              onBaseChange={(base,basePrice) => {
+              onBaseChange={(base, basePrice) => {
                 setSelectedBase(base);
                 setSelectedBasePrice(basePrice);
               }}
