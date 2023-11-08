@@ -149,7 +149,7 @@ function PizzaList() {
       </Modal>
       <Basket
         basket={basket}
-        selectedSizePrice={calculateTotalPrice()}
+        calculateTotalPrice={calculateTotalPrice}
         increaseQuantity={increaseQuantity}
         decreaseQuantity={decreaseQuantity}
       />

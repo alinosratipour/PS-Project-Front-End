@@ -1,10 +1,11 @@
 import { BasketItem } from "./SharedTypes";
 
 interface BasketProps {
-  selectedSizePrice: number;
+
   basket: BasketItem[];
   increaseQuantity: (item: BasketItem) => void;
   decreaseQuantity: (item: BasketItem) => void;
+  calculateTotalPrice: () => number;
 }
 
 function Basket({ basket, increaseQuantity, decreaseQuantity }: BasketProps) {
