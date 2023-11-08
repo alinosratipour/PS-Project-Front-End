@@ -1,21 +1,18 @@
 import { BasketItem } from "./SharedTypes";
 
 interface BasketProps {
-
   basket: BasketItem[];
   increaseQuantity: (item: BasketItem) => void;
   decreaseQuantity: (item: BasketItem) => void;
   calculateTotalPrice: () => number;
 }
 
-function Basket({ basket, increaseQuantity, decreaseQuantity }: BasketProps) {
-  const calculateTotalPrice = () => {
-    return basket.reduce(
-      (total, item) => (item.price || 0) * item.quantity + total,
-      0
-    );
-  };
-
+function Basket({
+  basket,
+  increaseQuantity,
+  decreaseQuantity,
+  calculateTotalPrice,
+}: BasketProps) {
   return (
     <div>
       <h1>Basket</h1>
@@ -26,8 +23,8 @@ function Basket({ basket, increaseQuantity, decreaseQuantity }: BasketProps) {
           <ul>
             {basket.map((item) => (
               <li key={item.id_pizza}>
-                {item.name} (Size: {item.size} Base: {item.base})    - Quantity: {item.quantity} - £
-                {(item.price || 0) * item.quantity}
+                {item.name} (Size: {item.size} Base: {item.base}) - Quantity:{" "}
+                {item.quantity} - £{(item.price || 0) * item.quantity}
                 <button onClick={() => increaseQuantity(item)}>+</button>
                 <button onClick={() => decreaseQuantity(item)}>-</button>
               </li>
