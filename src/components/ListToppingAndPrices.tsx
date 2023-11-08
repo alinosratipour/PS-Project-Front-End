@@ -11,6 +11,7 @@ import SizeRadioButtons from "./UI-Liberary/SizeRadioButton/SizeRadioButtons";
 
 import { If } from "tsx-control-statements/components";
 import BaseRadioButtons from "./BaseRadioButtons";
+import { BaseWithPrice } from "./SharedTypes";
 
 interface ListToppingAndPricesProps {
   pizzaId: number;
@@ -18,7 +19,7 @@ interface ListToppingAndPricesProps {
     price: number | undefined,
     sizeName: string | undefined
   ) => void;
-  onBaseChange: (base: string | undefined) => void;
+  onBaseChange: (base: string | undefined, price: number) => void; // Update the callback to accept base price
 }
 
 interface ToppingType {
@@ -38,11 +39,7 @@ interface SizeType {
     base: string;
   }[];
 }
-type BaseWithPrice = {
-  id_base: number;
-  price: number;
-  base: string;
-};
+
 function ListToppingAndPrices({
   pizzaId,
   onSizePriceChange,
@@ -59,7 +56,8 @@ function ListToppingAndPrices({
     GET_PIZZAS_WITH_SIZES_AND_PRICES
   );
   const [basePrices, setBasePrices] = useState<BaseWithPrice[]>([]);
-
+  const [selectedToppings, setSelectedToppings] = useState<string[]>([]);
+  const [selectedToppingPrices, setSelectedToppingPrices] = useState<number[]>([]);
   // Query for topping data
   const {
     loading,
@@ -75,6 +73,28 @@ function ListToppingAndPrices({
   }>(GET_ALL_SIZES_WITH_RELATED_BASES, {
     variables: { id_size: Number(selectedSize) },
   });
+
+  const handleToppingChange = (toppingName: string, toppingPrice: number) => {
+    const index = selectedToppings.indexOf(toppingName);
+    if (index !== -1) {
+      // Topping is already selected, so remove it
+      const newToppings = [...selectedToppings];
+      newToppings.splice(index, 1);
+  
+      const newToppingPrices = [...selectedToppingPrices];
+      newToppingPrices.splice(index, 1);
+  console.log(newToppingPrices);
+  
+      setSelectedToppings(newToppings);
+      setSelectedToppingPrices(newToppingPrices);
+    } else {
+      // Topping is not selected, so add it
+      setSelectedToppings([...selectedToppings, toppingName]);
+      setSelectedToppingPrices([...selectedToppingPrices, toppingPrice]);
+    }
+  };
+  
+
 
   useEffect(() => {
     if (!sizesLoading && sizesData) {
@@ -115,7 +135,11 @@ function ListToppingAndPrices({
   };
 
   const handleBaseChange = (newBase: string) => {
-    onBaseChange(newBase);
+    const selectedBase = Bases?.getBasesPricesBySize.find(
+      (item) => item.base === newBase
+    );
+    const basePrice = selectedBase ? selectedBase.price : 0;
+    onBaseChange(newBase, basePrice);
   };
 
   if (sizesLoading) return "Loading sizes...";
@@ -135,7 +159,7 @@ function ListToppingAndPrices({
       </If>
 
       <SizePrice selectedSizePrice={selectedSizePrice} size="" />
-      <ToppingsList toppingData={toppingData?.getToppingPricesBySize} />
+      <ToppingsList toppingData={toppingData?.getToppingPricesBySize}   />
     </div>
   );
 }

@@ -13,11 +13,16 @@ function PizzaList() {
   const [selectedSize, setSelectedSize] = useState<string | undefined>(
     undefined
   );
+
+
   const [selectedBase, setSelectedBase] = useState<string | undefined>(
     undefined
   );
-
   const [selectedSizePrice, setSelectedSizePrice] = useState<
+    number | undefined
+  >(0);
+
+  const [selectedBasePrice, setSelectedBasePrice] = useState<
     number | undefined
   >(0);
 
@@ -31,10 +36,11 @@ function PizzaList() {
     setIsModalOpen(true);
   };
 
-
   const addToBasket = (pizza: Pizza) => {
     if (selectedSize !== undefined) {
       // Proceed with adding to the basket
+      console.log("basket", basket);
+
       const existingItemIndex = basket.findIndex(
         (item) =>
           item.id_pizza === pizza.id_pizza &&
@@ -54,8 +60,8 @@ function PizzaList() {
           quantity: 1,
           size: selectedSize,
           base: selectedBase,
+          basePrice: selectedBasePrice,
         };
-
 
         setBasket([...basket, pizzaWithPrice]);
       }
@@ -94,7 +100,10 @@ function PizzaList() {
 
   const calculateTotalPrice = () => {
     return basket.reduce(
-      (total, item) => (item.price || 0) * item.quantity + total,
+      (total, item) =>
+        (item.price || 0) * item.quantity +
+        (item.basePrice || 0) * item.quantity +
+        total,
       0
     );
   };
@@ -134,13 +143,15 @@ function PizzaList() {
                 setSelectedSize(size);
                 setSelectedSizePrice(price);
               }}
-              onBaseChange={(base) => setSelectedBase(base)}
-             
+              onBaseChange={(base, basePrice) => {
+                setSelectedBase(base);
+                setSelectedBasePrice(basePrice);
+              }}
             />
 
             <button
               onClick={() => addToBasket(selectedPizza)}
-              disabled={selectedSize === undefined}
+              disabled={selectedSize === undefined || selectedBase === undefined}
             >
               Add to Basket
             </button>
@@ -149,7 +160,7 @@ function PizzaList() {
       </Modal>
       <Basket
         basket={basket}
-        selectedSizePrice={calculateTotalPrice()}
+        calculateTotalPrice={calculateTotalPrice}
         increaseQuantity={increaseQuantity}
         decreaseQuantity={decreaseQuantity}
       />

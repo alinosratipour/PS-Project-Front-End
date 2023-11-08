@@ -4,7 +4,6 @@ export interface Pizza {
   name: string;
   description: string;
   image: string;
- 
 }
 
 export interface SizePriceProps {
@@ -12,13 +11,18 @@ export interface SizePriceProps {
   size: string; // Add the 'size' property
 }
 
-
-
- export interface BasketItem {
+export interface BasketItem {
   id_pizza: number;
   name: string;
   price: number | undefined;
   quantity: number;
   size?: string; // Add the 'size' property
   base: string | undefined;
+  basePrice: number | undefined;
 }
+
+export type BaseWithPrice = {
+  id_base: number;
+  price: number;
+  base: string;
+};
