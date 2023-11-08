@@ -22,3 +22,9 @@ export interface SizePriceProps {
   size?: string; // Add the 'size' property
   base: string | undefined;
 }
+
+export type BaseWithPrice = {
+  id_base: number;
+  price: number;
+  base: string;
+};

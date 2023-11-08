@@ -44,11 +44,7 @@ interface SizeType {
     base: string;
   }[];
 }
-type BaseWithPrice = {
-  id_base: number;
-  price: number;
-  base: string;
-};
+
 function ListToppingAndPrices({
   pizzaId,
   onSizePriceChange,
