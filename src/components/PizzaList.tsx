@@ -13,6 +13,8 @@ function PizzaList() {
   const [selectedSize, setSelectedSize] = useState<string | undefined>(
     undefined
   );
+
+
   const [selectedBase, setSelectedBase] = useState<string | undefined>(
     undefined
   );
@@ -149,7 +151,7 @@ function PizzaList() {
 
             <button
               onClick={() => addToBasket(selectedPizza)}
-              disabled={selectedSize === undefined}
+              disabled={selectedSize === undefined || selectedBase === undefined}
             >
               Add to Basket
             </button>

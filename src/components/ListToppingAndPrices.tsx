@@ -19,13 +19,8 @@ interface ListToppingAndPricesProps {
     price: number | undefined,
     sizeName: string | undefined
   ) => void;
-  onBaseChange: (
-    base: string | undefined,
-    price: number
-  ) => void; // Update the callback to accept base price
-  
+  onBaseChange: (base: string | undefined, price: number) => void; // Update the callback to accept base price
 }
-
 
 interface ToppingType {
   id_size: number;
@@ -49,7 +44,6 @@ function ListToppingAndPrices({
   pizzaId,
   onSizePriceChange,
   onBaseChange,
- 
 }: ListToppingAndPricesProps) {
   const [sizes, setSizes] = useState<SizeType[]>([]);
   const [selectedSize, setSelectedSize] = useState<number>(1);
@@ -79,7 +73,6 @@ function ListToppingAndPrices({
     variables: { id_size: Number(selectedSize) },
   });
 
-
   useEffect(() => {
     if (!sizesLoading && sizesData) {
       const pizzaSizesData = sizesData.getpizzasWithSizesAndPrices.find(
@@ -105,7 +98,6 @@ function ListToppingAndPrices({
     }
   }, [Bases]);
 
-
   const handleSizeChange = (newSize: number) => {
     setSelectedSize(newSize);
     const newSelectedSizeData = sizes.find(
@@ -120,14 +112,11 @@ function ListToppingAndPrices({
   };
 
   const handleBaseChange = (newBase: string) => {
-
-  const selectedBase = Bases?.getBasesPricesBySize.find((item) => item.base === newBase);
-  const basePrice = selectedBase ? selectedBase.price : 0;
-  onBaseChange(newBase, basePrice);
-  // const selectedBaseData = basePrices.find((base) => base.base === newBase);
-  //   if (selectedBaseData) {
-  //     onBaseChange(newBase, selectedBaseData.price);
-  //   }
+    const selectedBase = Bases?.getBasesPricesBySize.find(
+      (item) => item.base === newBase
+    );
+    const basePrice = selectedBase ? selectedBase.price : 0;
+    onBaseChange(newBase, basePrice);
   };
 
   if (sizesLoading) return "Loading sizes...";
