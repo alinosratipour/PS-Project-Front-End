@@ -20,10 +20,12 @@ interface ListToppingAndPricesProps {
     sizeName: string | undefined
   ) => void;
   onBaseChange: (base: string | undefined, price: number) => void; // Update the callback to accept base price
+  onAddTopping: (topping: ToppingType) => void;
+  onRemoveTopping: (topping: ToppingType) => void;
 }
 
 interface ToppingType {
-  id_size: number;
+  id_size?: number;
   name: string;
   price: number;
 }
@@ -44,6 +46,9 @@ function ListToppingAndPrices({
   pizzaId,
   onSizePriceChange,
   onBaseChange,
+  onAddTopping,
+  onRemoveTopping,
+
 }: ListToppingAndPricesProps) {
   const [sizes, setSizes] = useState<SizeType[]>([]);
   const [selectedSize, setSelectedSize] = useState<number>(1);
@@ -56,8 +61,7 @@ function ListToppingAndPrices({
     GET_PIZZAS_WITH_SIZES_AND_PRICES
   );
   const [basePrices, setBasePrices] = useState<BaseWithPrice[]>([]);
-  const [selectedToppings, setSelectedToppings] = useState<string[]>([]);
-  const [selectedToppingPrices, setSelectedToppingPrices] = useState<number[]>([]);
+
   // Query for topping data
   const {
     loading,
@@ -73,28 +77,6 @@ function ListToppingAndPrices({
   }>(GET_ALL_SIZES_WITH_RELATED_BASES, {
     variables: { id_size: Number(selectedSize) },
   });
-
-  const handleToppingChange = (toppingName: string, toppingPrice: number) => {
-    const index = selectedToppings.indexOf(toppingName);
-    if (index !== -1) {
-      // Topping is already selected, so remove it
-      const newToppings = [...selectedToppings];
-      newToppings.splice(index, 1);
-  
-      const newToppingPrices = [...selectedToppingPrices];
-      newToppingPrices.splice(index, 1);
-  console.log(newToppingPrices);
-  
-      setSelectedToppings(newToppings);
-      setSelectedToppingPrices(newToppingPrices);
-    } else {
-      // Topping is not selected, so add it
-      setSelectedToppings([...selectedToppings, toppingName]);
-      setSelectedToppingPrices([...selectedToppingPrices, toppingPrice]);
-    }
-  };
-  
-
 
   useEffect(() => {
     if (!sizesLoading && sizesData) {
@@ -159,7 +141,8 @@ function ListToppingAndPrices({
       </If>
 
       <SizePrice selectedSizePrice={selectedSizePrice} size="" />
-      <ToppingsList toppingData={toppingData?.getToppingPricesBySize}   />
+      <ToppingsList toppingData={toppingData?.getToppingPricesBySize}  onAddTopping={onAddTopping}
+  onRemoveTopping={onRemoveTopping}/>
     </div>
   );
 }

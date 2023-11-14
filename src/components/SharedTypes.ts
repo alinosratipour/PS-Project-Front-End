@@ -26,3 +26,9 @@ export type BaseWithPrice = {
   price: number;
   base: string;
 };
+export interface ToppingType {
+  id_size:number;
+  name: string;
+  price: number;
+  quantity:number;
+}
