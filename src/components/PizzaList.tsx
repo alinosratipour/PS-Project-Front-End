@@ -151,14 +151,18 @@ function PizzaList() {
   };
 
   const calculateTotalPrice = () => {
-    return basket.reduce(
+    const toppingsTotalPrice = calculateToppingsTotal(selectedToppings);
+    const pizzasTotalPrice = basket.reduce(
       (total, item) =>
         (item.price || 0) * item.quantity +
         (item.basePrice || 0) * item.quantity +
         total,
       0
     );
+  
+    return pizzasTotalPrice + toppingsTotalPrice;
   };
+  
 
   return (
     <div>
