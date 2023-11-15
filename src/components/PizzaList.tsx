@@ -4,7 +4,7 @@ import Modal from "../components/UI-Liberary/Modal";
 import { GET_ALL_PIZZAS_LIST } from "../queries/queries";
 import ListToppingAndPrices from "./ListToppingAndPrices";
 import Basket from "./Basket";
-import { Pizza, BasketItem,ToppingType } from "./SharedTypes";
+import { Pizza, BasketItem, ToppingType } from "./SharedTypes";
 
 function PizzaList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -37,22 +37,18 @@ function PizzaList() {
     setIsModalOpen(true);
   };
 
-
-  
-  
- 
   const addToppingToBasket = (topping: ToppingType) => {
     const existingToppingIndex = selectedToppings.findIndex(
       (t) => t.name === topping.name
     );
-  
+
     if (existingToppingIndex !== -1) {
       // Topping already exists, update its quantity
       const updatedToppings = [...selectedToppings];
       if (updatedToppings[existingToppingIndex].quantity < 10) {
         updatedToppings[existingToppingIndex].quantity += 1;
         setSelectedToppings(updatedToppings);
-  
+
         // Update toppingsTotal directly
         setToppingsTotal(calculateToppingsTotal(updatedToppings));
       }
@@ -60,13 +56,12 @@ function PizzaList() {
       // Topping doesn't exist, add it with quantity 1
       const newToppings = [...selectedToppings, { ...topping, quantity: 1 }];
       setSelectedToppings(newToppings);
-  
+
       // Update toppingsTotal directly
       setToppingsTotal(calculateToppingsTotal(newToppings));
     }
   };
-  
-  
+
   const calculateToppingsTotal = (toppings: ToppingType[]) => {
     const total = toppings.reduce(
       (total, topping) => total + topping.price * (topping.quantity || 1),
@@ -78,13 +73,20 @@ function PizzaList() {
 
   const removeToppingFromBasket = (topping: ToppingType) => {
     setSelectedToppings((prevToppings) => {
-      const updatedToppings = prevToppings.filter((t: ToppingType) => t !== topping);
+      const updatedToppings = prevToppings
+        .map((t: ToppingType) =>
+          t.name === topping.name
+            ? { ...t, quantity: t.quantity - 1 } // Decrease quantity for the matching topping
+            : t
+        )
+        .filter((t: ToppingType) => t.quantity > 0); // Remove toppings with quantity 0
+
       // Update toppingsTotal directly
       setToppingsTotal(calculateToppingsTotal(updatedToppings));
+
       return updatedToppings;
     });
   };
-  
 
   const addToBasket = (pizza: Pizza) => {
     if (selectedSize !== undefined) {
@@ -217,9 +219,8 @@ function PizzaList() {
         calculateTotalPrice={calculateTotalPrice}
         increaseQuantity={increaseQuantity}
         decreaseQuantity={decreaseQuantity}
-        selectedToppings={selectedToppings} 
+        selectedToppings={selectedToppings}
         toppingsTotal={toppingsTotal}
-
       />
     </div>
   );
