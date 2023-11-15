@@ -35,6 +35,7 @@ function PizzaList() {
     setSelectedToppings([]);
     setToppingsTotal(0);
   }, [selectedSize]);
+  
   const openModal = (pizza: Pizza) => {
     setSelectedPizza(pizza);
     setSelectedSize(undefined); // Deselect size when opening the modal
@@ -71,7 +72,7 @@ function PizzaList() {
       (total, topping) => total + topping.price * (topping.quantity || 1),
       0
     );
-  
+
     return total;
   };
 
@@ -95,7 +96,7 @@ function PizzaList() {
   const addToBasket = (pizza: Pizza) => {
     if (selectedSize !== undefined) {
       // Proceed with adding to the basket
-    
+
       const existingItemIndex = basket.findIndex(
         (item) =>
           item.id_pizza === pizza.id_pizza &&
@@ -163,10 +164,9 @@ function PizzaList() {
         total,
       0
     );
-  
+
     return pizzasTotalPrice + toppingsTotalPrice;
   };
-  
 
   return (
     <div>
