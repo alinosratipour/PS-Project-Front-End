@@ -19,6 +19,7 @@ export interface BasketItem {
   size?: string; // Add the 'size' property
   base: string | undefined;
   basePrice: number | undefined;
+  toppings?: ToppingType[];
 }
 
 export type BaseWithPrice = {

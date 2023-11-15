@@ -46,9 +46,7 @@ function ListToppingAndPrices({
   const [sizes, setSizes] = useState<SizeType[]>([]);
   const [selectedSize, setSelectedSize] = useState<number>(1);
   const [isSizeSelected, setIsSizeSelected] = useState(false);
-  const [selectedSizePrice, setSelectedSizePrice] = useState<
-    number | undefined
-  >(0);
+  const [selectedSizePrice, setSelectedSizePrice] = useState<number | undefined>(0);
 
   const { loading: sizesLoading, data: sizesData } = useQuery(
     GET_PIZZAS_WITH_SIZES_AND_PRICES
@@ -60,12 +58,13 @@ function ListToppingAndPrices({
     loading,
     error,
     data: toppingData,
+    refetch: refetchToppingData,
   } = useQuery<{ getToppingPricesBySize: ToppingType[] }>(GET_TOPPING_PRICES, {
     variables: { id_size: Number(selectedSize) },
   });
 
   // Use refetch function for bases data
-  const { data: Bases } = useQuery<{
+  const { data: Bases, refetch: refetchBases } = useQuery<{
     getBasesPricesBySize: BaseWithPrice[];
   }>(GET_ALL_SIZES_WITH_RELATED_BASES, {
     variables: { id_size: Number(selectedSize) },
@@ -85,6 +84,8 @@ function ListToppingAndPrices({
         if (initialSelectedSizeData) {
           setSelectedSize(initialSelectedSizeData.id_size);
           setSelectedSizePrice(initialSelectedSizeData.price);
+          onSizePriceChange(initialSelectedSizeData.price, initialSelectedSizeData.p_size);
+          setIsSizeSelected(true);
         }
       }
     }
@@ -106,6 +107,8 @@ function ListToppingAndPrices({
       setSelectedSizePrice(newSelectedSizeData.price);
       onSizePriceChange(newSelectedSizeData.price, newSelectedSizeData.p_size);
       setIsSizeSelected(true);
+      refetchToppingData({ id_size: newSize });
+      refetchBases({ id_size: newSize });
     }
   };
 

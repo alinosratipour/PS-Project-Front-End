@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import Modal from "../components/UI-Liberary/Modal";
 import { GET_ALL_PIZZAS_LIST } from "../queries/queries";
@@ -10,26 +10,15 @@ function PizzaList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPizza, setSelectedPizza] = useState<Pizza | null>(null);
   const [basket, setBasket] = useState<BasketItem[]>([]);
-  const [selectedSize, setSelectedSize] = useState<string | undefined>(
-    undefined
-  );
-
-  const [selectedBase, setSelectedBase] = useState<string | undefined>(
-    undefined
-  );
-  const [selectedSizePrice, setSelectedSizePrice] = useState<
-    number | undefined
-  >(0);
-
-  const [selectedBasePrice, setSelectedBasePrice] = useState<
-    number | undefined
-  >(0);
+  const [selectedSize, setSelectedSize] = useState<string | undefined>(undefined);
+  const [selectedBase, setSelectedBase] = useState<string | undefined>(undefined);
+  const [selectedSizePrice, setSelectedSizePrice] = useState<number | undefined>(0);
+  const [selectedBasePrice, setSelectedBasePrice] = useState<number | undefined>(0);
   const [selectedToppings, setSelectedToppings] = useState<ToppingType[]>([]);
   const [toppingsTotal, setToppingsTotal] = useState<number>(0);
 
-  const { loading, error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(
-    GET_ALL_PIZZAS_LIST
-  );
+  const { loading, error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(GET_ALL_PIZZAS_LIST);
+
   useEffect(() => {
     // Reset selectedToppings when the pizza size changes
     setSelectedToppings([]);
@@ -107,6 +96,10 @@ function PizzaList() {
       if (existingItemIndex !== -1) {
         const updatedBasket = [...basket];
         updatedBasket[existingItemIndex].quantity += 1;
+
+        // Update toppings for the existing item
+        updatedBasket[existingItemIndex].toppings = selectedToppings;
+
         setBasket(updatedBasket);
       } else {
         const pizzaWithPrice = {
@@ -117,6 +110,7 @@ function PizzaList() {
           size: selectedSize,
           base: selectedBase,
           basePrice: selectedBasePrice,
+          toppings: selectedToppings, // Include selected toppings
         };
 
         setBasket([...basket, pizzaWithPrice]);
@@ -213,9 +207,7 @@ function PizzaList() {
 
             <button
               onClick={() => addToBasket(selectedPizza)}
-              disabled={
-                selectedSize === undefined || selectedBase === undefined
-              }
+              disabled={selectedSize === undefined || selectedBase === undefined}
             >
               Add to Basket
             </button>

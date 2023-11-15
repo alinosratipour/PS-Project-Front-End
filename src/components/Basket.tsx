@@ -1,12 +1,13 @@
-import { BasketItem } from "./SharedTypes";
+
+import { BasketItem, ToppingType } from "./SharedTypes";
 
 interface BasketProps {
   basket: BasketItem[];
   increaseQuantity: (item: BasketItem) => void;
   decreaseQuantity: (item: BasketItem) => void;
   calculateTotalPrice: () => number;
-  selectedToppings: any[]; // Assuming selectedToppings is an array of toppings
-  toppingsTotal:number;
+  selectedToppings: ToppingType[];
+  toppingsTotal: number;
 }
 
 function Basket({
@@ -17,25 +18,21 @@ function Basket({
   selectedToppings,
   toppingsTotal,
 }: BasketProps) {
-
- 
-
   return (
     <div>
       <h1>Basket</h1>
 
       {selectedToppings.length > 0 && (
         <div>
-          <h2>Selected Toppings:</h2>
-          <p>Total Price: £{toppingsTotal}</p>
-          <ul>
+          {/* <h2>Extra Toppings:</h2> */}
+          <p>Extra Toppping: £{toppingsTotal}</p>
+          {/* <ul>
             {selectedToppings.map((topping, index) => (
               <li key={index}>
                 {topping.name}: Quantity: {topping.quantity} - £{topping.price}
               </li>
             ))}
-          </ul>
-        
+          </ul> */}
         </div>
       )}
 
@@ -50,10 +47,21 @@ function Basket({
                 {item.quantity} - £{(item.price || 0) * item.quantity}
                 <button onClick={() => increaseQuantity(item)}>+</button>
                 <button onClick={() => decreaseQuantity(item)}>-</button>
+                {item.toppings && item.toppings.length > 0 && (
+                  <div>
+                    <h3>Toppings:</h3>
+                    <ul>
+                      {item.toppings.map((topping, index) => (
+                        <li key={index}>
+                          {topping.name}: Quantity: {topping.quantity} - £{topping.price}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </li>
             ))}
           </ul>
-        
           <p>Total Price: £{calculateTotalPrice()}</p>
         </>
       )}
