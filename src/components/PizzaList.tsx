@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import Modal from "../components/UI-Liberary/Modal";
 import { GET_ALL_PIZZAS_LIST } from "../queries/queries";
@@ -67,7 +67,7 @@ function PizzaList() {
       (total, topping) => total + topping.price * (topping.quantity || 1),
       0
     );
-    console.log("Intermediate toppingsTotal:", total);
+  
     return total;
   };
 
@@ -91,8 +91,7 @@ function PizzaList() {
   const addToBasket = (pizza: Pizza) => {
     if (selectedSize !== undefined) {
       // Proceed with adding to the basket
-      console.log("basket", basket);
-
+    
       const existingItemIndex = basket.findIndex(
         (item) =>
           item.id_pizza === pizza.id_pizza &&
