@@ -11,7 +11,7 @@ import SizeRadioButtons from "./UI-Liberary/SizeRadioButton/SizeRadioButtons";
 
 import { If } from "tsx-control-statements/components";
 import BaseRadioButtons from "./BaseRadioButtons";
-import { BaseWithPrice } from "./SharedTypes";
+import { BaseWithPrice,ToppingType } from "./SharedTypes";
 
 interface ListToppingAndPricesProps {
   pizzaId: number;
@@ -24,11 +24,6 @@ interface ListToppingAndPricesProps {
   onRemoveTopping: (topping: ToppingType) => void;
 }
 
-interface ToppingType {
-  id_size?: number;
-  name: string;
-  price: number;
-}
 
 interface SizeType {
   id_size: number;

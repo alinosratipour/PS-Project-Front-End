@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import Modal from "../components/UI-Liberary/Modal";
 import { GET_ALL_PIZZAS_LIST } from "../queries/queries";
@@ -25,6 +25,8 @@ function PizzaList() {
     number | undefined
   >(0);
   const [selectedToppings, setSelectedToppings] = useState<ToppingType[]>([]);
+  const [toppingsTotal, setToppingsTotal] = useState<number>(0);
+
   const { loading, error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(
     GET_ALL_PIZZAS_LIST
   );
@@ -34,6 +36,11 @@ function PizzaList() {
     setSelectedSize(undefined); // Deselect size when opening the modal
     setIsModalOpen(true);
   };
+
+
+  
+  
+ 
   const addToppingToBasket = (topping: ToppingType) => {
     const existingToppingIndex = selectedToppings.findIndex(
       (t) => t.name === topping.name
@@ -42,25 +49,42 @@ function PizzaList() {
     if (existingToppingIndex !== -1) {
       // Topping already exists, update its quantity
       const updatedToppings = [...selectedToppings];
-      updatedToppings[existingToppingIndex].quantity += 1;
-      setSelectedToppings(updatedToppings);
+      if (updatedToppings[existingToppingIndex].quantity < 10) {
+        updatedToppings[existingToppingIndex].quantity += 1;
+        setSelectedToppings(updatedToppings);
+  
+        // Update toppingsTotal directly
+        setToppingsTotal(calculateToppingsTotal(updatedToppings));
+      }
     } else {
       // Topping doesn't exist, add it with quantity 1
-      setSelectedToppings((prevToppings) => [
-        ...prevToppings,
-        { ...topping, quantity: 1 },
-      ]);
+      const newToppings = [...selectedToppings, { ...topping, quantity: 1 }];
+      setSelectedToppings(newToppings);
+  
+      // Update toppingsTotal directly
+      setToppingsTotal(calculateToppingsTotal(newToppings));
     }
   };
   
   
-  
+  const calculateToppingsTotal = (toppings: ToppingType[]) => {
+    const total = toppings.reduce(
+      (total, topping) => total + topping.price * (topping.quantity || 1),
+      0
+    );
+    console.log("Intermediate toppingsTotal:", total);
+    return total;
+  };
 
   const removeToppingFromBasket = (topping: ToppingType) => {
-    setSelectedToppings((prevToppings) =>
-      prevToppings.filter((t) => t !== topping)
-    );
+    setSelectedToppings((prevToppings) => {
+      const updatedToppings = prevToppings.filter((t: ToppingType) => t !== topping);
+      // Update toppingsTotal directly
+      setToppingsTotal(calculateToppingsTotal(updatedToppings));
+      return updatedToppings;
+    });
   };
+  
 
   const addToBasket = (pizza: Pizza) => {
     if (selectedSize !== undefined) {
@@ -194,6 +218,8 @@ function PizzaList() {
         increaseQuantity={increaseQuantity}
         decreaseQuantity={decreaseQuantity}
         selectedToppings={selectedToppings} 
+        toppingsTotal={toppingsTotal}
+
       />
     </div>
   );

@@ -6,6 +6,7 @@ interface BasketProps {
   decreaseQuantity: (item: BasketItem) => void;
   calculateTotalPrice: () => number;
   selectedToppings: any[]; // Assuming selectedToppings is an array of toppings
+  toppingsTotal:number;
 }
 
 function Basket({
@@ -14,7 +15,10 @@ function Basket({
   decreaseQuantity,
   calculateTotalPrice,
   selectedToppings,
+  toppingsTotal,
 }: BasketProps) {
+
+ 
 
   return (
     <div>
@@ -23,6 +27,7 @@ function Basket({
       {selectedToppings.length > 0 && (
         <div>
           <h2>Selected Toppings:</h2>
+          <p>Total Price: £{toppingsTotal}</p>
           <ul>
             {selectedToppings.map((topping, index) => (
               <li key={index}>
@@ -30,6 +35,7 @@ function Basket({
               </li>
             ))}
           </ul>
+        
         </div>
       )}
 
@@ -47,6 +53,7 @@ function Basket({
               </li>
             ))}
           </ul>
+        
           <p>Total Price: £{calculateTotalPrice()}</p>
         </>
       )}
