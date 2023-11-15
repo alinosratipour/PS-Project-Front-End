@@ -11,7 +11,7 @@ import SizeRadioButtons from "./UI-Liberary/SizeRadioButton/SizeRadioButtons";
 
 import { If } from "tsx-control-statements/components";
 import BaseRadioButtons from "./BaseRadioButtons";
-import { BaseWithPrice,ToppingType } from "./SharedTypes";
+import { BaseWithPrice, ToppingType } from "./SharedTypes";
 
 interface ListToppingAndPricesProps {
   pizzaId: number;
@@ -23,7 +23,6 @@ interface ListToppingAndPricesProps {
   onAddTopping: (topping: ToppingType) => void;
   onRemoveTopping: (topping: ToppingType) => void;
 }
-
 
 interface SizeType {
   id_size: number;
@@ -43,7 +42,6 @@ function ListToppingAndPrices({
   onBaseChange,
   onAddTopping,
   onRemoveTopping,
-
 }: ListToppingAndPricesProps) {
   const [sizes, setSizes] = useState<SizeType[]>([]);
   const [selectedSize, setSelectedSize] = useState<number>(1);
@@ -133,11 +131,14 @@ function ListToppingAndPrices({
           onBaseChange={handleBaseChange}
           selectedSize={selectedSize}
         />
+        <ToppingsList
+          toppingData={toppingData?.getToppingPricesBySize}
+          onAddTopping={onAddTopping}
+          onRemoveTopping={onRemoveTopping}
+        />
       </If>
 
       <SizePrice selectedSizePrice={selectedSizePrice} size="" />
-      <ToppingsList toppingData={toppingData?.getToppingPricesBySize}  onAddTopping={onAddTopping}
-  onRemoveTopping={onRemoveTopping}/>
     </div>
   );
 }

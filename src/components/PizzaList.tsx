@@ -115,6 +115,7 @@ function PizzaList() {
         };
 
         setBasket([...basket, pizzaWithPrice]);
+        setIsModalOpen(false);
       }
     }
   };
