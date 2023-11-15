@@ -8,6 +8,9 @@ interface BasketProps {
   calculateTotalPrice: () => number;
   selectedToppings: ToppingType[];
   toppingsTotal: number;
+
+  openPizzaModal: (pizza: BasketItem |  null) => void;
+ 
 }
 
 function Basket({
@@ -17,22 +20,32 @@ function Basket({
   calculateTotalPrice,
   selectedToppings,
   toppingsTotal,
+  openPizzaModal,
 }: BasketProps) {
+
+
+  const handlePizzaClick = (pizza: BasketItem) => {
+    //setSelectedPizza(pizza);
+    console.log(pizza);
+    
+    openPizzaModal(pizza);
+  };
+
   return (
     <div>
       <h1>Basket</h1>
 
       {selectedToppings.length > 0 && (
         <div>
-          {/* <h2>Extra Toppings:</h2> */}
-          <p>Extra Toppping: £{toppingsTotal}</p>
-          {/* <ul>
+          <h2>Selected Toppings:</h2>
+          <p>Total Price: £{toppingsTotal}</p>
+          <ul>
             {selectedToppings.map((topping, index) => (
               <li key={index}>
                 {topping.name}: Quantity: {topping.quantity} - £{topping.price}
               </li>
             ))}
-          </ul> */}
+          </ul>
         </div>
       )}
 
@@ -43,7 +56,13 @@ function Basket({
           <ul>
             {basket.map((item) => (
               <li key={item.id_pizza}>
-                {item.name} (Size: {item.size} Base: {item.base}) - Quantity:{" "}
+                <span
+                  style={{ cursor: "pointer", textDecoration: "underline" }}
+                  onClick={() => handlePizzaClick(item)}
+                >
+                  {item.name}
+                </span>{" "}
+                (Size: {item.size} Base: {item.base}) - Quantity:{" "}
                 {item.quantity} - £{(item.price || 0) * item.quantity}
                 <button onClick={() => increaseQuantity(item)}>+</button>
                 <button onClick={() => decreaseQuantity(item)}>-</button>
@@ -53,7 +72,8 @@ function Basket({
                     <ul>
                       {item.toppings.map((topping, index) => (
                         <li key={index}>
-                          {topping.name}: Quantity: {topping.quantity} - £{topping.price}
+                          {topping.name}: Quantity: {topping.quantity} - £
+                          {topping.price}
                         </li>
                       ))}
                     </ul>

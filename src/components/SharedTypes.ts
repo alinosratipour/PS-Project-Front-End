@@ -2,8 +2,8 @@
 export interface Pizza {
   id_pizza: number;
   name: string;
-  description: string;
-  image: string;
+  description?: string;
+  image?: string;
 }
 
 export interface SizePriceProps {

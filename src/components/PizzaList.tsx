@@ -25,7 +25,9 @@ function PizzaList() {
     setToppingsTotal(0);
   }, [selectedSize]);
   
-  const openModal = (pizza: Pizza) => {
+
+  
+  const openModal = (pizza: Pizza | null) => {
     setSelectedPizza(pizza);
     setSelectedSize(undefined); // Deselect size when opening the modal
     setIsModalOpen(true);
@@ -221,6 +223,7 @@ function PizzaList() {
         decreaseQuantity={decreaseQuantity}
         selectedToppings={selectedToppings}
         toppingsTotal={toppingsTotal}
+        openPizzaModal={openModal}
       />
     </div>
   );

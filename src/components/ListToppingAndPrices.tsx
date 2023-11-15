@@ -46,7 +46,9 @@ function ListToppingAndPrices({
   const [sizes, setSizes] = useState<SizeType[]>([]);
   const [selectedSize, setSelectedSize] = useState<number>(1);
   const [isSizeSelected, setIsSizeSelected] = useState(false);
-  const [selectedSizePrice, setSelectedSizePrice] = useState<number | undefined>(0);
+  const [selectedSizePrice, setSelectedSizePrice] = useState<
+    number | undefined
+  >(0);
 
   const { loading: sizesLoading, data: sizesData } = useQuery(
     GET_PIZZAS_WITH_SIZES_AND_PRICES
@@ -84,7 +86,10 @@ function ListToppingAndPrices({
         if (initialSelectedSizeData) {
           setSelectedSize(initialSelectedSizeData.id_size);
           setSelectedSizePrice(initialSelectedSizeData.price);
-          onSizePriceChange(initialSelectedSizeData.price, initialSelectedSizeData.p_size);
+          onSizePriceChange(
+            initialSelectedSizeData.price,
+            initialSelectedSizeData.p_size
+          );
           setIsSizeSelected(true);
         }
       }
