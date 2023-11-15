@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import Modal from "../components/UI-Liberary/Modal";
 import { GET_ALL_PIZZAS_LIST } from "../queries/queries";
@@ -30,7 +30,11 @@ function PizzaList() {
   const { loading, error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(
     GET_ALL_PIZZAS_LIST
   );
-
+  useEffect(() => {
+    // Reset selectedToppings when the pizza size changes
+    setSelectedToppings([]);
+    setToppingsTotal(0);
+  }, [selectedSize]);
   const openModal = (pizza: Pizza) => {
     setSelectedPizza(pizza);
     setSelectedSize(undefined); // Deselect size when opening the modal
