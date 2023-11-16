@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import Modal from "../components/UI-Liberary/Modal";
 import { GET_ALL_PIZZAS_LIST } from "../queries/queries";
 import ListToppingAndPrices from "./ListToppingAndPrices";
 import Basket from "./Basket";
-import { Pizza, BasketItem } from "./SharedTypes";
+import { Pizza, BasketItem, ToppingType } from "./SharedTypes";
 
 function PizzaList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,33 +13,88 @@ function PizzaList() {
   const [selectedSize, setSelectedSize] = useState<string | undefined>(
     undefined
   );
-
-
   const [selectedBase, setSelectedBase] = useState<string | undefined>(
     undefined
   );
   const [selectedSizePrice, setSelectedSizePrice] = useState<
     number | undefined
   >(0);
-
   const [selectedBasePrice, setSelectedBasePrice] = useState<
     number | undefined
   >(0);
+  const [selectedToppings, setSelectedToppings] = useState<ToppingType[]>([]);
+  const [toppingsTotal, setToppingsTotal] = useState<number>(0);
 
   const { loading, error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(
     GET_ALL_PIZZAS_LIST
   );
 
-  const openModal = (pizza: Pizza) => {
+  useEffect(() => {
+    // Reset selectedToppings when the pizza size changes
+    setSelectedToppings([]);
+    setToppingsTotal(0);
+  }, [selectedSize]);
+
+  const openModal = (pizza: Pizza | null) => {
     setSelectedPizza(pizza);
     setSelectedSize(undefined); // Deselect size when opening the modal
     setIsModalOpen(true);
   };
 
+  const addToppingToBasket = (topping: ToppingType) => {
+    const existingToppingIndex = selectedToppings.findIndex(
+      (t) => t.name === topping.name
+    );
+
+    if (existingToppingIndex !== -1) {
+      // Topping already exists, update its quantity
+      const updatedToppings = [...selectedToppings];
+      if (updatedToppings[existingToppingIndex].quantity < 10) {
+        updatedToppings[existingToppingIndex].quantity += 1;
+        setSelectedToppings(updatedToppings);
+
+        // Update toppingsTotal directly
+        setToppingsTotal(calculateToppingsTotal(updatedToppings));
+      }
+    } else {
+      // Topping doesn't exist, add it with quantity 1
+      const newToppings = [...selectedToppings, { ...topping, quantity: 1 }];
+      setSelectedToppings(newToppings);
+
+      // Update toppingsTotal directly
+      setToppingsTotal(calculateToppingsTotal(newToppings));
+    }
+  };
+
+  const calculateToppingsTotal = (toppings: ToppingType[]) => {
+    const total = toppings.reduce(
+      (total, topping) => total + topping.price * (topping.quantity || 1),
+      0
+    );
+
+    return total;
+  };
+
+  const removeToppingFromBasket = (topping: ToppingType) => {
+    setSelectedToppings((prevToppings) => {
+      const updatedToppings = prevToppings
+        .map((t: ToppingType) =>
+          t.name === topping.name
+            ? { ...t, quantity: t.quantity - 1 } // Decrease quantity for the matching topping
+            : t
+        )
+        .filter((t: ToppingType) => t.quantity > 0); // Remove toppings with quantity 0
+
+      // Update toppingsTotal directly
+      setToppingsTotal(calculateToppingsTotal(updatedToppings));
+
+      return updatedToppings;
+    });
+  };
+
   const addToBasket = (pizza: Pizza) => {
     if (selectedSize !== undefined) {
       // Proceed with adding to the basket
-      console.log("basket", basket);
 
       const existingItemIndex = basket.findIndex(
         (item) =>
@@ -51,6 +106,10 @@ function PizzaList() {
       if (existingItemIndex !== -1) {
         const updatedBasket = [...basket];
         updatedBasket[existingItemIndex].quantity += 1;
+
+        // Update toppings for the existing item
+        updatedBasket[existingItemIndex].toppings = selectedToppings;
+
         setBasket(updatedBasket);
       } else {
         const pizzaWithPrice = {
@@ -61,9 +120,11 @@ function PizzaList() {
           size: selectedSize,
           base: selectedBase,
           basePrice: selectedBasePrice,
+          toppings: selectedToppings, // Include selected toppings
         };
 
         setBasket([...basket, pizzaWithPrice]);
+        setIsModalOpen(false);
       }
     }
   };
@@ -99,13 +160,16 @@ function PizzaList() {
   };
 
   const calculateTotalPrice = () => {
-    return basket.reduce(
+    const toppingsTotalPrice = calculateToppingsTotal(selectedToppings);
+    const pizzasTotalPrice = basket.reduce(
       (total, item) =>
         (item.price || 0) * item.quantity +
         (item.basePrice || 0) * item.quantity +
         total,
       0
     );
+
+    return pizzasTotalPrice + toppingsTotalPrice;
   };
 
   return (
@@ -147,11 +211,15 @@ function PizzaList() {
                 setSelectedBase(base);
                 setSelectedBasePrice(basePrice);
               }}
+              onAddTopping={addToppingToBasket}
+              onRemoveTopping={removeToppingFromBasket}
             />
 
             <button
               onClick={() => addToBasket(selectedPizza)}
-              disabled={selectedSize === undefined || selectedBase === undefined}
+              disabled={
+                selectedSize === undefined || selectedBase === undefined
+              }
             >
               Add to Basket
             </button>
@@ -163,6 +231,10 @@ function PizzaList() {
         calculateTotalPrice={calculateTotalPrice}
         increaseQuantity={increaseQuantity}
         decreaseQuantity={decreaseQuantity}
+        selectedToppings={selectedToppings}
+        toppingsTotal={toppingsTotal}
+        setBasket={setBasket}
+       
       />
     </div>
   );

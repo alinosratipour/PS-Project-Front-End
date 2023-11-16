@@ -1,21 +1,24 @@
-interface ToppingType {
-  name: string;
-  price: number;
-}
+import { ToppingType } from "./SharedTypes";
 
 interface ToppingsListProps {
   toppingData: ToppingType[] | undefined;
+  onAddTopping: (topping: ToppingType) => void;
+  onRemoveTopping: (topping: ToppingType) => void;
 }
 
-function ToppingsList({ toppingData }: ToppingsListProps) {
+function ToppingsList({
+  toppingData,
+  onAddTopping,
+  onRemoveTopping,
+}: ToppingsListProps) {
   return (
     <ul>
       {toppingData &&
         toppingData.map((topping, index) => (
           <li key={index}>
             {topping.name}: £{topping.price}
-            <button>add</button>
-            <button>remove</button>
+            <button onClick={() => onAddTopping(topping)}>add</button>
+            <button onClick={() => onRemoveTopping(topping)}>remove</button>
           </li>
         ))}
     </ul>

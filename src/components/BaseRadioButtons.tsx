@@ -1,13 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 
 interface BaseRadioButtonsProps {
   bases: { base: string; price: number }[];
   onBaseChange: (base: string, price: number) => void; // Pass both base and price
-  selectedSize:number;
-
+  selectedSize?: number;
+  initialCheckedBase?: string | null | undefined;
 }
 
-const BaseRadioButtons: React.FC<BaseRadioButtonsProps> = ({ bases, onBaseChange,selectedSize}) => {
+const BaseRadioButtons: React.FC<BaseRadioButtonsProps> = ({
+  bases,
+  onBaseChange,
+  selectedSize,
+  initialCheckedBase,
+}) => {
+  const [selectedBase, setSelectedBase] = useState<string | undefined>(
+    initialCheckedBase || undefined
+  );
+  
   return (
     <div>
       <h2>Select a base:</h2>
@@ -17,7 +26,11 @@ const BaseRadioButtons: React.FC<BaseRadioButtonsProps> = ({ bases, onBaseChange
             type="radio"
             name="base"
             value={base.base}
-            onChange={() => onBaseChange(base.base, base.price)} // Pass both base and price
+            onChange={() => {
+              setSelectedBase(base.base);
+              onBaseChange(base.base, base.price);
+            }} // Pass both base and price
+            checked={base.base === initialCheckedBase || base.base === selectedBase}
           />
           {base.base} £{base.price}
         </label>
