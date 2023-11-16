@@ -1,6 +1,6 @@
 import PizzaList from "./components/PizzaList";
-import { AvailableBasesProvider } from "./components/Context/AvailableBasesContext";
-import {SizeProvider} from "./components/Context/SizeContext"
+import { BaseProvider } from "./components/Context/BaseContext";
+import { SizeProvider } from "./components/Context/SizeContext";
 function App() {
   return (
     <div className="App">
@@ -8,13 +8,11 @@ function App() {
         <h1>Pizza Shop</h1>
       </header>
       <main>
-      <AvailableBasesProvider> 
-
-      <SizeProvider>
+        <BaseProvider>
+          <SizeProvider>
             <PizzaList />
           </SizeProvider>
-      </AvailableBasesProvider>
-       
+        </BaseProvider>
       </main>
     </div>
   );

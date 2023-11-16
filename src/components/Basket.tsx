@@ -10,8 +10,8 @@ interface BasketProps {
   calculateTotalPrice: () => number;
   selectedToppings: ToppingType[];
   toppingsTotal: number;
-  //onSizeChange: (newSize: number, itemId: number) => void;
   onSizeChange?: (newSize: number) => void;
+  onBaseChange?: (newBase: string) => void; // Add this prop
 }
 
 function Basket({
@@ -23,6 +23,7 @@ function Basket({
   selectedToppings,
   toppingsTotal,
   onSizeChange,
+  onBaseChange,
 }: BasketProps) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedBasketItem, setSelectedBasketItem] =
@@ -37,20 +38,22 @@ function Basket({
     const updatedBasket = basket.map((item) => {
       if (item.id_pizza === updatedItem.id_pizza) {
         // Ensure that the size is updated (if defined)
-        return { ...updatedItem, size: updatedItem.size?.toString() };
+        return {
+          ...updatedItem,
+          size: updatedItem.size?.toString(),
+          base: updatedItem.base,
+        };
       }
       return item;
     });
-  console.log("updatedBasket",updatedBasket);
-  
+
     // Update the basket state with the edited item
     setBasket(updatedBasket);
-  
+
     // Close the edit modal
     setIsEditModalOpen(false);
     setSelectedBasketItem(null);
   };
-  
 
   return (
     <div>
@@ -114,6 +117,7 @@ function Basket({
           onClose={() => setIsEditModalOpen(false)}
           onSave={handleSaveChanges}
           onSizeChange={onSizeChange}
+          onBaseChange={onBaseChange}
         />
       )}
     </div>
