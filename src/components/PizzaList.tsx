@@ -10,23 +10,31 @@ function PizzaList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPizza, setSelectedPizza] = useState<Pizza | null>(null);
   const [basket, setBasket] = useState<BasketItem[]>([]);
-  const [selectedSize, setSelectedSize] = useState<string | undefined>(undefined);
-  const [selectedBase, setSelectedBase] = useState<string | undefined>(undefined);
-  const [selectedSizePrice, setSelectedSizePrice] = useState<number | undefined>(0);
-  const [selectedBasePrice, setSelectedBasePrice] = useState<number | undefined>(0);
+  const [selectedSize, setSelectedSize] = useState<string | undefined>(
+    undefined
+  );
+  const [selectedBase, setSelectedBase] = useState<string | undefined>(
+    undefined
+  );
+  const [selectedSizePrice, setSelectedSizePrice] = useState<
+    number | undefined
+  >(0);
+  const [selectedBasePrice, setSelectedBasePrice] = useState<
+    number | undefined
+  >(0);
   const [selectedToppings, setSelectedToppings] = useState<ToppingType[]>([]);
   const [toppingsTotal, setToppingsTotal] = useState<number>(0);
 
-  const { loading, error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(GET_ALL_PIZZAS_LIST);
+  const { loading, error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(
+    GET_ALL_PIZZAS_LIST
+  );
 
   useEffect(() => {
     // Reset selectedToppings when the pizza size changes
     setSelectedToppings([]);
     setToppingsTotal(0);
   }, [selectedSize]);
-  
 
-  
   const openModal = (pizza: Pizza | null) => {
     setSelectedPizza(pizza);
     setSelectedSize(undefined); // Deselect size when opening the modal
@@ -209,7 +217,9 @@ function PizzaList() {
 
             <button
               onClick={() => addToBasket(selectedPizza)}
-              disabled={selectedSize === undefined || selectedBase === undefined}
+              disabled={
+                selectedSize === undefined || selectedBase === undefined
+              }
             >
               Add to Basket
             </button>
@@ -223,7 +233,8 @@ function PizzaList() {
         decreaseQuantity={decreaseQuantity}
         selectedToppings={selectedToppings}
         toppingsTotal={toppingsTotal}
-        openPizzaModal={openModal}
+        setBasket={setBasket}
+       
       />
     </div>
   );

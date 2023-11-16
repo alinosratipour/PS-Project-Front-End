@@ -11,7 +11,8 @@ import SizeRadioButtons from "./UI-Liberary/SizeRadioButton/SizeRadioButtons";
 
 import { If } from "tsx-control-statements/components";
 import BaseRadioButtons from "./BaseRadioButtons";
-import { BaseWithPrice, ToppingType } from "./SharedTypes";
+import { BaseWithPrice, SizeType, ToppingType } from "./SharedTypes";
+import { useSizeContext } from '../components/Context/SizeContext'; // Import the context
 
 interface ListToppingAndPricesProps {
   pizzaId: number;
@@ -22,19 +23,11 @@ interface ListToppingAndPricesProps {
   onBaseChange: (base: string | undefined, price: number) => void; // Update the callback to accept base price
   onAddTopping: (topping: ToppingType) => void;
   onRemoveTopping: (topping: ToppingType) => void;
+  initialSize?: string; // new prop
+
 }
 
-interface SizeType {
-  id_size: number;
-  p_size: string;
-  price_topping: number;
-  price: number;
-  bases: {
-    id_base: number;
-    price: number;
-    base: string;
-  }[];
-}
+
 
 function ListToppingAndPrices({
   pizzaId,
@@ -42,8 +35,11 @@ function ListToppingAndPrices({
   onBaseChange,
   onAddTopping,
   onRemoveTopping,
+  initialSize,
 }: ListToppingAndPricesProps) {
-  const [sizes, setSizes] = useState<SizeType[]>([]);
+
+  const { availableSizes, setSizes } = useSizeContext(); // Use the context
+ // const [sizes, setSizes] = useState<SizeType[]>([]);
   const [selectedSize, setSelectedSize] = useState<number>(1);
   const [isSizeSelected, setIsSizeSelected] = useState(false);
   const [selectedSizePrice, setSelectedSizePrice] = useState<
@@ -72,17 +68,25 @@ function ListToppingAndPrices({
     variables: { id_size: Number(selectedSize) },
   });
 
+
   useEffect(() => {
     if (!sizesLoading && sizesData) {
       const pizzaSizesData = sizesData.getpizzasWithSizesAndPrices.find(
         (pizza: any) => pizza.id_pizza === pizzaId
       );
-
       if (pizzaSizesData) {
         const availableSizes = pizzaSizesData.sizesWithPrices;
         setSizes(availableSizes);
 
-        const initialSelectedSizeData = availableSizes[0];
+
+      
+  
+        const initialSelectedSizeData = availableSizes.find(
+          (sizeData) => sizeData.p_size === initialSize
+        );
+
+
+  
         if (initialSelectedSizeData) {
           setSelectedSize(initialSelectedSizeData.id_size);
           setSelectedSizePrice(initialSelectedSizeData.price);
@@ -94,7 +98,8 @@ function ListToppingAndPrices({
         }
       }
     }
-  }, [sizesLoading, sizesData, pizzaId]);
+  }, [sizesLoading, sizesData, pizzaId, initialSize]);
+  
 
   useEffect(() => {
     if (Bases && Bases.getBasesPricesBySize) {
@@ -104,7 +109,7 @@ function ListToppingAndPrices({
 
   const handleSizeChange = (newSize: number) => {
     setSelectedSize(newSize);
-    const newSelectedSizeData = sizes.find(
+    const newSelectedSizeData = availableSizes.find(
       (sizeData) => sizeData.id_size === newSize
     );
 
@@ -131,7 +136,7 @@ function ListToppingAndPrices({
   return (
     <div>
       <h1>Topping Prices</h1>
-      <SizeRadioButtons sizes={sizes} onSizeChange={handleSizeChange} />
+      <SizeRadioButtons sizes={availableSizes} onSizeChange={handleSizeChange}  />
 
       <If condition={isSizeSelected}>
         <BaseRadioButtons

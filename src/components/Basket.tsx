@@ -1,35 +1,56 @@
-
+import React, { useState } from "react";
+import EditPizzaModal from "./EditPizzaModal";
 import { BasketItem, ToppingType } from "./SharedTypes";
 
 interface BasketProps {
   basket: BasketItem[];
+  setBasket: React.Dispatch<React.SetStateAction<BasketItem[]>>;
   increaseQuantity: (item: BasketItem) => void;
   decreaseQuantity: (item: BasketItem) => void;
   calculateTotalPrice: () => number;
   selectedToppings: ToppingType[];
   toppingsTotal: number;
-
-  openPizzaModal: (pizza: BasketItem |  null) => void;
- 
+  //onSizeChange: (newSize: number, itemId: number) => void;
+  onSizeChange?: (newSize: number) => void;
 }
 
 function Basket({
   basket,
+  setBasket,
   increaseQuantity,
   decreaseQuantity,
   calculateTotalPrice,
   selectedToppings,
   toppingsTotal,
-  openPizzaModal,
+  onSizeChange,
 }: BasketProps) {
-
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedBasketItem, setSelectedBasketItem] =
+    useState<BasketItem | null>(null);
 
   const handlePizzaClick = (pizza: BasketItem) => {
-    //setSelectedPizza(pizza);
-    console.log(pizza);
-    
-    openPizzaModal(pizza);
+    setSelectedBasketItem(pizza);
+    setIsEditModalOpen(true);
   };
+  const handleSaveChanges = (updatedItem: BasketItem) => {
+    // Logic to update the basket with the edited item
+    const updatedBasket = basket.map((item) => {
+      if (item.id_pizza === updatedItem.id_pizza) {
+        // Ensure that the size is updated (if defined)
+        return { ...updatedItem, size: updatedItem.size?.toString() };
+      }
+      return item;
+    });
+  console.log("updatedBasket",updatedBasket);
+  
+    // Update the basket state with the edited item
+    setBasket(updatedBasket);
+  
+    // Close the edit modal
+    setIsEditModalOpen(false);
+    setSelectedBasketItem(null);
+  };
+  
 
   return (
     <div>
@@ -84,6 +105,16 @@ function Basket({
           </ul>
           <p>Total Price: £{calculateTotalPrice()}</p>
         </>
+      )}
+
+      {/* Render the EditPizzaModal */}
+      {isEditModalOpen && (
+        <EditPizzaModal
+          item={selectedBasketItem}
+          onClose={() => setIsEditModalOpen(false)}
+          onSave={handleSaveChanges}
+          onSizeChange={onSizeChange}
+        />
       )}
     </div>
   );
