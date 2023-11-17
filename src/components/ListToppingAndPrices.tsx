@@ -15,16 +15,18 @@ import { BaseWithPrice, ToppingType } from "./SharedTypes";
 import { useSizeContext } from "../components/Context/SizeContext"; // Import the context
 import { useBaseContext } from "../components/Context/BaseContext";
 
+// ... (import statements)
+
 interface ListToppingAndPricesProps {
   pizzaId: number;
   onSizePriceChange: (
     price: number | undefined,
     sizeName: string | undefined
   ) => void;
-  onBaseChange: (base: string | undefined, price: number) => void; // Update the callback to accept base price
+  onBaseChange: (base: string | undefined, price: number) => void;
   onAddTopping: (topping: ToppingType) => void;
   onRemoveTopping: (topping: ToppingType) => void;
-  initialSize?: string; // new prop
+  initialSize?: string;
 }
 
 function ListToppingAndPrices({
@@ -35,35 +37,25 @@ function ListToppingAndPrices({
   onRemoveTopping,
   initialSize,
 }: ListToppingAndPricesProps) {
-  const { availableSizes, setSizes } = useSizeContext(); // Use the context
-  const { availableBases, setAvailableBases } = useBaseContext();
+  const { availableSizes, setSizes } = useSizeContext();
+  const { availableBases, setAvailableBases, refetchBases } = useBaseContext();
   const [selectedSize, setSelectedSize] = useState<number>(1);
-
   const [isSizeSelected, setIsSizeSelected] = useState(false);
-  const [selectedSizePrice, setSelectedSizePrice] = useState<
-    number | undefined
-  >(0);
+  const [selectedSizePrice, setSelectedSizePrice] = useState<number | undefined>(0);
 
-  const { loading: sizesLoading, data: sizesData } = useQuery(
-    GET_PIZZAS_WITH_SIZES_AND_PRICES
+  const { loading: sizesLoading, data: sizesData } = useQuery(GET_PIZZAS_WITH_SIZES_AND_PRICES);
+  const { loading, error, data: toppingData, refetch: refetchToppingData } = useQuery<{ getToppingPricesBySize: ToppingType[] }>(
+    GET_TOPPING_PRICES,
+    {
+      variables: { id_size: Number(selectedSize) },
+    }
   );
-
-  // Query for topping data
-  const {
-    loading,
-    error,
-    data: toppingData,
-    refetch: refetchToppingData,
-  } = useQuery<{ getToppingPricesBySize: ToppingType[] }>(GET_TOPPING_PRICES, {
-    variables: { id_size: Number(selectedSize) },
-  });
-
-  // Use refetch function for bases data
-  const { data: Bases, refetch: refetchBases } = useQuery<{
-    getBasesPricesBySize: BaseWithPrice[];
-  }>(GET_ALL_SIZES_WITH_RELATED_BASES, {
-    variables: { id_size: Number(selectedSize) },
-  });
+  const { data: Bases } = useQuery<{ getBasesPricesBySize: BaseWithPrice[] }>(
+    GET_ALL_SIZES_WITH_RELATED_BASES,
+    {
+      variables: { id_size: Number(selectedSize) },
+    }
+  );
 
   useEffect(() => {
     if (!sizesLoading && sizesData) {
@@ -108,7 +100,7 @@ function ListToppingAndPrices({
       onSizePriceChange(newSelectedSizeData.price, newSelectedSizeData.p_size);
       setIsSizeSelected(true);
       refetchToppingData({ id_size: newSize });
-      refetchBases({ id_size: newSize });
+      refetchBases(newSize); // Pass the new size ID to refetchBases
     }
   };
 
@@ -126,16 +118,13 @@ function ListToppingAndPrices({
   return (
     <div>
       <h1>Topping Prices</h1>
-      <SizeRadioButtons
-        sizes={availableSizes}
-        onSizeChange={handleSizeChange}
-      />
+      <SizeRadioButtons sizes={availableSizes} onSizeChange={handleSizeChange} />
 
       <If condition={isSizeSelected}>
         <BaseRadioButtons
           bases={availableBases}
           onBaseChange={handleBaseChange}
-          selectedSize={selectedSize}
+          //selectedSize={selectedSize}
         />
         <ToppingsList
           toppingData={toppingData?.getToppingPricesBySize}

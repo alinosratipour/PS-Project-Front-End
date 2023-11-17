@@ -42,8 +42,10 @@ function Basket({
           ...updatedItem,
           size: updatedItem.size?.toString(),
           base: updatedItem.base,
+          price: updatedItem.price,
         };
       }
+
       return item;
     });
 
