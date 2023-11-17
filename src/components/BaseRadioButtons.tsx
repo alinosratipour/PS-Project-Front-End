@@ -16,7 +16,7 @@ const BaseRadioButtons: React.FC<BaseRadioButtonsProps> = ({
   const [selectedBase, setSelectedBase] = useState<string | undefined>(
     initialCheckedBase || undefined
   );
-  
+
   return (
     <div>
       <h2>Select a base:</h2>
@@ -30,7 +30,9 @@ const BaseRadioButtons: React.FC<BaseRadioButtonsProps> = ({
               setSelectedBase(base.base);
               onBaseChange(base.base, base.price);
             }} // Pass both base and price
-            checked={base.base === initialCheckedBase || base.base === selectedBase}
+            checked={
+              base.base === initialCheckedBase || base.base === selectedBase
+            }
           />
           {base.base} £{base.price}
         </label>

@@ -23,13 +23,12 @@ const EditPizzaModal: React.FC<EditPizzaModalProps> = ({
   onBaseChange,
 }) => {
   const { availableSizes } = useSizeContext();
-  const { availableBases } = useBaseContext();
+  const { availableBases, refetchBases } = useBaseContext();
 
   const [editedPizza, setEditedPizza] = useState<BasketItem | null>(item);
   const [selectedSize, setSelectedSize] = useState<SizeType | undefined>(
     availableSizes.find((size) => size.p_size === item?.size)
   );
-
   const [selectedBase, setSelectedBase] = useState<string | undefined>(
     editedPizza?.base
   );
@@ -40,7 +39,10 @@ const EditPizzaModal: React.FC<EditPizzaModalProps> = ({
   }, [item, availableSizes]);
 
   const handleSizeChange = (newSize: number, sizeName: string) => {
-    const selectedSize = availableSizes.find((size) => size.p_size === sizeName);
+    refetchBases(newSize);
+    const selectedSize = availableSizes.find(
+      (size) => size.p_size === sizeName
+    );
 
     if (selectedSize) {
       setSelectedSize(selectedSize);
@@ -59,9 +61,9 @@ const EditPizzaModal: React.FC<EditPizzaModalProps> = ({
     if (editedPizza) {
       const updatedItem = {
         ...editedPizza,
-        size: selectedSize?.p_size || "", // Use optional chaining to avoid errors
+        size: selectedSize?.p_size || "",
         base: selectedBase,
-        price: selectedSize?.price || 0,  // Update the price property
+        price: selectedSize?.price || 0,
       };
       onSave(updatedItem);
       onClose();
@@ -89,7 +91,10 @@ const EditPizzaModal: React.FC<EditPizzaModalProps> = ({
           onBaseChange={handleBaseChange}
           initialCheckedBase={selectedBase}
         />
-        <SizePrice selectedSizePrice={selectedSize?.price || 0} size={selectedSize?.p_size || ""} />
+        <SizePrice
+          selectedSizePrice={selectedSize?.price || 0}
+          size={selectedSize?.p_size || ""}
+        />
         <button onClick={handleSave}>Save Changes</button>
       </div>
     </Modal>
