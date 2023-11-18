@@ -1,21 +1,32 @@
 import { ToppingType } from "./SharedTypes";
 
 interface ToppingsListProps {
-  toppingData: ToppingType[] | undefined;
+  //toppingData?: ToppingType[] | undefined;
   onAddTopping: (topping: ToppingType) => void;
   onRemoveTopping: (topping: ToppingType) => void;
+  availableToppings?: ToppingType[] | undefined;
+  refetchToppings?: (idSize: number) => Promise<void>; // Add this line
+  selectedToppings?: ToppingType[];
 }
 
 function ToppingsList({
-  toppingData,
+  availableToppings,
+  selectedToppings,
+  // toppingData,
   onAddTopping,
   onRemoveTopping,
 }: ToppingsListProps) {
+  const isToppingInBasket = (topping: ToppingType) =>
+    selectedToppings && selectedToppings.some((t) => t.name === topping.name);
+
   return (
     <ul>
-      {toppingData &&
-        toppingData.map((topping, index) => (
-          <li key={index}>
+      {availableToppings &&
+        availableToppings.map((topping, index) => (
+          <li
+            key={index}
+            style={isToppingInBasket(topping) ? { color: "red" } : {}}
+          >
             {topping.name}: £{topping.price}
             <button onClick={() => onAddTopping(topping)}>add</button>
             <button onClick={() => onRemoveTopping(topping)}>remove</button>

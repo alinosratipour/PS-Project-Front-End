@@ -3,9 +3,11 @@ import Modal from "../components/UI-Liberary/Modal";
 import SizeRadioButtons from "./UI-Liberary/SizeRadioButton/SizeRadioButtons";
 import { useSizeContext } from "../components/Context/SizeContext";
 import { useBaseContext } from "../components/Context/BaseContext";
+import { useToppingContext } from "../components/Context/ToppingContaxt";
 import BaseRadioButtons from "./BaseRadioButtons";
 import SizePrice from "./SizePrice";
-import { BaseWithPrice, BasketItem, SizeType } from "./SharedTypes";
+import { BasketItem, SizeType, ToppingType } from "./SharedTypes";
+import ToppingsList from "./ToppingsList";
 
 interface EditPizzaModalProps {
   item: BasketItem | null;
@@ -24,6 +26,7 @@ const EditPizzaModal: React.FC<EditPizzaModalProps> = ({
 }) => {
   const { availableSizes } = useSizeContext();
   const { availableBases, refetchBases } = useBaseContext();
+  const { availableToppings, refetchToppings } = useToppingContext();
 
   const [editedPizza, setEditedPizza] = useState<BasketItem | null>(item);
   const [selectedSize, setSelectedSize] = useState<SizeType | undefined>(
@@ -37,9 +40,14 @@ const EditPizzaModal: React.FC<EditPizzaModalProps> = ({
     number | undefined
   >(item?.basePrice || 0);
 
+  const [selectedToppings, setSelectedToppings] = useState<ToppingType[]>(
+    item?.toppings || []
+  );
+
   useEffect(() => {
     setEditedPizza(item);
     setSelectedSize(availableSizes.find((size) => size.p_size === item?.size));
+    setSelectedToppings(item?.toppings || []);
   }, [item, availableSizes]);
 
   const handleSizeChange = (newSize: number, sizeName: string) => {
@@ -72,8 +80,8 @@ const EditPizzaModal: React.FC<EditPizzaModalProps> = ({
           selectedBasePrice !== undefined
             ? selectedBasePrice
             : editedPizza.basePrice,
-
         price: selectedSize?.price || 0,
+        toppings: selectedToppings, // Include selected toppings
       };
       onSave(updatedItem);
       onClose();
@@ -86,6 +94,39 @@ const EditPizzaModal: React.FC<EditPizzaModalProps> = ({
     if (onBaseChange && editedPizza) {
       onBaseChange(newBase, price);
     }
+  };
+
+  const handleAddTopping = (topping: ToppingType) => {
+    const existingToppingIndex = selectedToppings.findIndex(
+      (t) => t.name === topping.name
+    );
+
+    if (existingToppingIndex !== -1) {
+      // Topping already exists, update its quantity
+      const updatedToppings = [...selectedToppings];
+      if (updatedToppings[existingToppingIndex].quantity < 10) {
+        updatedToppings[existingToppingIndex].quantity += 1;
+        setSelectedToppings(updatedToppings);
+      }
+    } else {
+      // Topping doesn't exist, add it with quantity 1
+      const newTopping = { ...topping, quantity: 1 };
+      setSelectedToppings([...selectedToppings, newTopping]);
+    }
+  };
+
+  const handleRemoveTopping = (topping: ToppingType) => {
+    setSelectedToppings((prevToppings) => {
+      const updatedToppings = prevToppings
+        .map((t: ToppingType) =>
+          t.name === topping.name
+            ? { ...t, quantity: t.quantity - 1 } // Decrease quantity for the matching topping
+            : t
+        )
+        .filter((t: ToppingType) => t.quantity > 0); // Remove toppings with quantity 0
+
+      return updatedToppings;
+    });
   };
 
   return (
@@ -106,6 +147,14 @@ const EditPizzaModal: React.FC<EditPizzaModalProps> = ({
           selectedSizePrice={selectedSize?.price || 0}
           size={selectedSize?.p_size || ""}
         />
+        <ToppingsList
+          availableToppings={availableToppings}
+          refetchToppings={refetchToppings}
+          onAddTopping={handleAddTopping} // Pass the add topping function
+          onRemoveTopping={handleRemoveTopping} // Pass the remove topping function
+          selectedToppings={selectedToppings}
+        />
+
         <button onClick={handleSave}>Save Changes</button>
       </div>
     </Modal>
