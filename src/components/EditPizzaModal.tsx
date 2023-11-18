@@ -5,7 +5,7 @@ import { useSizeContext } from "../components/Context/SizeContext";
 import { useBaseContext } from "../components/Context/BaseContext";
 import BaseRadioButtons from "./BaseRadioButtons";
 import SizePrice from "./SizePrice";
-import { BasketItem, SizeType } from "./SharedTypes";
+import { BaseWithPrice, BasketItem, SizeType } from "./SharedTypes";
 
 interface EditPizzaModalProps {
   item: BasketItem | null;
@@ -33,6 +33,10 @@ const EditPizzaModal: React.FC<EditPizzaModalProps> = ({
     editedPizza?.base
   );
 
+  const [selectedBasePrice, setSelectedBasePrice] = useState<
+    number | undefined
+  >(item?.basePrice || 0);
+
   useEffect(() => {
     setEditedPizza(item);
     setSelectedSize(availableSizes.find((size) => size.p_size === item?.size));
@@ -40,6 +44,7 @@ const EditPizzaModal: React.FC<EditPizzaModalProps> = ({
 
   const handleSizeChange = (newSize: number, sizeName: string) => {
     refetchBases(newSize);
+    setSelectedBasePrice(newSize);
     const selectedSize = availableSizes.find(
       (size) => size.p_size === sizeName
     );
@@ -63,6 +68,11 @@ const EditPizzaModal: React.FC<EditPizzaModalProps> = ({
         ...editedPizza,
         size: selectedSize?.p_size || "",
         base: selectedBase,
+        basePrice:
+          selectedBasePrice !== undefined
+            ? selectedBasePrice
+            : editedPizza.basePrice,
+
         price: selectedSize?.price || 0,
       };
       onSave(updatedItem);
@@ -72,6 +82,7 @@ const EditPizzaModal: React.FC<EditPizzaModalProps> = ({
 
   const handleBaseChange = (newBase: string, price: number) => {
     setSelectedBase(newBase);
+    setSelectedBasePrice(price);
     if (onBaseChange && editedPizza) {
       onBaseChange(newBase, price);
     }
