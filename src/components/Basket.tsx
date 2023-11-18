@@ -34,15 +34,14 @@ function Basket({
     setIsEditModalOpen(true);
   };
   const handleSaveChanges = (updatedItem: BasketItem) => {
-    // Logic to update the basket with the edited item
     const updatedBasket = basket.map((item) => {
       if (item.id_pizza === updatedItem.id_pizza) {
-        // Ensure that the size is updated (if defined)
         return {
           ...updatedItem,
           size: updatedItem.size?.toString(),
           base: updatedItem.base,
           price: updatedItem.price,
+          basePrice: updatedItem.basePrice,
         };
       }
 
@@ -52,7 +51,6 @@ function Basket({
     // Update the basket state with the edited item
     setBasket(updatedBasket);
 
-    // Close the edit modal
     setIsEditModalOpen(false);
     setSelectedBasketItem(null);
   };
