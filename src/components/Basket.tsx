@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import EditPizzaModal from "./EditPizzaModal";
 import { BasketItem, ToppingType } from "./SharedTypes";
+import { calculateToppingsTotal } from "./utils";
 
 interface BasketProps {
   basket: BasketItem[];
@@ -11,8 +12,9 @@ interface BasketProps {
   selectedToppings: ToppingType[];
   toppingsTotal: number;
   onSizeChange?: (newSize: number) => void;
-  onBaseChange?: (newBase: string) => void; // Add this prop
-  onToppingsChange: (updatedToppings: ToppingType[]) => void;
+  onBaseChange?: (newBase: string) => void;
+  onBasketToppingsChange: (updatedToppings: ToppingType[]) => void;
+  onBasketToppingsTotalChange: (total: number) => void;
 }
 
 function Basket({
@@ -25,20 +27,26 @@ function Basket({
   toppingsTotal,
   onSizeChange,
   onBaseChange,
-  onToppingsChange,
+  onBasketToppingsChange,
+  onBasketToppingsTotalChange,
 }: BasketProps) {
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [selectedBasketItem, setSelectedBasketItem] =
-    useState<BasketItem | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
+  const [selectedBasketItem, setSelectedBasketItem] = React.useState<
+    BasketItem | null
+  >(null);
 
   const handlePizzaClick = (pizza: BasketItem) => {
     setSelectedBasketItem(pizza);
     setIsEditModalOpen(true);
   };
+
   const handleSaveChanges = (updatedItem: BasketItem) => {
     const updatedBasket = basket.map((item) => {
       if (item.id_pizza === updatedItem.id_pizza) {
-        onToppingsChange(updatedItem.toppings || []);
+        onBasketToppingsChange(updatedItem.toppings || []);
+        const total = calculateToppingsTotal(updatedItem.toppings || []);
+        onBasketToppingsTotalChange(total);
+
         return {
           ...updatedItem,
           size: updatedItem.size?.toString(),
@@ -51,7 +59,6 @@ function Basket({
       return item;
     });
 
-    // Update the basket state with the edited item
     setBasket(updatedBasket);
 
     setIsEditModalOpen(false);
@@ -100,7 +107,6 @@ function Basket({
         </>
       )}
 
-      {/* Render the EditPizzaModal */}
       {isEditModalOpen && (
         <EditPizzaModal
           item={selectedBasketItem}
@@ -108,6 +114,8 @@ function Basket({
           onSave={handleSaveChanges}
           onSizeChange={onSizeChange}
           onBaseChange={onBaseChange}
+          onToppingsTotalChange={onBasketToppingsTotalChange}
+          onToppingsChange={onBasketToppingsChange}
         />
       )}
     </div>

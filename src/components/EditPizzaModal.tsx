@@ -16,6 +16,8 @@ interface EditPizzaModalProps {
   onSave: (updatedItem: BasketItem) => void;
   onSizeChange?: (newSize: number, sizeName: string) => void;
   onBaseChange?: (newBase: string, price: number) => void;
+  onToppingsChange: (toppings: ToppingType[]) => void;
+  onToppingsTotalChange: (total: number) => void;
 }
 
 const EditPizzaModal: React.FC<EditPizzaModalProps> = ({
@@ -24,6 +26,8 @@ const EditPizzaModal: React.FC<EditPizzaModalProps> = ({
   onSave,
   onSizeChange,
   onBaseChange,
+  onToppingsChange,
+  onToppingsTotalChange,
 }) => {
   const { availableSizes } = useSizeContext();
   const { availableBases, refetchBases } = useBaseContext();
@@ -92,6 +96,7 @@ const EditPizzaModal: React.FC<EditPizzaModalProps> = ({
   const handleBaseChange = (newBase: string, price: number) => {
     setSelectedBase(newBase);
     setSelectedBasePrice(price);
+
     if (onBaseChange && editedPizza) {
       onBaseChange(newBase, price);
     }
@@ -108,11 +113,21 @@ const EditPizzaModal: React.FC<EditPizzaModalProps> = ({
       if (updatedToppings[existingToppingIndex].quantity < 10) {
         updatedToppings[existingToppingIndex].quantity += 1;
         setSelectedToppings(updatedToppings);
+
+        // Update toppingsTotal directly
+        const total = calculateToppingsTotal(updatedToppings);
+        onToppingsChange(updatedToppings);
+        onToppingsTotalChange(total);
       }
     } else {
       // Topping doesn't exist, add it with quantity 1
-      const newTopping = { ...topping, quantity: 1 };
-      setSelectedToppings([...selectedToppings, newTopping]);
+      const newToppings = [...selectedToppings, { ...topping, quantity: 1 }];
+      setSelectedToppings(newToppings);
+
+      // Update toppingsTotal directly
+      const total = calculateToppingsTotal(newToppings);
+      onToppingsChange(newToppings);
+      onToppingsTotalChange(total);
     }
   };
 
@@ -126,38 +141,46 @@ const EditPizzaModal: React.FC<EditPizzaModalProps> = ({
         )
         .filter((t: ToppingType) => t.quantity > 0); // Remove toppings with quantity 0
 
+      // Update toppingsTotal directly
+      const total = calculateToppingsTotal(updatedToppings);
+      onToppingsChange(updatedToppings);
+      onToppingsTotalChange(total);
+
       return updatedToppings;
     });
   };
 
   return (
     <Modal isOpen={true} onClose={onClose}>
+      <h2>Edit Pizza</h2>
       <div>
-        <h2>Edit Pizza: {editedPizza?.name}</h2>
+        <h3>Size:</h3>
         <SizeRadioButtons
           sizes={availableSizes}
           onSizeChange={handleSizeChange}
-          initialCheckedSize={selectedSize?.p_size}
+          initialCheckedSize={selectedSize?.p_size || ""}
         />
+      </div>
+      <div>
+        <h3>Base:</h3>
         <BaseRadioButtons
           bases={availableBases}
           onBaseChange={handleBaseChange}
           initialCheckedBase={selectedBase}
         />
-        <SizePrice
-          selectedSizePrice={selectedSize?.price || 0}
-          size={selectedSize?.p_size || ""}
-        />
-        <ToppingsList
-          availableToppings={availableToppings}
-          refetchToppings={refetchToppings}
-          onAddTopping={handleAddTopping} // Pass the add topping function
-          onRemoveTopping={handleRemoveTopping} // Pass the remove topping function
-          selectedToppings={selectedToppings}
-        />
-
-        <button onClick={handleSave}>Save Changes</button>
       </div>
+      <SizePrice
+        selectedSizePrice={selectedSize?.price || 0}
+        size={selectedSize?.p_size || ""}
+      />
+      <ToppingsList
+        availableToppings={availableToppings}
+        refetchToppings={refetchToppings}
+        onAddTopping={handleAddTopping}
+        onRemoveTopping={handleRemoveTopping}
+        selectedToppings={selectedToppings}
+      />
+      <button onClick={handleSave}>Save Changes</button>
     </Modal>
   );
 };
