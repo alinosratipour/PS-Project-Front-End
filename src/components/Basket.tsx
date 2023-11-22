@@ -12,6 +12,7 @@ interface BasketProps {
   toppingsTotal: number;
   onSizeChange?: (newSize: number) => void;
   onBaseChange?: (newBase: string) => void; // Add this prop
+  onToppingsChange: (updatedToppings: ToppingType[]) => void;
 }
 
 function Basket({
@@ -24,6 +25,7 @@ function Basket({
   toppingsTotal,
   onSizeChange,
   onBaseChange,
+  onToppingsChange,
 }: BasketProps) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedBasketItem, setSelectedBasketItem] =
@@ -36,6 +38,7 @@ function Basket({
   const handleSaveChanges = (updatedItem: BasketItem) => {
     const updatedBasket = basket.map((item) => {
       if (item.id_pizza === updatedItem.id_pizza) {
+        onToppingsChange(updatedItem.toppings || []);
         return {
           ...updatedItem,
           size: updatedItem.size?.toString(),
@@ -44,7 +47,7 @@ function Basket({
           basePrice: updatedItem.basePrice,
         };
       }
-
+     
       return item;
     });
 

@@ -234,6 +234,7 @@ function PizzaList() {
         selectedToppings={selectedToppings}
         toppingsTotal={toppingsTotal}
         setBasket={setBasket}
+        onToppingsChange={setSelectedToppings}
        
       />
     </div>
