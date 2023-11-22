@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import EditPizzaModal from "./EditPizzaModal";
 import { BasketItem, ToppingType } from "./SharedTypes";
+import { calculateToppingsTotal } from "./utils";
 
 interface BasketProps {
   basket: BasketItem[];
@@ -11,7 +12,9 @@ interface BasketProps {
   selectedToppings: ToppingType[];
   toppingsTotal: number;
   onSizeChange?: (newSize: number) => void;
-  onBaseChange?: (newBase: string) => void; // Add this prop
+  onBaseChange?: (newBase: string) => void;
+  onBasketToppingsChange: (updatedToppings: ToppingType[]) => void;
+  onBasketToppingsTotalChange: (total: number) => void;
 }
 
 function Basket({
@@ -24,54 +27,55 @@ function Basket({
   toppingsTotal,
   onSizeChange,
   onBaseChange,
+  onBasketToppingsChange,
+  onBasketToppingsTotalChange,
 }: BasketProps) {
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [selectedBasketItem, setSelectedBasketItem] =
-    useState<BasketItem | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
+  const [selectedBasketItem, setSelectedBasketItem] = React.useState<
+    BasketItem | null
+  >(null);
 
   const handlePizzaClick = (pizza: BasketItem) => {
     setSelectedBasketItem(pizza);
     setIsEditModalOpen(true);
   };
+
   const handleSaveChanges = (updatedItem: BasketItem) => {
-    const updatedBasket = basket.map((item) => {
-      if (item.id_pizza === updatedItem.id_pizza) {
-        return {
-          ...updatedItem,
-          size: updatedItem.size?.toString(),
-          base: updatedItem.base,
-          price: updatedItem.price,
-          basePrice: updatedItem.basePrice,
-        };
-      }
+    const toppingsTotal = updatedItem.toppings
+  ? updatedItem.toppings.reduce((total, topping) => {
+      const toppingTotal = (topping.price || 0) * (topping.quantity || 1);
+      return total + toppingTotal;
+    }, 0)
+  : 0;
 
-      return item;
-    });
+  
+ 
 
-    // Update the basket state with the edited item
+  
+  
+    const updatedBasket = basket.map((item) =>
+      item.id_pizza === updatedItem.id_pizza
+        ? {
+            ...updatedItem,
+            size: updatedItem.size?.toString(),
+            base: updatedItem.base,
+            price: updatedItem.price,
+            basePrice: updatedItem.basePrice,
+            toppingsTotal: toppingsTotal,
+          }
+        : item
+    );
+  
     setBasket(updatedBasket);
-
     setIsEditModalOpen(false);
     setSelectedBasketItem(null);
   };
+  
+  
 
   return (
     <div>
       <h1>Basket</h1>
-
-      {selectedToppings.length > 0 && (
-        <div>
-          <h2>Selected Toppings:</h2>
-          <p>Total Price: £{toppingsTotal}</p>
-          <ul>
-            {selectedToppings.map((topping, index) => (
-              <li key={index}>
-                {topping.name}: Quantity: {topping.quantity} - £{topping.price}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
 
       {basket.length === 0 ? (
         <p>Your basket is empty.</p>
@@ -90,9 +94,10 @@ function Basket({
                 {item.quantity} - £{(item.price || 0) * item.quantity}
                 <button onClick={() => increaseQuantity(item)}>+</button>
                 <button onClick={() => decreaseQuantity(item)}>-</button>
-                {item.toppings && item.toppings.length > 0 && (
+                {item.toppings && item.toppings.length > 0 &&  (
                   <div>
                     <h3>Toppings:</h3>
+                    <p>Topping Price: £{item.toppingsTotal}</p>
                     <ul>
                       {item.toppings.map((topping, index) => (
                         <li key={index}>
@@ -110,7 +115,6 @@ function Basket({
         </>
       )}
 
-      {/* Render the EditPizzaModal */}
       {isEditModalOpen && (
         <EditPizzaModal
           item={selectedBasketItem}
@@ -118,6 +122,8 @@ function Basket({
           onSave={handleSaveChanges}
           onSizeChange={onSizeChange}
           onBaseChange={onBaseChange}
+          onToppingsTotalChange={onBasketToppingsTotalChange}
+          onToppingsChange={onBasketToppingsChange}
         />
       )}
     </div>
