@@ -38,9 +38,13 @@ function ListToppingAndPrices({
   const { availableToppings, refetchToppings } = useToppingContext();
   const [selectedSize, setSelectedSize] = useState<number>(1);
   const [isSizeSelected, setIsSizeSelected] = useState(false);
-  const [selectedSizePrice, setSelectedSizePrice] = useState<number | undefined>(0);
+  const [selectedSizePrice, setSelectedSizePrice] = useState<
+    number | undefined
+  >(0);
 
-  const { loading: sizesLoading, data: sizesData } = useQuery(GET_PIZZAS_WITH_SIZES_AND_PRICES);
+  const { loading: sizesLoading, data: sizesData } = useQuery(
+    GET_PIZZAS_WITH_SIZES_AND_PRICES
+  );
   const { data: Bases } = useQuery<{ getBasesPricesBySize: BaseWithPrice[] }>(
     GET_ALL_SIZES_WITH_RELATED_BASES,
     {
@@ -104,12 +108,14 @@ function ListToppingAndPrices({
   };
 
   if (sizesLoading) return "Loading sizes...";
-console.log(availableToppings);
 
   return (
     <div>
       <h1>Topping Prices</h1>
-      <SizeRadioButtons sizes={availableSizes} onSizeChange={handleSizeChange} />
+      <SizeRadioButtons
+        sizes={availableSizes}
+        onSizeChange={handleSizeChange}
+      />
 
       {isSizeSelected && (
         <>
@@ -118,7 +124,7 @@ console.log(availableToppings);
             onBaseChange={handleBaseChange}
           />
           <ToppingsList
-             availableToppings={availableToppings}
+            availableToppings={availableToppings}
             onAddTopping={onAddTopping}
             onRemoveTopping={onRemoveTopping}
           />
