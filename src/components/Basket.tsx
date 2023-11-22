@@ -47,7 +47,7 @@ function Basket({
           basePrice: updatedItem.basePrice,
         };
       }
-     
+
       return item;
     });
 
@@ -61,20 +61,6 @@ function Basket({
   return (
     <div>
       <h1>Basket</h1>
-
-      {selectedToppings.length > 0 && (
-        <div>
-          <h2>Selected Toppings:</h2>
-          <p>Total Price: £{toppingsTotal}</p>
-          <ul>
-            {selectedToppings.map((topping, index) => (
-              <li key={index}>
-                {topping.name}: Quantity: {topping.quantity} - £{topping.price}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
 
       {basket.length === 0 ? (
         <p>Your basket is empty.</p>
@@ -96,6 +82,7 @@ function Basket({
                 {item.toppings && item.toppings.length > 0 && (
                   <div>
                     <h3>Toppings:</h3>
+                    <p>Total Price: £{toppingsTotal}</p>
                     <ul>
                       {item.toppings.map((topping, index) => (
                         <li key={index}>

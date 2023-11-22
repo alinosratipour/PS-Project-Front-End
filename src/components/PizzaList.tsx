@@ -5,6 +5,7 @@ import { GET_ALL_PIZZAS_LIST } from "../queries/queries";
 import ListToppingAndPrices from "./ListToppingAndPrices";
 import Basket from "./Basket";
 import { Pizza, BasketItem, ToppingType } from "./SharedTypes";
+import { calculateToppingsTotal } from "./utils";
 
 function PizzaList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -64,15 +65,6 @@ function PizzaList() {
       // Update toppingsTotal directly
       setToppingsTotal(calculateToppingsTotal(newToppings));
     }
-  };
-
-  const calculateToppingsTotal = (toppings: ToppingType[]) => {
-    const total = toppings.reduce(
-      (total, topping) => total + topping.price * (topping.quantity || 1),
-      0
-    );
-
-    return total;
   };
 
   const removeToppingFromBasket = (topping: ToppingType) => {
@@ -235,7 +227,6 @@ function PizzaList() {
         toppingsTotal={toppingsTotal}
         setBasket={setBasket}
         onToppingsChange={setSelectedToppings}
-       
       />
     </div>
   );
