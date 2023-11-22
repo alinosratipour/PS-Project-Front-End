@@ -41,29 +41,37 @@ function Basket({
   };
 
   const handleSaveChanges = (updatedItem: BasketItem) => {
-    const updatedBasket = basket.map((item) => {
-      if (item.id_pizza === updatedItem.id_pizza) {
-        onBasketToppingsChange(updatedItem.toppings || []);
-        const total = calculateToppingsTotal(updatedItem.toppings || []);
-        onBasketToppingsTotalChange(total);
+    const toppingsTotal = updatedItem.toppings
+  ? updatedItem.toppings.reduce((total, topping) => {
+      const toppingTotal = (topping.price || 0) * (topping.quantity || 1);
+      return total + toppingTotal;
+    }, 0)
+  : 0;
 
-        return {
-          ...updatedItem,
-          size: updatedItem.size?.toString(),
-          base: updatedItem.base,
-          price: updatedItem.price,
-          basePrice: updatedItem.basePrice,
-        };
-      }
+  
+ 
 
-      return item;
-    });
-
+  
+  
+    const updatedBasket = basket.map((item) =>
+      item.id_pizza === updatedItem.id_pizza
+        ? {
+            ...updatedItem,
+            size: updatedItem.size?.toString(),
+            base: updatedItem.base,
+            price: updatedItem.price,
+            basePrice: updatedItem.basePrice,
+            toppingsTotal: toppingsTotal,
+          }
+        : item
+    );
+  
     setBasket(updatedBasket);
-
     setIsEditModalOpen(false);
     setSelectedBasketItem(null);
   };
+  
+  
 
   return (
     <div>
@@ -86,10 +94,10 @@ function Basket({
                 {item.quantity} - £{(item.price || 0) * item.quantity}
                 <button onClick={() => increaseQuantity(item)}>+</button>
                 <button onClick={() => decreaseQuantity(item)}>-</button>
-                {item.toppings && item.toppings.length > 0 && (
+                {item.toppings && item.toppings.length > 0 &&  (
                   <div>
                     <h3>Toppings:</h3>
-                    <p>Total Price: £{toppingsTotal}</p>
+                    <p>Topping Price: £{item.toppingsTotal}</p>
                     <ul>
                       {item.toppings.map((topping, index) => (
                         <li key={index}>

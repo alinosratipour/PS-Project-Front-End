@@ -1,9 +1,10 @@
 import { ToppingType } from "./SharedTypes";
 
+
 export const calculateToppingsTotal = (toppings: ToppingType[]) => {
-    const total = toppings.reduce(
-      (total, topping) => total + topping.price * (topping.quantity || 1),
-      0
-    );
-    return total;
-  };
+  return toppings.reduce((total, topping) => {
+    const toppingTotal = (topping.price || 0) * (topping.quantity || 1);
+    return total + toppingTotal;
+  }, 0);
+};
+

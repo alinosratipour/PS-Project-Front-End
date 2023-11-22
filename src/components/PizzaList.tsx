@@ -66,9 +66,7 @@ function PizzaList() {
     setSelectedToppings((prevToppings) => {
       const updatedToppings = prevToppings
         .map((t: ToppingType) =>
-          t.name === topping.name
-            ? { ...t, quantity: t.quantity - 1 }
-            : t
+          t.name === topping.name ? { ...t, quantity: t.quantity - 1 } : t
         )
         .filter((t: ToppingType) => t.quantity > 0);
 
@@ -80,34 +78,22 @@ function PizzaList() {
 
   const addToBasket = (pizza: Pizza) => {
     if (selectedSize !== undefined) {
-      const existingItemIndex = basket.findIndex(
-        (item) =>
-          item.id_pizza === pizza.id_pizza &&
-          item.size === selectedSize &&
-          item.base === selectedBase
-      );
+      // ... (existing code)
 
-      if (existingItemIndex !== -1) {
-        const updatedBasket = [...basket];
-        updatedBasket[existingItemIndex].quantity += 1;
-        updatedBasket[existingItemIndex].toppings = selectedToppings;
+      const pizzaWithPrice = {
+        id_pizza: pizza.id_pizza,
+        name: pizza.name,
+        price: selectedSizePrice || 0,
+        quantity: 1,
+        size: selectedSize,
+        base: selectedBase,
+        basePrice: selectedBasePrice,
+        toppings: selectedToppings,
+        toppingsTotal: calculateToppingsTotal(selectedToppings), // Add toppingsTotal
+      };
 
-        setBasket(updatedBasket);
-      } else {
-        const pizzaWithPrice = {
-          id_pizza: pizza.id_pizza,
-          name: pizza.name,
-          price: selectedSizePrice || 0,
-          quantity: 1,
-          size: selectedSize,
-          base: selectedBase,
-          basePrice: selectedBasePrice,
-          toppings: selectedToppings,
-        };
-
-        setBasket([...basket, pizzaWithPrice]);
-        setIsModalOpen(false);
-      }
+      setBasket([...basket, pizzaWithPrice]);
+      setIsModalOpen(false);
     }
   };
 
@@ -142,16 +128,18 @@ function PizzaList() {
   };
 
   const calculateTotalPrice = () => {
-    const toppingsTotalPrice = calculateToppingsTotal(selectedToppings);
-    const pizzasTotalPrice = basket.reduce(
-      (total, item) =>
+    const pizzasTotalPrice = basket.reduce((total, item) => {
+      const pizzaPrice =
         (item.price || 0) * item.quantity +
         (item.basePrice || 0) * item.quantity +
-        total,
-      0
-    );
+        (item.toppingsTotal || 0) * item.quantity;
 
-    return pizzasTotalPrice + toppingsTotalPrice;
+      return total + pizzaPrice; // Only add the pizza price for each iteration
+    }, 0);
+
+    const totalPrice = pizzasTotalPrice; // Remove toppingsTotalPrice from the overall total
+
+    return Number(totalPrice.toFixed(2));
   };
 
   return (

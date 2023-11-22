@@ -126,7 +126,7 @@ const EditPizzaModal: React.FC<EditPizzaModalProps> = ({
 
       // Update toppingsTotal directly
       const total = calculateToppingsTotal(newToppings);
-      onToppingsChange(newToppings);
+     // onToppingsChange(newToppings);
       onToppingsTotalChange(total);
     }
   };
@@ -143,7 +143,7 @@ const EditPizzaModal: React.FC<EditPizzaModalProps> = ({
 
       // Update toppingsTotal directly
       const total = calculateToppingsTotal(updatedToppings);
-      onToppingsChange(updatedToppings);
+     // onToppingsChange(updatedToppings);
       onToppingsTotalChange(total);
 
       return updatedToppings;
