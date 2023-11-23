@@ -1,6 +1,6 @@
 // PizzaItem.tsx
 import React from "react";
-import { Pizza } from "./SharedTypes";
+import { Pizza } from "../SharedTypes";
 
 interface PizzaItemProps {
   pizza: Pizza;

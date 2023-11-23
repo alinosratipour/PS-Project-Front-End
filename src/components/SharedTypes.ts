@@ -50,3 +50,9 @@ export interface ToppingType {
   price: number;
   quantity:number;
 }
+export interface SizeWithPrice {
+  id_size: number;
+  p_size: string;
+  price_topping: number;
+  price: number;
+}

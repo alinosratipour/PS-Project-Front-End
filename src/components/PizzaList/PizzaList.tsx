@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
-import Modal from "../components/UI-Liberary/Modal";
-import ListToppingAndPrices from "./ListToppingAndPrices";
-import Basket from "./Basket";
-import { Pizza, BasketItem, ToppingType } from "./SharedTypes";
-import { GET_ALL_PIZZAS_LIST } from "../queries/queries";
-
-import useToppings from "./hooks/ToppingsHook"; // Import the useToppings hook
-import useQuantity from "./hooks/useQuantityHook";
-import useAddToBasket from "./hooks/useAddToBasketHook";
+import Modal from "../UI-Liberary/Modal";
+import Basket from "../Basket";
+import AddPizzaModal from "./AddPizzaModal";
 import PizzaItem from "./PizzaItem";
+import { Pizza, BasketItem, ToppingType } from "../SharedTypes";
+import { GET_ALL_PIZZAS_LIST } from "../../queries/queries";
+import useToppings from "../hooks/ToppingsHook";
+import useQuantity from "../hooks/useQuantityHook";
+import useAddToBasket from "../hooks/useAddToBasketHook";
 
 function PizzaList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -39,7 +38,9 @@ function PizzaList() {
     setSelectedToppings,
     setToppingsTotal,
   });
+
   const { increaseQuantity, decreaseQuantity } = useQuantity(basket, setBasket);
+
   useEffect(() => {
     setSelectedToppings([]);
     setToppingsTotal(0);
@@ -48,7 +49,7 @@ function PizzaList() {
   const { addToBasket } = useAddToBasket({
     basket,
     setBasket,
-    setIsModalOpen, // Pass setIsModalOpen
+    setIsModalOpen,
     selectedSizePrice,
     selectedBasePrice,
     selectedToppings,
@@ -89,43 +90,18 @@ function PizzaList() {
       </ul>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         {selectedPizza && (
-          <>
-            <h2>{selectedPizza.name}</h2>
-            <p>{selectedPizza.description}</p>
-            <img
-              src={selectedPizza.image}
-              alt={selectedPizza.name}
-              width="250px"
-              height="250px"
-            />
-            <ListToppingAndPrices
-              pizzaId={selectedPizza.id_pizza}
-              onSizePriceChange={(price, size) => {
-                setSelectedSize(size);
-                setSelectedSizePrice(price);
-              }}
-              onBaseChange={(base, basePrice) => {
-                setSelectedBase(base);
-                setSelectedBasePrice(basePrice);
-              }}
-              onAddTopping={addToppingToBasket}
-              onRemoveTopping={removeToppingFromBasket}
-            />
-            <button
-              onClick={() =>
-                addToBasket(
-                  selectedPizza,
-                  selectedSize || "",
-                  selectedBase || ""
-                )
-              }
-              disabled={
-                selectedSize === undefined || selectedBase === undefined
-              }
-            >
-              Add to Basket
-            </button>
-          </>
+          <AddPizzaModal
+            selectedPizza={selectedPizza}
+            setSelectedSize={setSelectedSize}
+            setSelectedSizePrice={setSelectedSizePrice}
+            setSelectedBase={setSelectedBase}
+            setSelectedBasePrice={setSelectedBasePrice}
+            addToppingToBasket={addToppingToBasket}
+            removeToppingFromBasket={removeToppingFromBasket}
+            addToBasket={addToBasket}
+            selectedSize={selectedSize}
+            selectedBase={selectedBase}
+          />
         )}
       </Modal>
       <Basket

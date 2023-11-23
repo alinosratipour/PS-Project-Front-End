@@ -1,4 +1,4 @@
-import PizzaList from "./components/PizzaList";
+import PizzaList from "./components/PizzaList/PizzaList";
 import { BaseProvider } from "./components/Context/BaseContext";
 import { SizeProvider } from "./components/Context/SizeContext";
 import { ToppingProvider } from "./components/Context/ToppingContaxt";
