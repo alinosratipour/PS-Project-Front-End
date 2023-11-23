@@ -22,22 +22,39 @@ const useAddToBasket = ({
 }: UseAddToBasketProps) => {
   const addToBasket = (pizza: Pizza, size: string, base: string) => {
     if (size !== undefined) {
-      const pizzaWithPrice = {
-        id_pizza: pizza.id_pizza,
-        name: pizza.name,
-        price: selectedSizePrice || 0,
-        quantity: 1,
-        size: size,
-        base: base,
-        basePrice: selectedBasePrice,
-        toppings: selectedToppings,
-        toppingsTotal: calculateToppingsTotal(selectedToppings),
-      };
-
-      setBasket([...basket, pizzaWithPrice]);
+      const existingPizzaIndex = basket.findIndex(
+        (item) =>
+          item.id_pizza === pizza.id_pizza &&
+          item.size === size &&
+          item.base === base
+      );
+  
+      if (existingPizzaIndex !== -1) {
+        // Pizza with the same size and base already exists, update quantity
+        const updatedBasket = [...basket];
+        updatedBasket[existingPizzaIndex].quantity += 1;
+        setBasket(updatedBasket);
+      } else {
+        // Add a new pizza to the basket
+        const pizzaWithPrice = {
+          id_pizza: pizza.id_pizza,
+          name: pizza.name,
+          price: selectedSizePrice || 0,
+          quantity: 1,
+          size: size,
+          base: base,
+          basePrice: selectedBasePrice,
+          toppings: selectedToppings,
+          toppingsTotal: calculateToppingsTotal(selectedToppings),
+        };
+  
+        setBasket([...basket, pizzaWithPrice]);
+      }
+  
       setIsModalOpen(false); // Use setIsModalOpen here
     }
   };
+  
 
   const calculateTotalPrice = () => {
     const pizzasTotalPrice = basket.reduce((total, item) => {

@@ -9,6 +9,7 @@ const useQuantity = (
   basket: BasketItem[],
   setBasket: React.Dispatch<React.SetStateAction<BasketItem[]>>
 ): UseQuantity => {
+ 
   const increaseQuantity = (basketItem: BasketItem) => {
     const updatedBasket = basket.map((item) => {
       if (
