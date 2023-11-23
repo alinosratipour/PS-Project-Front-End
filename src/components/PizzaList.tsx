@@ -8,6 +8,7 @@ import { Pizza, BasketItem, ToppingType } from "./SharedTypes";
 import { GET_ALL_PIZZAS_LIST } from "../queries/queries";
 import { calculateToppingsTotal } from "./utils";
 import useToppings from "./hooks/ToppingsHook"; // Import the useToppings hook
+import useQuantity from "./hooks/useQuantityHook";
 
 function PizzaList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -37,7 +38,7 @@ function PizzaList() {
     setSelectedToppings,
     setToppingsTotal,
   });
-
+  const { increaseQuantity,decreaseQuantity } = useQuantity(basket, setBasket);
   useEffect(() => {
     setSelectedToppings([]);
     setToppingsTotal(0);
@@ -68,35 +69,23 @@ function PizzaList() {
     }
   };
 
-  const increaseQuantity = (basketItem: BasketItem) => {
-    const updatedBasket = basket.map((item) => {
-      if (
-        item.id_pizza === basketItem.id_pizza &&
-        item.price === basketItem.price
-      ) {
-        return { ...item, quantity: item.quantity + 1 };
-      }
-      return item;
-    });
-    setBasket(updatedBasket);
-  };
+  
+  // const decreaseQuantity = (basketItem: BasketItem) => {
+  //   const updatedBasket = basket.map((item) => {
+  //     if (
+  //       item.id_pizza === basketItem.id_pizza &&
+  //       item.price === basketItem.price
+  //     ) {
+  //       if (item.quantity > 1) {
+  //         return { ...item, quantity: item.quantity - 1 };
+  //       }
+  //       return null as unknown as BasketItem;
+  //     }
+  //     return item;
+  //   });
 
-  const decreaseQuantity = (basketItem: BasketItem) => {
-    const updatedBasket = basket.map((item) => {
-      if (
-        item.id_pizza === basketItem.id_pizza &&
-        item.price === basketItem.price
-      ) {
-        if (item.quantity > 1) {
-          return { ...item, quantity: item.quantity - 1 };
-        }
-        return null as unknown as BasketItem;
-      }
-      return item;
-    });
-
-    setBasket(updatedBasket.filter((item) => item !== null));
-  };
+  //   setBasket(updatedBasket.filter((item) => item !== null));
+  // };
 
   const calculateTotalPrice = () => {
     const pizzasTotalPrice = basket.reduce((total, item) => {
