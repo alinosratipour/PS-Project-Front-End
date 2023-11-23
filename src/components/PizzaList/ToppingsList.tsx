@@ -1,4 +1,4 @@
-import { ToppingType } from "./SharedTypes";
+import { ToppingType } from "../SharedTypes";
 
 interface ToppingsListProps {
   //toppingData?: ToppingType[] | undefined;

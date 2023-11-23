@@ -1,5 +1,4 @@
-
-import { SizePriceProps } from "./SharedTypes"; // Import the shared type
+import { SizePriceProps } from "../SharedTypes"; // Import the shared type
 
 function SizePrice({ selectedSizePrice }: SizePriceProps) {
   return (

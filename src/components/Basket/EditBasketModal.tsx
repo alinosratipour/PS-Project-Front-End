@@ -5,9 +5,9 @@ import { useSizeContext } from "../Context/SizeContext";
 import { useBaseContext } from "../Context/BaseContext";
 import { useToppingContext } from "../Context/ToppingContaxt";
 import BaseRadioButtons from "../UI-Liberary/BaseRadioButton/BaseRadioButtons";
-import SizePrice from "../SizePrice";
+import SizePrice from "../PizzaList/SizePrice";
 import { BasketItem, SizeType, ToppingType } from "../SharedTypes";
-import ToppingsList from "../ToppingsList";
+import ToppingsList from "../PizzaList/ToppingsList";
 import { calculateToppingsTotal } from "../utils";
 
 interface EditBasketModalProps {

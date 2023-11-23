@@ -1,6 +1,6 @@
 // PizzaModalContent.js
 import React from "react";
-import ListToppingAndPrices from "../ListToppingAndPrices";
+import PizzaOptionsContainer from "./PizzaOptionsContainer";
 import { Pizza, ToppingType } from "../SharedTypes";
 
 interface AddPizzaModalProps {
@@ -37,7 +37,7 @@ const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
       width="250px"
       height="250px"
     />
-    <ListToppingAndPrices
+    <PizzaOptionsContainer
       pizzaId={selectedPizza.id_pizza}
       onSizePriceChange={(price, size) => {
         setSelectedSize(size);
