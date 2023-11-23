@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import {
   GET_PIZZAS_WITH_SIZES_AND_PRICES,
@@ -7,8 +7,8 @@ import {
 import SizePrice from "./SizePrice";
 import ToppingsList from "./ToppingsList";
 import SizeRadioButtons from "./UI-Liberary/SizeRadioButton/SizeRadioButtons";
-import BaseRadioButtons from "./BaseRadioButtons";
-import { BaseWithPrice, ToppingType } from "./SharedTypes";
+import BaseRadioButtons from "./UI-Liberary/BaseRadioButton/BaseRadioButtons";
+import { BaseWithPrice, SizeWithPrice, ToppingType } from "./SharedTypes";
 import { useSizeContext } from "../components/Context/SizeContext";
 import { useBaseContext } from "../components/Context/BaseContext";
 import { useToppingContext } from "../components/Context/ToppingContaxt";
@@ -62,8 +62,9 @@ function ListToppingAndPrices({
         setSizes(availableSizes);
 
         const initialSelectedSizeData = availableSizes.find(
-          (sizeData) => sizeData.p_size === initialSize
+          (sizeData:SizeWithPrice) => sizeData.p_size === initialSize
         );
+
 
         if (initialSelectedSizeData) {
           setSelectedSize(initialSelectedSizeData.id_size);

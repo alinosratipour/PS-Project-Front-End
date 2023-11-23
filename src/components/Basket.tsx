@@ -1,7 +1,6 @@
 import React from "react";
 import EditPizzaModal from "./EditPizzaModal";
 import { BasketItem, ToppingType } from "./SharedTypes";
-import { calculateToppingsTotal } from "./utils";
 
 interface BasketProps {
   basket: BasketItem[];
@@ -23,17 +22,14 @@ function Basket({
   increaseQuantity,
   decreaseQuantity,
   calculateTotalPrice,
-  selectedToppings,
-  toppingsTotal,
   onSizeChange,
   onBaseChange,
   onBasketToppingsChange,
   onBasketToppingsTotalChange,
 }: BasketProps) {
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
-  const [selectedBasketItem, setSelectedBasketItem] = React.useState<
-    BasketItem | null
-  >(null);
+  const [selectedBasketItem, setSelectedBasketItem] =
+    React.useState<BasketItem | null>(null);
 
   const handlePizzaClick = (pizza: BasketItem) => {
     setSelectedBasketItem(pizza);
@@ -42,17 +38,12 @@ function Basket({
 
   const handleSaveChanges = (updatedItem: BasketItem) => {
     const toppingsTotal = updatedItem.toppings
-  ? updatedItem.toppings.reduce((total, topping) => {
-      const toppingTotal = (topping.price || 0) * (topping.quantity || 1);
-      return total + toppingTotal;
-    }, 0)
-  : 0;
+      ? updatedItem.toppings.reduce((total, topping) => {
+          const toppingTotal = (topping.price || 0) * (topping.quantity || 1);
+          return total + toppingTotal;
+        }, 0)
+      : 0;
 
-  
- 
-
-  
-  
     const updatedBasket = basket.map((item) =>
       item.id_pizza === updatedItem.id_pizza
         ? {
@@ -65,13 +56,11 @@ function Basket({
           }
         : item
     );
-  
+
     setBasket(updatedBasket);
     setIsEditModalOpen(false);
     setSelectedBasketItem(null);
   };
-  
-  
 
   return (
     <div>
@@ -94,7 +83,7 @@ function Basket({
                 {item.quantity} - £{(item.price || 0) * item.quantity}
                 <button onClick={() => increaseQuantity(item)}>+</button>
                 <button onClick={() => decreaseQuantity(item)}>-</button>
-                {item.toppings && item.toppings.length > 0 &&  (
+                {item.toppings && item.toppings.length > 0 && (
                   <div>
                     <h3>Toppings:</h3>
                     <p>Topping Price: £{item.toppingsTotal}</p>

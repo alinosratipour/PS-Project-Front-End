@@ -4,11 +4,11 @@ import SizeRadioButtons from "./UI-Liberary/SizeRadioButton/SizeRadioButtons";
 import { useSizeContext } from "../components/Context/SizeContext";
 import { useBaseContext } from "../components/Context/BaseContext";
 import { useToppingContext } from "../components/Context/ToppingContaxt";
-import BaseRadioButtons from "./BaseRadioButtons";
+import BaseRadioButtons from "./UI-Liberary/BaseRadioButton/BaseRadioButtons";
 import SizePrice from "./SizePrice";
 import { BasketItem, SizeType, ToppingType } from "./SharedTypes";
 import ToppingsList from "./ToppingsList";
-import { calculateToppingsTotal } from './utils';
+import { calculateToppingsTotal } from "./utils";
 
 interface EditPizzaModalProps {
   item: BasketItem | null;
@@ -126,7 +126,7 @@ const EditPizzaModal: React.FC<EditPizzaModalProps> = ({
 
       // Update toppingsTotal directly
       const total = calculateToppingsTotal(newToppings);
-     // onToppingsChange(newToppings);
+      // onToppingsChange(newToppings);
       onToppingsTotalChange(total);
     }
   };
@@ -143,7 +143,7 @@ const EditPizzaModal: React.FC<EditPizzaModalProps> = ({
 
       // Update toppingsTotal directly
       const total = calculateToppingsTotal(updatedToppings);
-     // onToppingsChange(updatedToppings);
+      // onToppingsChange(updatedToppings);
       onToppingsTotalChange(total);
 
       return updatedToppings;
