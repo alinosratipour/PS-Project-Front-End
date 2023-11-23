@@ -7,7 +7,7 @@ import Basket from "./Basket";
 import { Pizza, BasketItem, ToppingType } from "./SharedTypes";
 import { GET_ALL_PIZZAS_LIST } from "../queries/queries";
 import { calculateToppingsTotal } from "./utils";
-import useToppings from "./ToppingsHook"; // Import the useToppings hook
+import useToppings from "./hooks/ToppingsHook"; // Import the useToppings hook
 
 function PizzaList() {
   const [isModalOpen, setIsModalOpen] = useState(false);

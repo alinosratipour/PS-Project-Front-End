@@ -1,7 +1,7 @@
 // ToppingsHook.tsx
 import React from "react";
-import { ToppingType } from "./SharedTypes";
-import { calculateToppingsTotal } from "./utils";
+import { ToppingType } from "../SharedTypes";
+import { calculateToppingsTotal } from "../utils";
 
 interface ToppingsHookProps {
   selectedToppings: ToppingType[];
