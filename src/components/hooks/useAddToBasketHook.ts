@@ -1,5 +1,3 @@
-// useAddToBasketHook.ts
-import { useState } from "react";
 import { BasketItem, Pizza, ToppingType } from "../SharedTypes";
 import { calculateToppingsTotal } from "../utils";
 
@@ -41,7 +39,20 @@ const useAddToBasket = ({
     }
   };
 
-  return { addToBasket };
+  const calculateTotalPrice = () => {
+    const pizzasTotalPrice = basket.reduce((total, item) => {
+      const pizzaPrice =
+        (item.price || 0) * item.quantity +
+        (item.basePrice || 0) * item.quantity +
+        (item.toppingsTotal || 0) * item.quantity;
+
+      return total + pizzaPrice;
+    }, 0);
+
+    return Number(pizzasTotalPrice.toFixed(2));
+  };
+
+  return { addToBasket, calculateTotalPrice };
 };
 
 export default useAddToBasket;

@@ -10,7 +10,7 @@ import useToppings from "../hooks/ToppingsHook";
 import useQuantity from "../hooks/useQuantityHook";
 import useAddToBasket from "../hooks/useAddToBasketHook";
 
-function PizzaList() {
+const PizzaList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPizza, setSelectedPizza] = useState<Pizza | null>(null);
   const [basket, setBasket] = useState<BasketItem[]>([]);
@@ -46,7 +46,7 @@ function PizzaList() {
     setToppingsTotal(0);
   }, [selectedSize]);
 
-  const { addToBasket } = useAddToBasket({
+  const { addToBasket, calculateTotalPrice } = useAddToBasket({
     basket,
     setBasket,
     setIsModalOpen,
@@ -61,19 +61,6 @@ function PizzaList() {
     setSelectedPizza(pizza);
     setSelectedSize(undefined);
     setIsModalOpen(true);
-  };
-
-  const calculateTotalPrice = () => {
-    const pizzasTotalPrice = basket.reduce((total, item) => {
-      const pizzaPrice =
-        (item.price || 0) * item.quantity +
-        (item.basePrice || 0) * item.quantity +
-        (item.toppingsTotal || 0) * item.quantity;
-
-      return total + pizzaPrice;
-    }, 0);
-
-    return Number(pizzasTotalPrice.toFixed(2));
   };
 
   return (
@@ -119,6 +106,6 @@ function PizzaList() {
       />
     </div>
   );
-}
+};
 
 export default PizzaList;
