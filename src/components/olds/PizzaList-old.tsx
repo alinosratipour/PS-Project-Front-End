@@ -1,44 +1,38 @@
-// PizzaList.tsx
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useQuery } from "@apollo/client";
 import Modal from "../components/UI-Liberary/Modal";
+import { GET_ALL_PIZZAS_LIST } from "../queries/queries";
 import ListToppingAndPrices from "./ListToppingAndPrices";
 import Basket from "./Basket";
 import { Pizza, BasketItem, ToppingType } from "./SharedTypes";
-import { GET_ALL_PIZZAS_LIST } from "../queries/queries";
 import { calculateToppingsTotal } from "./utils";
-import useToppings from "./ToppingsHook"; // Import the useToppings hook
 
 function PizzaList() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPizza, setSelectedPizza] = useState<Pizza | null>(null);
-  const [basket, setBasket] = useState<BasketItem[]>([]);
-  const [selectedSize, setSelectedSize] = useState<string | undefined>(
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [selectedPizza, setSelectedPizza] = React.useState<Pizza | null>(null);
+  const [basket, setBasket] = React.useState<BasketItem[]>([]);
+  const [selectedSize, setSelectedSize] = React.useState<string | undefined>(
     undefined
   );
-  const [selectedBase, setSelectedBase] = useState<string | undefined>(
+  const [selectedBase, setSelectedBase] = React.useState<string | undefined>(
     undefined
   );
-  const [selectedSizePrice, setSelectedSizePrice] = useState<number | undefined>(
-    0
+  const [selectedSizePrice, setSelectedSizePrice] = React.useState<
+    number | undefined
+  >(0);
+  const [selectedBasePrice, setSelectedBasePrice] = React.useState<
+    number | undefined
+  >(0);
+  const [selectedToppings, setSelectedToppings] = React.useState<ToppingType[]>(
+    []
   );
-  const [selectedBasePrice, setSelectedBasePrice] = useState<number | undefined>(
-    0
-  );
-  const [selectedToppings, setSelectedToppings] = useState<ToppingType[]>([]);
-  const [toppingsTotal, setToppingsTotal] = useState<number>(0);
+  const [toppingsTotal, setToppingsTotal] = React.useState<number>(0);
 
   const { loading, error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(
     GET_ALL_PIZZAS_LIST
   );
 
-  const { addToppingToBasket, removeToppingFromBasket } = useToppings({
-    selectedToppings,
-    setSelectedToppings,
-    setToppingsTotal,
-  });
-
-  useEffect(() => {
+  React.useEffect(() => {
     setSelectedToppings([]);
     setToppingsTotal(0);
   }, [selectedSize]);
@@ -49,8 +43,43 @@ function PizzaList() {
     setIsModalOpen(true);
   };
 
+  const addToppingToBasket = (topping: ToppingType) => {
+    const existingToppingIndex = selectedToppings.findIndex(
+      (t) => t.name === topping.name
+    );
+
+    if (existingToppingIndex !== -1) {
+      const updatedToppings = [...selectedToppings];
+      if (updatedToppings[existingToppingIndex].quantity < 10) {
+        updatedToppings[existingToppingIndex].quantity += 1;
+        setSelectedToppings(updatedToppings);
+        setToppingsTotal(calculateToppingsTotal(updatedToppings));
+      }
+    } else {
+      const newToppings = [...selectedToppings, { ...topping, quantity: 1 }];
+      setSelectedToppings(newToppings);
+      setToppingsTotal(calculateToppingsTotal(newToppings));
+    }
+  };
+
+  const removeToppingFromBasket = (topping: ToppingType) => {
+    setSelectedToppings((prevToppings) => {
+      const updatedToppings = prevToppings
+        .map((t: ToppingType) =>
+          t.name === topping.name ? { ...t, quantity: t.quantity - 1 } : t
+        )
+        .filter((t: ToppingType) => t.quantity > 0);
+
+      setToppingsTotal(calculateToppingsTotal(updatedToppings));
+
+      return updatedToppings;
+    });
+  };
+
   const addToBasket = (pizza: Pizza) => {
     if (selectedSize !== undefined) {
+      // ... (existing code)
+
       const pizzaWithPrice = {
         id_pizza: pizza.id_pizza,
         name: pizza.name,
@@ -60,7 +89,7 @@ function PizzaList() {
         base: selectedBase,
         basePrice: selectedBasePrice,
         toppings: selectedToppings,
-        toppingsTotal: calculateToppingsTotal(selectedToppings),
+        toppingsTotal: calculateToppingsTotal(selectedToppings), // Add toppingsTotal
       };
 
       setBasket([...basket, pizzaWithPrice]);
@@ -105,10 +134,12 @@ function PizzaList() {
         (item.basePrice || 0) * item.quantity +
         (item.toppingsTotal || 0) * item.quantity;
 
-      return total + pizzaPrice;
+      return total + pizzaPrice; // Only add the pizza price for each iteration
     }, 0);
 
-    return Number(pizzasTotalPrice.toFixed(2));
+    const totalPrice = pizzasTotalPrice; // Remove toppingsTotalPrice from the overall total
+
+    return Number(totalPrice.toFixed(2));
   };
 
   return (
@@ -153,9 +184,12 @@ function PizzaList() {
               onAddTopping={addToppingToBasket}
               onRemoveTopping={removeToppingFromBasket}
             />
+
             <button
               onClick={() => addToBasket(selectedPizza)}
-              disabled={selectedSize === undefined || selectedBase === undefined}
+              disabled={
+                selectedSize === undefined || selectedBase === undefined
+              }
             >
               Add to Basket
             </button>
