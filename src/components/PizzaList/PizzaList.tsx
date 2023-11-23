@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
-import Modal from "../UI-Liberary/Modal";
-import Basket from "../Basket";
+import Modal from "../UI-Liberary/Modal/Modal";
+import Basket from "../Basket/Basket";
 import AddPizzaModal from "./AddPizzaModal";
 import PizzaItem from "./PizzaItem";
 import { Pizza, BasketItem, ToppingType } from "../SharedTypes";

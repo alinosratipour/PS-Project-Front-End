@@ -1,6 +1,6 @@
 import React from "react";
-import EditPizzaModal from "./EditPizzaModal";
-import { BasketItem, ToppingType } from "./SharedTypes";
+import EditBasketModal from "./EditBasketModal";
+import { BasketItem, ToppingType } from "../SharedTypes";
 
 interface BasketProps {
   basket: BasketItem[];
@@ -105,7 +105,7 @@ function Basket({
       )}
 
       {isEditModalOpen && (
-        <EditPizzaModal
+        <EditBasketModal
           item={selectedBasketItem}
           onClose={() => setIsEditModalOpen(false)}
           onSave={handleSaveChanges}
