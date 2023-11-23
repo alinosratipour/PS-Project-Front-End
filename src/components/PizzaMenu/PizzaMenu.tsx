@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import Modal from "../UI-Liberary/Modal/Modal";
 import Basket from "../Basket/Basket";
-import AddPizzaModal from "./AddPizzaModal";
-import PizzaItem from "./PizzaItem";
+import AddPizzaModal from "../AddPizza/AddPizzaModal";
+import PizzaItem from "../AddPizza/PizzaItem";
 import { Pizza, BasketItem, ToppingType } from "../SharedTypes";
 import { GET_ALL_PIZZAS_LIST } from "../../queries/queries";
 import useToppings from "../hooks/ToppingsHook";
 import useQuantity from "../hooks/useQuantityHook";
 import useAddToBasket from "../hooks/useAddToBasketHook";
 
-const PizzaList = () => {
+const PizzaMenu = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPizza, setSelectedPizza] = useState<Pizza | null>(null);
   const [basket, setBasket] = useState<BasketItem[]>([]);
@@ -108,4 +108,4 @@ const PizzaList = () => {
   );
 };
 
-export default PizzaList;
+export default PizzaMenu;

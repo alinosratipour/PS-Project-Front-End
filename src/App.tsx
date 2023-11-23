@@ -1,4 +1,4 @@
-import PizzaList from "./components/PizzaList/PizzaList";
+import PizzaMenu from "./components/PizzaMenu/PizzaMenu";
 import { BaseProvider } from "./components/Context/BaseContext";
 import { SizeProvider } from "./components/Context/SizeContext";
 import { ToppingProvider } from "./components/Context/ToppingContaxt";
@@ -12,7 +12,7 @@ function App() {
         <ToppingProvider>
           <BaseProvider>
             <SizeProvider>
-              <PizzaList />
+              <PizzaMenu />
             </SizeProvider>
           </BaseProvider>
         </ToppingProvider>
