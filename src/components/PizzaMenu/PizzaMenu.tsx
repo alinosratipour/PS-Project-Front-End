@@ -3,12 +3,13 @@ import { useQuery } from "@apollo/client";
 import Modal from "../UI-Liberary/Modal/Modal";
 import Basket from "../Basket/Basket";
 import AddPizzaModal from "../AddPizza/AddPizzaModal";
-import PizzaItem from "../AddPizza/PizzaItem";
+import PizzaItem from "../PizzaItems/PizzaItem";
 import { Pizza, BasketItem, ToppingType } from "../SharedTypes";
 import { GET_ALL_PIZZAS_LIST } from "../../queries/queries";
 import useToppings from "../hooks/ToppingsHook";
 import useQuantity from "../hooks/useQuantityHook";
 import useAddToBasket from "../hooks/useAddToBasketHook";
+import "./PizzaMenu.scss";
 
 const PizzaMenu = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -65,16 +66,33 @@ const PizzaMenu = () => {
 
   return (
     <div>
-      <ul>
-        {data &&
-          data.getAllPizzasList.map((pizza) => (
-            <PizzaItem
-              key={pizza.id_pizza}
-              pizza={pizza}
-              onCustomize={openModal}
-            />
-          ))}
-      </ul>
+      <div className="pizza-menu-container">
+        <div className="pizza-items-container">
+          {data &&
+            data.getAllPizzasList.map((pizza) => (
+              <PizzaItem
+                key={pizza.id_pizza}
+                pizza={pizza}
+                onCustomize={openModal}
+              />
+            ))}
+        </div>
+        <div className="basket-container">
+          <Basket
+            basket={basket}
+            calculateTotalPrice={calculateTotalPrice}
+            increaseQuantity={increaseQuantity}
+            decreaseQuantity={decreaseQuantity}
+            selectedToppings={selectedToppings}
+            toppingsTotal={toppingsTotal}
+            setBasket={setBasket}
+            onBasketToppingsChange={(updatedToppings) =>
+              setSelectedToppings(updatedToppings)
+            }
+            onBasketToppingsTotalChange={(total) => setToppingsTotal(total)}
+          />
+        </div>
+      </div>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         {selectedPizza && (
           <AddPizzaModal
@@ -91,19 +109,6 @@ const PizzaMenu = () => {
           />
         )}
       </Modal>
-      <Basket
-        basket={basket}
-        calculateTotalPrice={calculateTotalPrice}
-        increaseQuantity={increaseQuantity}
-        decreaseQuantity={decreaseQuantity}
-        selectedToppings={selectedToppings}
-        toppingsTotal={toppingsTotal}
-        setBasket={setBasket}
-        onBasketToppingsChange={(updatedToppings) =>
-          setSelectedToppings(updatedToppings)
-        }
-        onBasketToppingsTotalChange={(total) => setToppingsTotal(total)}
-      />
     </div>
   );
 };
