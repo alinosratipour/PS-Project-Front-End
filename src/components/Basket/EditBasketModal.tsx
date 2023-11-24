@@ -8,7 +8,7 @@ import BaseRadioButtons from "../UI-Liberary/BaseRadioButton/BaseRadioButtons";
 import SizePrice from "../AddPizza/SizePrice";
 import { BasketItem, SizeType, ToppingType } from "../SharedTypes";
 import ToppingsList from "../AddPizza/ToppingsList";
-import { calculateToppingsTotal } from "../utils";
+import { calculateToppingsTotal } from "../../utils";
 
 interface EditBasketModalProps {
   item: BasketItem | null;

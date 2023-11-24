@@ -1,5 +1,5 @@
 import { BasketItem, Pizza, ToppingType } from "../SharedTypes";
-import { calculateToppingsTotal } from "../utils";
+import { calculateToppingsTotal } from "../../utils";
 
 interface UseAddToBasketProps {
   basket: BasketItem[];
@@ -28,7 +28,7 @@ const useAddToBasket = ({
           item.size === size &&
           item.base === base
       );
-  
+
       if (existingPizzaIndex !== -1) {
         // Pizza with the same size and base already exists, update quantity
         const updatedBasket = [...basket];
@@ -47,14 +47,13 @@ const useAddToBasket = ({
           toppings: selectedToppings,
           toppingsTotal: calculateToppingsTotal(selectedToppings),
         };
-  
+
         setBasket([...basket, pizzaWithPrice]);
       }
-  
+
       setIsModalOpen(false); // Use setIsModalOpen here
     }
   };
-  
 
   const calculateTotalPrice = () => {
     const pizzasTotalPrice = basket.reduce((total, item) => {
