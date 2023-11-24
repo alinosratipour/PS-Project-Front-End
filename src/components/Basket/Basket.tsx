@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import EditBasketModal from "./EditBasketModal";
 import { BasketItem, ToppingType } from "../SharedTypes";
 
@@ -15,7 +15,7 @@ interface BasketProps {
   onBasketToppingsChange: (updatedToppings: ToppingType[]) => void;
   onBasketToppingsTotalChange: (total: number) => void;
 }
-
+const BASKET_STORAGE_KEY = "basket";
 function Basket({
   basket,
   setBasket,
@@ -35,7 +35,19 @@ function Basket({
     setSelectedBasketItem(pizza);
     setIsEditModalOpen(true);
   };
+  useEffect(() => {
+    // Load basket from local storage on component mount
+    const storedBasket = localStorage.getItem(BASKET_STORAGE_KEY);
+    if (storedBasket) {
+      setBasket(JSON.parse(storedBasket));
+    }
+  }, []);
 
+  useEffect(() => {
+    // Save basket to local storage whenever it changes
+    localStorage.setItem(BASKET_STORAGE_KEY, JSON.stringify(basket));
+  }, [basket]);
+  
   const handleSaveChanges = (updatedItem: BasketItem) => {
     const toppingsTotal = updatedItem.toppings
       ? updatedItem.toppings.reduce((total, topping) => {
