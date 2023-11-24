@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
+import { If } from 'tsx-control-statements';
+
 import {
   GET_PIZZAS_WITH_SIZES_AND_PRICES,
   GET_ALL_SIZES_WITH_RELATED_BASES,
@@ -111,13 +113,12 @@ const PizzaOptionsContainer = ({
 
   return (
     <div>
-      <h1>Topping Prices</h1>
       <SizeRadioButtons
         sizes={availableSizes}
         onSizeChange={handleSizeChange}
       />
 
-      {isSizeSelected && (
+      <If condition={isSizeSelected}>
         <>
           <BaseRadioButtons
             bases={availableBases}
@@ -129,9 +130,11 @@ const PizzaOptionsContainer = ({
             onRemoveTopping={onRemoveTopping}
           />
         </>
-      )}
+      </If>
 
-      <SizePrice selectedSizePrice={selectedSizePrice} size="" />
+      <If condition={selectedSizePrice}>
+        <SizePrice selectedSizePrice={selectedSizePrice} size="" />
+      </If>
     </div>
   );
 };
