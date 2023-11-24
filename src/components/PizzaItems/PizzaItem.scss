@@ -13,7 +13,8 @@
   align-items: center;
   padding: 10px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adjusted shadow values */
 }
 
 
@@ -77,4 +78,11 @@ button.addPizza {
   width: 100%;
   margin-top: auto;
   font-size: 1.5em;
+  transition: background-color 0.3s, color 0.3s; 
+  border: 1px solid black;
+  &:hover {
+    background-color: white;
+    color: #070807;
+    border: 1px solid black;
+  }
 }
