@@ -29,14 +29,18 @@ const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
   selectedBase,
 }) => (
   <>
+  <div className="addPizzaContainer">
     <h2>{selectedPizza.name}</h2>
     <p>{selectedPizza.description}</p>
-    <img
+    <div className="img-container">
+       <img
       src={selectedPizza.image}
       alt={selectedPizza.name}
-      width="250px"
-      height="250px"
+    
     />
+    </div>
+   
+    </div>
     <PizzaOptionsContainer
       pizzaId={selectedPizza.id_pizza}
       onSizePriceChange={(price, size) => {

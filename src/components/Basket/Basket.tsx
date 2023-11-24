@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import EditBasketModal from "./EditBasketModal";
 import { BasketItem, ToppingType } from "../SharedTypes";
-
+import "./Basket.scss";
 interface BasketProps {
   basket: BasketItem[];
   setBasket: React.Dispatch<React.SetStateAction<BasketItem[]>>;
@@ -75,7 +75,7 @@ function Basket({
   };
 
   return (
-    <div>
+    <div className="BasketContainer">
       <h1>Basket</h1>
 
       {basket.length === 0 ? (
@@ -97,8 +97,8 @@ function Basket({
                 <button onClick={() => decreaseQuantity(item)}>-</button>
                 {item.toppings && item.toppings.length > 0 && (
                   <div>
-                    <h3>Toppings:</h3>
-                    <p>Topping Price: £{item.toppingsTotal}</p>
+                  
+                    <strong>Extra Toppings : £{item.toppingsTotal}</strong>
                     <ul>
                       {item.toppings.map((topping, index) => (
                         <li key={index}>
