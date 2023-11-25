@@ -3,10 +3,12 @@ import { ToppingType } from '../SharedTypes';
 import { useQuery } from '@apollo/client';
 import { GET_TOPPING_PRICES } from '../../queries/queries';
 
+
 interface ToppingContextProps {
   availableToppings: ToppingType[];
   setAvailableToppings: Dispatch<SetStateAction<ToppingType[]>>;
   refetchToppings: (idSize: number) => Promise<void>;
+  loading: boolean; // Include loading state in the context
 }
 
 interface ToppingProviderProps {
@@ -25,7 +27,8 @@ export const useToppingContext = (): ToppingContextProps => {
 
 export const ToppingProvider: React.FC<ToppingProviderProps> = ({ children }) => {
   const [availableToppings, setAvailableToppings] = useState<ToppingType[]>([]);
- 
+  const [currentIdSize, setCurrentIdSize] = useState<number | null>(null);
+
   // Use the useQuery hook to fetch toppings
   const { loading, error, data, refetch: refetchToppingsQuery } = useQuery<{
     getToppingPricesBySize: ToppingType[];
@@ -35,17 +38,18 @@ export const ToppingProvider: React.FC<ToppingProviderProps> = ({ children }) =>
   const refetchToppings = async (idSize: number): Promise<void> => {
     try {
       await refetchToppingsQuery({ id_size: idSize });
+      setCurrentIdSize(idSize);
     } catch (error) {
       console.error("Error refetching toppings:", error);
     }
   };
 
-  // Update availableToppings when data changes
+  // Update availableToppings when data changes and idSize is correct
   useEffect(() => {
-    if (data && data.getToppingPricesBySize) {
+    if (data && data.getToppingPricesBySize && currentIdSize !== null) {
       setAvailableToppings(data.getToppingPricesBySize);
     }
-  }, [data]);
+  }, [data, currentIdSize]);
 
   // Wait until the loading state is false before rendering children
   if (loading) {
@@ -57,8 +61,15 @@ export const ToppingProvider: React.FC<ToppingProviderProps> = ({ children }) =>
     return <div>Error loading toppings. Please try again.</div>;
   }
 
+  const contextValue: ToppingContextProps = {
+    availableToppings,
+    setAvailableToppings,
+    refetchToppings,
+    loading, // Include loading state in the context value
+  };
+
   return (
-    <ToppingContext.Provider value={{ availableToppings, setAvailableToppings, refetchToppings }}>
+    <ToppingContext.Provider value={contextValue}>
       {children}
     </ToppingContext.Provider>
   );
