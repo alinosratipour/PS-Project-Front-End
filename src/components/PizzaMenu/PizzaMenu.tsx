@@ -58,11 +58,19 @@ const PizzaMenu = () => {
     setToppingsTotal,
   });
 
-  const openModal = (pizza: Pizza | null) => {
+  const openAddPizzaModal = (pizza: Pizza | null) => {
     setSelectedPizza(pizza);
     setSelectedSize(undefined);
     setIsModalOpen(true);
   };
+
+  if (loading) {
+    return <p>Loading Pizzas...</p>; // Render a loading indicator while data is being fetched
+  }
+
+  if (error) {
+    return <p>Error fetching data</p>; // Render an error message if there's an issue with the query
+  }
 
   return (
     <div>
@@ -73,7 +81,7 @@ const PizzaMenu = () => {
               <PizzaItem
                 key={pizza.id_pizza}
                 pizza={pizza}
-                onCustomize={openModal}
+                onAddPizza={openAddPizzaModal}
               />
             ))}
         </div>
