@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
-import { If } from 'tsx-control-statements';
-
+import { If } from "tsx-control-statements/components";
 import {
   GET_PIZZAS_WITH_SIZES_AND_PRICES,
   GET_ALL_SIZES_WITH_RELATED_BASES,
@@ -37,7 +36,7 @@ const PizzaOptionsContainer = ({
 }: PizzaOptionsContainerProps) => {
   const { availableSizes, setSizes } = useSizeContext();
   const { availableBases, setAvailableBases, refetchBases } = useBaseContext();
-  const { availableToppings, refetchToppings,loading:toppingLoading, } = useToppingContext();
+  const { availableToppings, refetchToppings } = useToppingContext();
   const [selectedSize, setSelectedSize] = useState<number>(1);
   const [isSizeSelected, setIsSizeSelected] = useState(false);
   const [selectedSizePrice, setSelectedSizePrice] = useState<
@@ -86,18 +85,18 @@ const PizzaOptionsContainer = ({
     }
   }, [Bases]);
 
-  const handleSizeChange = (newSize: number) => {
-    setSelectedSize(newSize);
+  const handleSizeChange = (sizeId: number) => {
+    setSelectedSize(sizeId);
     const newSelectedSizeData = availableSizes.find(
-      (sizeData) => sizeData.id_size === newSize
+      (sizeData) => sizeData.id_size === sizeId
     );
 
     if (newSelectedSizeData) {
       setSelectedSizePrice(newSelectedSizeData.price);
       onSizePriceChange(newSelectedSizeData.price, newSelectedSizeData.p_size);
       setIsSizeSelected(true);
-      refetchToppings(newSize);
-      refetchBases(newSize);
+      refetchToppings(sizeId);
+      refetchBases(sizeId);
     }
   };
 
