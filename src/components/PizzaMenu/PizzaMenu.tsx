@@ -79,10 +79,10 @@ const PizzaMenu = () => {
 
   if (globalLoading || localLoading) {
     return (
-      <div className="center-container">
+      <div className="loader-container">
         <p>Loading Pizzas...</p>
       </div>
-    ); // You can replace this with a loading animation or component
+    ); 
   }
 
   if (error) {
