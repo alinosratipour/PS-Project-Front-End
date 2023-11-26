@@ -1,8 +1,15 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode, Dispatch, SetStateAction } from 'react';
-import { ToppingType } from '../SharedTypes';
-import { useQuery } from '@apollo/client';
-import { GET_TOPPING_PRICES } from '../../queries/queries';
-
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+  Dispatch,
+  SetStateAction,
+} from "react";
+import { ToppingType } from "../SharedTypes";
+import { useQuery } from "@apollo/client";
+import { GET_TOPPING_PRICES } from "../../queries/queries";
 
 interface ToppingContextProps {
   availableToppings: ToppingType[];
@@ -15,22 +22,30 @@ interface ToppingProviderProps {
   children: ReactNode;
 }
 
-const ToppingContext = createContext<ToppingContextProps | undefined>(undefined);
+const ToppingContext = createContext<ToppingContextProps | undefined>(
+  undefined
+);
 
 export const useToppingContext = (): ToppingContextProps => {
   const context = useContext(ToppingContext);
   if (!context) {
-    throw new Error('useToppingContext must be used within a ToppingProvider');
+    throw new Error("useToppingContext must be used within a ToppingProvider");
   }
   return context;
 };
 
-export const ToppingProvider: React.FC<ToppingProviderProps> = ({ children }) => {
+export const ToppingProvider: React.FC<ToppingProviderProps> = ({
+  children,
+}) => {
   const [availableToppings, setAvailableToppings] = useState<ToppingType[]>([]);
   const [currentIdSize, setCurrentIdSize] = useState<number | null>(null);
 
   // Use the useQuery hook to fetch toppings
-  const { loading, error, data, refetch: refetchToppingsQuery } = useQuery<{
+  const {
+    loading,
+    data,
+    refetch: refetchToppingsQuery,
+  } = useQuery<{
     getToppingPricesBySize: ToppingType[];
   }>(GET_TOPPING_PRICES);
 
@@ -50,16 +65,6 @@ export const ToppingProvider: React.FC<ToppingProviderProps> = ({ children }) =>
       setAvailableToppings(data.getToppingPricesBySize);
     }
   }, [data, currentIdSize]);
-
-  // Wait until the loading state is false before rendering children
-  if (loading) {
-    return <div>Loading toppings...</div>;
-  }
-
-  if (error) {
-    console.error("Error fetching toppings:", error);
-    return <div>Error loading toppings. Please try again.</div>;
-  }
 
   const contextValue: ToppingContextProps = {
     availableToppings,

@@ -9,9 +9,12 @@ import { GET_ALL_PIZZAS_LIST } from "../../queries/queries";
 import useToppings from "../hooks/ToppingsHook";
 import useQuantity from "../hooks/useQuantityHook";
 import useAddToBasket from "../hooks/useAddToBasketHook";
+import { useLoadingContext } from "../Context/LoadingContext";
 import "./PizzaMenu.scss";
 
 const PizzaMenu = () => {
+  const { loading: globalLoading, setLoading } = useLoadingContext();
+  const [localLoading, setLocalLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPizza, setSelectedPizza] = useState<Pizza | null>(null);
   const [basket, setBasket] = useState<BasketItem[]>([]);
@@ -30,8 +33,18 @@ const PizzaMenu = () => {
   const [selectedToppings, setSelectedToppings] = useState<ToppingType[]>([]);
   const [toppingsTotal, setToppingsTotal] = useState<number>(0);
 
-  const { loading, error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(
-    GET_ALL_PIZZAS_LIST
+  const { error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(
+    GET_ALL_PIZZAS_LIST,
+    {
+      onCompleted: () => {
+        setLocalLoading(false);
+        setLoading(false);
+      },
+      onError: () => {
+        setLocalLoading(false);
+        setLoading(false);
+      },
+    }
   );
 
   const { addToppingToBasket, removeToppingFromBasket } = useToppings({
@@ -64,12 +77,16 @@ const PizzaMenu = () => {
     setIsModalOpen(true);
   };
 
-  if (loading) {
-    return <p>Loading Pizzas...</p>; // Render a loading indicator while data is being fetched
+  if (globalLoading || localLoading) {
+    return (
+      <div className="center-container">
+        <p>Loading Pizzas...</p>
+      </div>
+    ); // You can replace this with a loading animation or component
   }
 
   if (error) {
-    return <p>Error fetching data</p>; // Render an error message if there's an issue with the query
+    return <p>Error fetching data</p>;
   }
 
   return (
