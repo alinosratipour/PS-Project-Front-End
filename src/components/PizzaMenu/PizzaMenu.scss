@@ -1,0 +1,30 @@
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Adjust to fit your needs */
+}
+.pizza-menu-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.pizza-items-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: auto;
+}
+
+.basket-container {
+  width: 100%;
+}
+@media (max-width: 768px) {
+  .pizza-items-container {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .basket-container {
+    width: 100%;
+    margin-top: 16px;
+  }
+}

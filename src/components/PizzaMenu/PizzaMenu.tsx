@@ -1,16 +1,20 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
-import Modal from "../UI-Liberary/Modal";
-import Basket from "../Basket";
-import AddPizzaModal from "./AddPizzaModal";
-import PizzaItem from "./PizzaItem";
+import Modal from "../UI-Liberary/Modal/Modal";
+import Basket from "../Basket/Basket";
+import AddPizzaModal from "../AddPizza/AddPizzaModal";
+import PizzaItem from "../PizzaItems/PizzaItem";
 import { Pizza, BasketItem, ToppingType } from "../SharedTypes";
 import { GET_ALL_PIZZAS_LIST } from "../../queries/queries";
 import useToppings from "../hooks/ToppingsHook";
 import useQuantity from "../hooks/useQuantityHook";
 import useAddToBasket from "../hooks/useAddToBasketHook";
+import { useLoadingContext } from "../Context/LoadingContext";
+import "./PizzaMenu.scss";
 
-const PizzaList = () => {
+const PizzaMenu = () => {
+  const { loading: globalLoading, setLoading } = useLoadingContext();
+  const [localLoading, setLocalLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPizza, setSelectedPizza] = useState<Pizza | null>(null);
   const [basket, setBasket] = useState<BasketItem[]>([]);
@@ -29,8 +33,18 @@ const PizzaList = () => {
   const [selectedToppings, setSelectedToppings] = useState<ToppingType[]>([]);
   const [toppingsTotal, setToppingsTotal] = useState<number>(0);
 
-  const { loading, error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(
-    GET_ALL_PIZZAS_LIST
+  const { error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(
+    GET_ALL_PIZZAS_LIST,
+    {
+      onCompleted: () => {
+        setLocalLoading(false);
+        setLoading(false);
+      },
+      onError: () => {
+        setLocalLoading(false);
+        setLoading(false);
+      },
+    }
   );
 
   const { addToppingToBasket, removeToppingFromBasket } = useToppings({
@@ -57,24 +71,53 @@ const PizzaList = () => {
     setToppingsTotal,
   });
 
-  const openModal = (pizza: Pizza | null) => {
+  const openAddPizzaModal = (pizza: Pizza | null) => {
     setSelectedPizza(pizza);
     setSelectedSize(undefined);
     setIsModalOpen(true);
   };
 
+  if (globalLoading || localLoading) {
+    return (
+      <div className="loader-container">
+        <p>Loading Pizzas...</p>
+      </div>
+    ); 
+  }
+
+  if (error) {
+    return <p>Error fetching data</p>;
+  }
+
   return (
     <div>
-      <ul>
-        {data &&
-          data.getAllPizzasList.map((pizza) => (
-            <PizzaItem
-              key={pizza.id_pizza}
-              pizza={pizza}
-              onCustomize={openModal}
-            />
-          ))}
-      </ul>
+      <div className="pizza-menu-container">
+        <div className="pizza-items-container">
+          {data &&
+            data.getAllPizzasList.map((pizza) => (
+              <PizzaItem
+                key={pizza.id_pizza}
+                pizza={pizza}
+                onAddPizza={openAddPizzaModal}
+              />
+            ))}
+        </div>
+        <div className="basket-container">
+          <Basket
+            basket={basket}
+            calculateTotalPrice={calculateTotalPrice}
+            increaseQuantity={increaseQuantity}
+            decreaseQuantity={decreaseQuantity}
+            selectedToppings={selectedToppings}
+            toppingsTotal={toppingsTotal}
+            setBasket={setBasket}
+            onBasketToppingsChange={(updatedToppings) =>
+              setSelectedToppings(updatedToppings)
+            }
+            onBasketToppingsTotalChange={(total) => setToppingsTotal(total)}
+          />
+        </div>
+      </div>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         {selectedPizza && (
           <AddPizzaModal
@@ -91,21 +134,8 @@ const PizzaList = () => {
           />
         )}
       </Modal>
-      <Basket
-        basket={basket}
-        calculateTotalPrice={calculateTotalPrice}
-        increaseQuantity={increaseQuantity}
-        decreaseQuantity={decreaseQuantity}
-        selectedToppings={selectedToppings}
-        toppingsTotal={toppingsTotal}
-        setBasket={setBasket}
-        onBasketToppingsChange={(updatedToppings) =>
-          setSelectedToppings(updatedToppings)
-        }
-        onBasketToppingsTotalChange={(total) => setToppingsTotal(total)}
-      />
     </div>
   );
 };
 
-export default PizzaList;
+export default PizzaMenu;

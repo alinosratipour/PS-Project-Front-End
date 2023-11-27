@@ -1,7 +1,7 @@
-import React from "react";
-import EditPizzaModal from "./EditPizzaModal";
-import { BasketItem, ToppingType } from "./SharedTypes";
-
+import React, { useEffect } from "react";
+import EditBasketModal from "./EditBasketModal";
+import { BasketItem, ToppingType } from "../SharedTypes";
+import "./Basket.scss";
 interface BasketProps {
   basket: BasketItem[];
   setBasket: React.Dispatch<React.SetStateAction<BasketItem[]>>;
@@ -15,7 +15,7 @@ interface BasketProps {
   onBasketToppingsChange: (updatedToppings: ToppingType[]) => void;
   onBasketToppingsTotalChange: (total: number) => void;
 }
-
+const BASKET_STORAGE_KEY = "basket";
 function Basket({
   basket,
   setBasket,
@@ -35,7 +35,19 @@ function Basket({
     setSelectedBasketItem(pizza);
     setIsEditModalOpen(true);
   };
+  useEffect(() => {
+    // Load basket from local storage on component mount
+    const storedBasket = localStorage.getItem(BASKET_STORAGE_KEY);
+    if (storedBasket) {
+      setBasket(JSON.parse(storedBasket));
+    }
+  }, []);
 
+  useEffect(() => {
+    // Save basket to local storage whenever it changes
+    localStorage.setItem(BASKET_STORAGE_KEY, JSON.stringify(basket));
+  }, [basket]);
+  
   const handleSaveChanges = (updatedItem: BasketItem) => {
     const toppingsTotal = updatedItem.toppings
       ? updatedItem.toppings.reduce((total, topping) => {
@@ -63,7 +75,7 @@ function Basket({
   };
 
   return (
-    <div>
+    <div className="BasketContainer">
       <h1>Basket</h1>
 
       {basket.length === 0 ? (
@@ -85,8 +97,8 @@ function Basket({
                 <button onClick={() => decreaseQuantity(item)}>-</button>
                 {item.toppings && item.toppings.length > 0 && (
                   <div>
-                    <h3>Toppings:</h3>
-                    <p>Topping Price: £{item.toppingsTotal}</p>
+                  
+                    <strong>Extra Toppings : £{item.toppingsTotal}</strong>
                     <ul>
                       {item.toppings.map((topping, index) => (
                         <li key={index}>
@@ -105,7 +117,7 @@ function Basket({
       )}
 
       {isEditModalOpen && (
-        <EditPizzaModal
+        <EditBasketModal
           item={selectedBasketItem}
           onClose={() => setIsEditModalOpen(false)}
           onSave={handleSaveChanges}

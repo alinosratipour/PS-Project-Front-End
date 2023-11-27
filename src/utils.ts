@@ -1,5 +1,4 @@
-import { ToppingType } from "./SharedTypes";
-
+import { ToppingType } from "./components/SharedTypes";
 
 export const calculateToppingsTotal = (toppings: ToppingType[]) => {
   return toppings.reduce((total, topping) => {
@@ -7,4 +6,3 @@ export const calculateToppingsTotal = (toppings: ToppingType[]) => {
     return total + toppingTotal;
   }, 0);
 };
-

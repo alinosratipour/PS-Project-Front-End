@@ -1,19 +1,20 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
+import { If } from "tsx-control-statements/components";
 import {
   GET_PIZZAS_WITH_SIZES_AND_PRICES,
   GET_ALL_SIZES_WITH_RELATED_BASES,
-} from "../queries/queries";
+} from "../../queries/queries";
 import SizePrice from "./SizePrice";
 import ToppingsList from "./ToppingsList";
-import SizeRadioButtons from "./UI-Liberary/SizeRadioButton/SizeRadioButtons";
-import BaseRadioButtons from "./UI-Liberary/BaseRadioButton/BaseRadioButtons";
-import { BaseWithPrice, SizeWithPrice, ToppingType } from "./SharedTypes";
-import { useSizeContext } from "../components/Context/SizeContext";
-import { useBaseContext } from "../components/Context/BaseContext";
-import { useToppingContext } from "../components/Context/ToppingContaxt";
+import SizeRadioButtons from "../UI-Liberary/SizeRadioButton/SizeRadioButtons";
+import BaseRadioButtons from "../UI-Liberary/BaseRadioButton/BaseRadioButtons";
+import { BaseWithPrice, SizeWithPrice, ToppingType } from "../SharedTypes";
+import { useSizeContext } from "../Context/SizeContext";
+import { useBaseContext } from "../Context/BaseContext";
+import { useToppingContext } from "../Context/ToppingContaxt";
 
-interface ListToppingAndPricesProps {
+interface PizzaOptionsContainerProps {
   pizzaId: number;
   onSizePriceChange: (
     price: number | undefined,
@@ -25,14 +26,14 @@ interface ListToppingAndPricesProps {
   initialSize?: string;
 }
 
-function ListToppingAndPrices({
+const PizzaOptionsContainer = ({
   pizzaId,
   onSizePriceChange,
   onBaseChange,
   onAddTopping,
   onRemoveTopping,
   initialSize,
-}: ListToppingAndPricesProps) {
+}: PizzaOptionsContainerProps) => {
   const { availableSizes, setSizes } = useSizeContext();
   const { availableBases, setAvailableBases, refetchBases } = useBaseContext();
   const { availableToppings, refetchToppings } = useToppingContext();
@@ -62,9 +63,8 @@ function ListToppingAndPrices({
         setSizes(availableSizes);
 
         const initialSelectedSizeData = availableSizes.find(
-          (sizeData:SizeWithPrice) => sizeData.p_size === initialSize
+          (sizeData: SizeWithPrice) => sizeData.p_size === initialSize
         );
-
 
         if (initialSelectedSizeData) {
           setSelectedSize(initialSelectedSizeData.id_size);
@@ -85,18 +85,18 @@ function ListToppingAndPrices({
     }
   }, [Bases]);
 
-  const handleSizeChange = (newSize: number) => {
-    setSelectedSize(newSize);
+  const handleSizeChange = (sizeId: number) => {
+    setSelectedSize(sizeId);
     const newSelectedSizeData = availableSizes.find(
-      (sizeData) => sizeData.id_size === newSize
+      (sizeData) => sizeData.id_size === sizeId
     );
 
     if (newSelectedSizeData) {
       setSelectedSizePrice(newSelectedSizeData.price);
       onSizePriceChange(newSelectedSizeData.price, newSelectedSizeData.p_size);
       setIsSizeSelected(true);
-      refetchToppings(newSize);
-      refetchBases(newSize);
+      refetchToppings(sizeId);
+      refetchBases(sizeId);
     }
   };
 
@@ -112,13 +112,12 @@ function ListToppingAndPrices({
 
   return (
     <div>
-      <h1>Topping Prices</h1>
       <SizeRadioButtons
         sizes={availableSizes}
         onSizeChange={handleSizeChange}
       />
 
-      {isSizeSelected && (
+      <If condition={isSizeSelected}>
         <>
           <BaseRadioButtons
             bases={availableBases}
@@ -130,11 +129,13 @@ function ListToppingAndPrices({
             onRemoveTopping={onRemoveTopping}
           />
         </>
-      )}
+      </If>
 
-      <SizePrice selectedSizePrice={selectedSizePrice} size="" />
+      <If condition={selectedSizePrice}>
+        <SizePrice selectedSizePrice={selectedSizePrice} size="" />
+      </If>
     </div>
   );
-}
+};
 
-export default ListToppingAndPrices;
+export default PizzaOptionsContainer;

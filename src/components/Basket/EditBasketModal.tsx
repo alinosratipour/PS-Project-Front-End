@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
-import Modal from "../components/UI-Liberary/Modal";
-import SizeRadioButtons from "./UI-Liberary/SizeRadioButton/SizeRadioButtons";
-import { useSizeContext } from "../components/Context/SizeContext";
-import { useBaseContext } from "../components/Context/BaseContext";
-import { useToppingContext } from "../components/Context/ToppingContaxt";
-import BaseRadioButtons from "./UI-Liberary/BaseRadioButton/BaseRadioButtons";
-import SizePrice from "./SizePrice";
-import { BasketItem, SizeType, ToppingType } from "./SharedTypes";
-import ToppingsList from "./ToppingsList";
-import { calculateToppingsTotal } from "./utils";
+import Modal from "../UI-Liberary/Modal/Modal";
+import SizeRadioButtons from "../UI-Liberary/SizeRadioButton/SizeRadioButtons";
+import { useSizeContext } from "../Context/SizeContext";
+import { useBaseContext } from "../Context/BaseContext";
+import { useToppingContext } from "../Context/ToppingContaxt";
+import BaseRadioButtons from "../UI-Liberary/BaseRadioButton/BaseRadioButtons";
+import SizePrice from "../AddPizza/SizePrice";
+import { BasketItem, SizeType, ToppingType } from "../SharedTypes";
+import ToppingsList from "../AddPizza/ToppingsList";
+import { calculateToppingsTotal } from "../../utils";
 
-interface EditPizzaModalProps {
+interface EditBasketModalProps {
   item: BasketItem | null;
   onClose: () => void;
   onSave: (updatedItem: BasketItem) => void;
@@ -20,7 +20,7 @@ interface EditPizzaModalProps {
   onToppingsTotalChange: (total: number) => void;
 }
 
-const EditPizzaModal: React.FC<EditPizzaModalProps> = ({
+const EditBasketModal: React.FC<EditBasketModalProps> = ({
   item,
   onClose,
   onSave,
@@ -185,4 +185,4 @@ const EditPizzaModal: React.FC<EditPizzaModalProps> = ({
   );
 };
 
-export default EditPizzaModal;
+export default EditBasketModal;
