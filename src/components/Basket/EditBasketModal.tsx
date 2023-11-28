@@ -1,3 +1,4 @@
+// EditBasketModal.tsx
 import React, { useState, useEffect } from "react";
 import Modal from "../UI-Liberary/Modal/Modal";
 import SizeRadioButtons from "../UI-Liberary/SizeRadioButton/SizeRadioButtons";
@@ -8,7 +9,7 @@ import BaseRadioButtons from "../UI-Liberary/BaseRadioButton/BaseRadioButtons";
 import SizePrice from "../AddPizza/SizePrice";
 import { BasketItem, SizeType, ToppingType } from "../SharedTypes";
 import ToppingsList from "../AddPizza/ToppingsList";
-import { calculateToppingsTotal } from "../../utils";
+import useToppings from "../hooks/ToppingsHook"; // import the useToppings hook
 
 interface EditBasketModalProps {
   item: BasketItem | null;
@@ -17,7 +18,9 @@ interface EditBasketModalProps {
   onSizeChange?: (newSize: number, sizeName: string) => void;
   onBaseChange?: (newBase: string, price: number) => void;
   onToppingsChange: (toppings: ToppingType[]) => void;
-  onToppingsTotalChange: (total: number) => void;
+ // onToppingsTotalChange: React.Dispatch<React.SetStateAction<number>> | ((prevTotal: number) => number);
+ onToppingsTotalChange: React.Dispatch<React.SetStateAction<number>> | ((prevTotal: number) => number) | undefined;
+
 }
 
 const EditBasketModal: React.FC<EditBasketModalProps> = ({
@@ -26,7 +29,6 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
   onSave,
   onSizeChange,
   onBaseChange,
-  onToppingsChange,
   onToppingsTotalChange,
 }) => {
   const { availableSizes } = useSizeContext();
@@ -48,6 +50,13 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
   const [selectedToppings, setSelectedToppings] = useState<ToppingType[]>(
     item?.toppings || []
   );
+
+  // Use the useToppings hook
+  const { addToppingToBasket, removeToppingFromBasket } = useToppings({
+    selectedToppings,
+    setSelectedToppings,
+    setToppingsTotal: onToppingsTotalChange, // Pass the onToppingsTotalChange directly
+  });
 
   useEffect(() => {
     setEditedPizza(item);
@@ -102,54 +111,6 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
     }
   };
 
-  const handleAddTopping = (topping: ToppingType) => {
-    const existingToppingIndex = selectedToppings.findIndex(
-      (t) => t.name === topping.name
-    );
-
-    if (existingToppingIndex !== -1) {
-      // Topping already exists, update its quantity
-      const updatedToppings = [...selectedToppings];
-      if (updatedToppings[existingToppingIndex].quantity < 10) {
-        updatedToppings[existingToppingIndex].quantity += 1;
-        setSelectedToppings(updatedToppings);
-
-        // Update toppingsTotal directly
-        const total = calculateToppingsTotal(updatedToppings);
-        onToppingsChange(updatedToppings);
-        onToppingsTotalChange(total);
-      }
-    } else {
-      // Topping doesn't exist, add it with quantity 1
-      const newToppings = [...selectedToppings, { ...topping, quantity: 1 }];
-      setSelectedToppings(newToppings);
-
-      // Update toppingsTotal directly
-      const total = calculateToppingsTotal(newToppings);
-      // onToppingsChange(newToppings);
-      onToppingsTotalChange(total);
-    }
-  };
-
-  const handleRemoveTopping = (topping: ToppingType) => {
-    setSelectedToppings((prevToppings) => {
-      const updatedToppings = prevToppings
-        .map((t: ToppingType) =>
-          t.name === topping.name
-            ? { ...t, quantity: t.quantity - 1 } // Decrease quantity for the matching topping
-            : t
-        )
-        .filter((t: ToppingType) => t.quantity > 0); // Remove toppings with quantity 0
-
-      // Update toppingsTotal directly
-      const total = calculateToppingsTotal(updatedToppings);
-      // onToppingsChange(updatedToppings);
-      onToppingsTotalChange(total);
-
-      return updatedToppings;
-    });
-  };
-
   return (
     <Modal isOpen={true} onClose={onClose}>
       <h2>Edit Pizza</h2>
@@ -176,8 +137,8 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
       <ToppingsList
         availableToppings={availableToppings}
         refetchToppings={refetchToppings}
-        onAddTopping={handleAddTopping}
-        onRemoveTopping={handleRemoveTopping}
+        onAddTopping={addToppingToBasket} // Use the addToppingToBasket from useToppings
+        onRemoveTopping={removeToppingFromBasket} // Use the removeToppingFromBasket from useToppings
         selectedToppings={selectedToppings}
       />
       <button onClick={handleSave}>Save Changes</button>

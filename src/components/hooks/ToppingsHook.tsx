@@ -6,7 +6,9 @@ import { calculateToppingsTotal } from "../../utils";
 interface ToppingsHookProps {
   selectedToppings: ToppingType[];
   setSelectedToppings: React.Dispatch<React.SetStateAction<ToppingType[]>>;
-  setToppingsTotal: React.Dispatch<React.SetStateAction<number>>;
+  setToppingsTotal?:
+    | React.Dispatch<React.SetStateAction<number>>
+    | ((prevTotal: number) => number);
 }
 
 const useToppings = ({
@@ -14,6 +16,12 @@ const useToppings = ({
   setSelectedToppings,
   setToppingsTotal,
 }: ToppingsHookProps) => {
+  const updateToppingsTotal = (toppings: ToppingType[]) => {
+    if (setToppingsTotal) {
+      setToppingsTotal(calculateToppingsTotal(toppings));
+    }
+  };
+
   const addToppingToBasket = (topping: ToppingType) => {
     const existingToppingIndex = selectedToppings.findIndex(
       (t) => t.name === topping.name
@@ -24,12 +32,12 @@ const useToppings = ({
       if (updatedToppings[existingToppingIndex].quantity < 10) {
         updatedToppings[existingToppingIndex].quantity += 1;
         setSelectedToppings(updatedToppings);
-        setToppingsTotal(calculateToppingsTotal(updatedToppings));
+        updateToppingsTotal(updatedToppings);
       }
     } else {
       const newToppings = [...selectedToppings, { ...topping, quantity: 1 }];
       setSelectedToppings(newToppings);
-      setToppingsTotal(calculateToppingsTotal(newToppings));
+      updateToppingsTotal(newToppings);
     }
   };
 
@@ -41,7 +49,7 @@ const useToppings = ({
         )
         .filter((t: ToppingType) => t.quantity > 0);
 
-      setToppingsTotal(calculateToppingsTotal(updatedToppings));
+      updateToppingsTotal(updatedToppings);
 
       return updatedToppings;
     });
