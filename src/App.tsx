@@ -3,6 +3,7 @@ import { BaseProvider } from "./components/Context/BaseContext";
 import { SizeProvider } from "./components/Context/SizeContext";
 import { ToppingProvider } from "./components/Context/ToppingContaxt";
 import { LoadingProvider } from "./components/Context/LoadingContext";
+import { PizzaProvider } from "./components/Context/PizzaContext";
 function App() {
   return (
     <div className="App">
@@ -14,7 +15,9 @@ function App() {
           <ToppingProvider>
             <BaseProvider>
               <SizeProvider>
+              <PizzaProvider>
                 <PizzaMenu />
+               </PizzaProvider>
               </SizeProvider>
             </BaseProvider>
           </ToppingProvider>

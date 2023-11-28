@@ -3,6 +3,7 @@ export interface Pizza {
   id_pizza: number;
   name: string;
   description?: string;
+  top_quantity?:number  
   image?: string;
 }
 export interface CustomizablePizza extends Pizza {
