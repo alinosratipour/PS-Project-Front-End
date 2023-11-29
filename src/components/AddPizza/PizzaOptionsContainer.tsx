@@ -4,13 +4,12 @@ import { If } from "tsx-control-statements/components";
 import {
   GET_PIZZAS_WITH_SIZES_AND_PRICES,
   GET_ALL_SIZES_WITH_RELATED_BASES,
-  GET_TOPPINGS_ON_PIZZA,
 } from "../../queries/queries";
 import SizePrice from "./SizePrice";
 import ToppingsList from "./ToppingsList";
 import SizeRadioButtons from "../UI-Liberary/SizeRadioButton/SizeRadioButtons";
 import BaseRadioButtons from "../UI-Liberary/BaseRadioButton/BaseRadioButtons";
-import { BaseWithPrice, SizeWithPrice, ToppingOnPizza, ToppingType } from "../SharedTypes";
+import { BaseWithPrice, SizeWithPrice, ToppingType } from "../SharedTypes";
 import { useSizeContext } from "../Context/SizeContext";
 import { useBaseContext } from "../Context/BaseContext";
 import { useToppingContext } from "../Context/ToppingContaxt";
@@ -54,16 +53,6 @@ const PizzaOptionsContainer = ({
       variables: { id_size: Number(selectedSize) },
     }
   );
-  
-  const { data: toppings, loading, error } = useQuery<{ GetToppingsOnPizza: ToppingOnPizza[] }>(
-    GET_TOPPINGS_ON_PIZZA,
-    {
-      variables: { id_pizza: pizzaId },
-    }
-  );
-  
-  
- 
 
   useEffect(() => {
     if (!sizesLoading && sizesData) {
@@ -135,7 +124,7 @@ const PizzaOptionsContainer = ({
             bases={availableBases}
             onBaseChange={handleBaseChange}
           />
-           <PizzaToppings pizzaId={pizzaId} selectedSize={selectedSize}/>
+          <PizzaToppings pizzaId={pizzaId} />
           <ToppingsList
             availableToppings={availableToppings}
             onAddTopping={onAddTopping}

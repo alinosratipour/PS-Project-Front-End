@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_TOPPINGS_ON_PIZZA } from "../../queries/queries";
+import "./PizzaToppings.scss";
+import classNames from "classnames";
 
 interface PizzaToppingsProps {
   pizzaId: number;
-  selectedSize: number; // Pass the selected size as a prop
+//  selectedSize: number;
 }
 
 interface ToppingsData {
@@ -25,7 +27,7 @@ interface ToppingsData {
 
 const PizzaToppings: React.FC<PizzaToppingsProps> = ({
   pizzaId,
-  selectedSize,
+ 
 }) => {
   const { data, loading, error } = useQuery<ToppingsData>(
     GET_TOPPINGS_ON_PIZZA,
@@ -34,31 +36,43 @@ const PizzaToppings: React.FC<PizzaToppingsProps> = ({
     }
   );
 
+  const [selectedToppings, setSelectedToppings] = useState<number[]>([]);
+
+  const handleToppingClick = (toppingId: number) => {
+    console.log("Clicked toppingId:", toppingId);
+  
+    // Toggle the topping in the selectedToppings array
+    setSelectedToppings((prevSelected) => {
+      if (prevSelected.includes(toppingId)) {
+        // If already selected, remove it
+        return prevSelected.filter((id) => id !== toppingId);
+      } else {
+        // If not selected, add it
+        return [...prevSelected, toppingId];
+      }
+    });
+  };
+  
   if (loading) return <p>Loading toppings...</p>;
   if (error) return <p>Error fetching toppings: {error.message}</p>;
 
   const toppingsOnPizza = data?.getToppingsOnPizza || [];
+const toppingCount = data?.getToppingsOnPizza || [];
+console.log("toppingCount",toppingCount.length);
 
   return (
-    <div>
-      <h2>Your Toppings</h2>
-      <ul>
-        {toppingsOnPizza.map((toppingOnPizza) => (
-          <div key={toppingOnPizza.id}>
-            <h4>{toppingOnPizza.toppings.name}</h4>
-            <ul>
-              {/* Find the correct price for the selected size */}
-              {toppingOnPizza.toppings.toppingPrice.map((toppingPrice) => (
-                toppingPrice.id_size === selectedSize && (
-                  <li key={toppingPrice.id}>
-                    £{toppingPrice.price_topping}
-                  </li>
-                )
-              ))}
-            </ul>
-          </div>
-        ))}
-      </ul>
+    <div className="topping-container">
+      {toppingsOnPizza.map((toppingOnPizza) => (
+        <div
+          key={toppingOnPizza.id}
+          className={classNames("box", {
+            selected: selectedToppings.includes(toppingOnPizza.id),
+          })}
+          onClick={() => handleToppingClick(toppingOnPizza.id)}
+        >
+          {toppingOnPizza.toppings.name}
+        </div>
+      ))}
     </div>
   );
 };
