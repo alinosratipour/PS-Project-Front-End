@@ -57,3 +57,11 @@ export interface SizeWithPrice {
   price_topping: number;
   price: number;
 }
+
+
+
+export interface ToppingOnPizza {
+  id: number;
+  id_pizza: number;
+  toppings:ToppingType;
+}

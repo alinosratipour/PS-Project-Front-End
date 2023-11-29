@@ -45,9 +45,10 @@ export const GET_ALL_PIZZAS_LIST = gql`
     }
   }
 `;
+
 export const GET_TOPPINGS_ON_PIZZA = gql`
-  query GetToppingsOnPizza($pizzaId: Int) {
-    getToppingsOnPizza(pizzaId: $pizzaId) {
+  query GetToppingsOnPizza($id_pizza: Int!) {
+    getToppingsOnPizza(pizzaId: $id_pizza) {
       id
       id_pizza
       toppings {
@@ -62,3 +63,5 @@ export const GET_TOPPINGS_ON_PIZZA = gql`
     }
   }
 `;
+
+
