@@ -5,28 +5,14 @@ import { GET_TOPPINGS_ON_PIZZA } from "../../queries/queries";
 import "./PizzaToppings.scss";
 import classNames from "classnames";
 import useToppingsSelection from "../hooks/ useToppingsSelection";
+import { ToppingsData, ToppingType } from "../SharedTypes";
 
 interface PizzaToppingsProps {
   pizzaId: number;
+  onRemoveTopping: (topping: ToppingType) => void; // New prop
 }
 
-interface ToppingsData {
-  getToppingsOnPizza: {
-    id: number;
-    id_pizza: number;
-    toppings: {
-      id: number;
-      name: string;
-      toppingPrice: {
-        id: number;
-        id_size: number;
-        price_topping: number;
-      }[];
-    };
-  }[];
-}
-
-const PizzaToppings: React.FC<PizzaToppingsProps> = ({ pizzaId }) => {
+const PizzaToppings: React.FC<PizzaToppingsProps> = ({ pizzaId, onRemoveTopping }) => {
   const { data, loading, error } = useQuery<ToppingsData>(
     GET_TOPPINGS_ON_PIZZA,
     {
@@ -34,7 +20,9 @@ const PizzaToppings: React.FC<PizzaToppingsProps> = ({ pizzaId }) => {
     }
   );
 
-  const { selectedToppings, handleToppingClick } = useToppingsSelection();
+  const { selectedToppings, handleToppingClick } = useToppingsSelection({
+    onRemoveTopping,
+  });
 
   if (loading) return <p>Loading toppings...</p>;
   if (error) return <p>Error fetching toppings: {error.message}</p>;

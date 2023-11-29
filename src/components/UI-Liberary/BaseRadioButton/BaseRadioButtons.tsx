@@ -10,7 +10,6 @@ interface BaseRadioButtonsProps {
 const BaseRadioButtons: React.FC<BaseRadioButtonsProps> = ({
   bases,
   onBaseChange,
-  selectedSize,
   initialCheckedBase,
 }) => {
   const [selectedBase, setSelectedBase] = useState<string | undefined>(
