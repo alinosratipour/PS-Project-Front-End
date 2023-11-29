@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+// PizzaToppings.tsx
+import React from "react";
 import { useQuery } from "@apollo/client";
 import { GET_TOPPINGS_ON_PIZZA } from "../../queries/queries";
 import "./PizzaToppings.scss";
 import classNames from "classnames";
+import useToppingsSelection from "../hooks/ useToppingsSelection";
 
 interface PizzaToppingsProps {
   pizzaId: number;
-//  selectedSize: number;
 }
 
 interface ToppingsData {
@@ -25,10 +26,7 @@ interface ToppingsData {
   }[];
 }
 
-const PizzaToppings: React.FC<PizzaToppingsProps> = ({
-  pizzaId,
- 
-}) => {
+const PizzaToppings: React.FC<PizzaToppingsProps> = ({ pizzaId }) => {
   const { data, loading, error } = useQuery<ToppingsData>(
     GET_TOPPINGS_ON_PIZZA,
     {
@@ -36,29 +34,12 @@ const PizzaToppings: React.FC<PizzaToppingsProps> = ({
     }
   );
 
-  const [selectedToppings, setSelectedToppings] = useState<number[]>([]);
+  const { selectedToppings, handleToppingClick } = useToppingsSelection();
 
-  const handleToppingClick = (toppingId: number) => {
-    console.log("Clicked toppingId:", toppingId);
-  
-    // Toggle the topping in the selectedToppings array
-    setSelectedToppings((prevSelected) => {
-      if (prevSelected.includes(toppingId)) {
-        // If already selected, remove it
-        return prevSelected.filter((id) => id !== toppingId);
-      } else {
-        // If not selected, add it
-        return [...prevSelected, toppingId];
-      }
-    });
-  };
-  
   if (loading) return <p>Loading toppings...</p>;
   if (error) return <p>Error fetching toppings: {error.message}</p>;
 
   const toppingsOnPizza = data?.getToppingsOnPizza || [];
-const toppingCount = data?.getToppingsOnPizza || [];
-console.log("toppingCount",toppingCount.length);
 
   return (
     <div className="topping-container">
@@ -68,7 +49,9 @@ console.log("toppingCount",toppingCount.length);
           className={classNames("box", {
             selected: selectedToppings.includes(toppingOnPizza.id),
           })}
-          onClick={() => handleToppingClick(toppingOnPizza.id)}
+          onClick={() =>
+            handleToppingClick(toppingOnPizza.id, toppingOnPizza.toppings.name)
+          }
         >
           {toppingOnPizza.toppings.name}
         </div>
