@@ -14,58 +14,22 @@ export const GET_PIZZAS_WITH_SIZES_AND_PRICES = gql`
   }
 `;
 
-
-export  const GET_TOPPING_PRICES = gql`
-query GetToppingPricesBySize($id_size: Int) {
-  getToppingPricesBySize(id_size: $id_size) {
-    id_size
-    name
-    price
+export const GET_TOPPING_PRICES = gql`
+  query GetToppingPricesBySize($id_size: Int) {
+    getToppingPricesBySize(id_size: $id_size) {
+      id_size
+      name
+      price
+    }
   }
-}
 `;
 
-// export const GET_ALL_SIZES_WITH_RELATED_BASES = gql`
-//   {
-   
-//     getSizesWithBases {
-//       id_size
-//       size
-//       bases {
-//         id_base
-//         price
-//         base
-        
-//       }
-//     }
-
-//   }
-// `;
 export const GET_ALL_SIZES_WITH_RELATED_BASES = gql`
   query GetBasesPricesBySize($id_size: Int) {
     getBasesPricesBySize(id_size: $id_size) {
       id_base
       base
       price
-    }
-  }
-`;
-
-
-
-export const LIST_PIZZAS_WITH_TOPPINGS = gql`
-  {
-    listPizzasWithToppings {
-      id_pizza
-      name
-      top_quantity
-      toppingsOnPizza {
-        id_pizza
-        toppings {
-          id
-          name
-        }
-      }
     }
   }
 `;
@@ -77,7 +41,27 @@ export const GET_ALL_PIZZAS_LIST = gql`
       name
       top_quantity
       description
-      image  
+      image
     }
   }
 `;
+
+export const GET_TOPPINGS_ON_PIZZA = gql`
+  query GetToppingsOnPizza($id_pizza: Int!) {
+    getToppingsOnPizza(pizzaId: $id_pizza) {
+      id
+      id_pizza
+      toppings {
+        id
+        name
+        toppingPrice {
+          id
+          id_size
+          price_topping
+        }
+      }
+    }
+  }
+`;
+
+

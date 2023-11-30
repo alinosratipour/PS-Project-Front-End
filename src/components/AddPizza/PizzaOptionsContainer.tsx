@@ -13,6 +13,7 @@ import { BaseWithPrice, SizeWithPrice, ToppingType } from "../SharedTypes";
 import { useSizeContext } from "../Context/SizeContext";
 import { useBaseContext } from "../Context/BaseContext";
 import { useToppingContext } from "../Context/ToppingContaxt";
+import PizzaToppings from "./PizzaToppings";
 
 interface PizzaOptionsContainerProps {
   pizzaId: number;
@@ -123,6 +124,7 @@ const PizzaOptionsContainer = ({
             bases={availableBases}
             onBaseChange={handleBaseChange}
           />
+          {/* <PizzaToppings pizzaId={pizzaId} /> */}
           <ToppingsList
             availableToppings={availableToppings}
             onAddTopping={onAddTopping}
