@@ -9,7 +9,7 @@ import BaseRadioButtons from "../UI-Liberary/BaseRadioButton/BaseRadioButtons";
 import SizePrice from "../AddPizza/SizePrice";
 import { BasketItem, SizeType, ToppingType } from "../SharedTypes";
 import ToppingsList from "../AddPizza/ToppingsList";
-import useToppings from "../hooks/ToppingsHook"; // import the useToppings hook
+import useAddToppings from "../hooks/useAddToppingsHook"; // import the useToppings hook
 
 interface EditBasketModalProps {
   item: BasketItem | null;
@@ -18,9 +18,11 @@ interface EditBasketModalProps {
   onSizeChange?: (newSize: number, sizeName: string) => void;
   onBaseChange?: (newBase: string, price: number) => void;
   onToppingsChange: (toppings: ToppingType[]) => void;
- // onToppingsTotalChange: React.Dispatch<React.SetStateAction<number>> | ((prevTotal: number) => number);
- onToppingsTotalChange: React.Dispatch<React.SetStateAction<number>> | ((prevTotal: number) => number) | undefined;
-
+  // onToppingsTotalChange: React.Dispatch<React.SetStateAction<number>> | ((prevTotal: number) => number);
+  onToppingsTotalChange:
+    | React.Dispatch<React.SetStateAction<number>>
+    | ((prevTotal: number) => number)
+    | undefined;
 }
 
 const EditBasketModal: React.FC<EditBasketModalProps> = ({
@@ -52,7 +54,7 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
   );
 
   // Use the useToppings hook
-  const { addToppingToBasket, removeToppingFromBasket } = useToppings({
+  const { addToppingToBasket, removeToppingFromBasket } = useAddToppings({
     selectedToppings,
     setSelectedToppings,
     setToppingsTotal: onToppingsTotalChange, // Pass the onToppingsTotalChange directly

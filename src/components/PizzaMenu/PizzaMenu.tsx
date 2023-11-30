@@ -6,7 +6,7 @@ import AddPizzaModal from "../AddPizza/AddPizzaModal";
 import PizzaItem from "../PizzaItems/PizzaItem";
 import { Pizza, BasketItem, ToppingType } from "../SharedTypes";
 import { GET_ALL_PIZZAS_LIST } from "../../queries/queries";
-import useToppings from "../hooks/ToppingsHook";
+import useAddToppings from "../hooks/useAddToppingsHook";
 import useQuantity from "../hooks/useQuantityHook";
 import useAddToBasket from "../hooks/useAddToBasketHook";
 import { useLoadingContext } from "../Context/LoadingContext";
@@ -47,7 +47,7 @@ const PizzaMenu = () => {
     }
   );
 
-  const { addToppingToBasket, removeToppingFromBasket } = useToppings({
+  const { addToppingToBasket, removeToppingFromBasket } = useAddToppings({
     selectedToppings,
     setSelectedToppings,
     setToppingsTotal,
@@ -82,7 +82,7 @@ const PizzaMenu = () => {
       <div className="loader-container">
         <p>Loading Pizzas...</p>
       </div>
-    ); 
+    );
   }
 
   if (error) {

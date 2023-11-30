@@ -11,7 +11,7 @@ interface ToppingsHookProps {
     | ((prevTotal: number) => number);
 }
 
-const useToppings = ({
+const useAddToppings = ({
   selectedToppings,
   setSelectedToppings,
   setToppingsTotal,
@@ -61,4 +61,4 @@ const useToppings = ({
   };
 };
 
-export default useToppings;
+export default useAddToppings;
