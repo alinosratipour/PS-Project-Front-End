@@ -4,18 +4,17 @@ import { calculateToppingsTotal } from "../../utils";
 interface UseAddToBasketProps {
   basket: BasketItem[];
   setBasket: React.Dispatch<React.SetStateAction<BasketItem[]>>;
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>; // Pass setIsModalOpen
   selectedSizePrice?: number;
   selectedBasePrice?: number;
   selectedToppings: ToppingType[];
   setSelectedToppings: React.Dispatch<React.SetStateAction<ToppingType[]>>;
   setToppingsTotal: React.Dispatch<React.SetStateAction<number>>;
+   
 }
 
 const useAddToBasket = ({
   basket,
   setBasket,
-  setIsModalOpen, // Receive setIsModalOpen
   selectedSizePrice,
   selectedBasePrice,
   selectedToppings,
@@ -51,7 +50,6 @@ const useAddToBasket = ({
         setBasket([...basket, pizzaWithPrice]);
       }
 
-      setIsModalOpen(false); // Use setIsModalOpen here
     }
   };
 

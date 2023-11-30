@@ -14,6 +14,7 @@ interface AddPizzaModalProps {
   addToBasket: (pizza: Pizza, size: string, base: string) => void;
   selectedSize: string | undefined;
   selectedBase: string | undefined;
+  setIsModalOpen: (isOpen: boolean) => void;
 }
 
 const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
@@ -27,6 +28,7 @@ const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
   addToBasket,
   selectedSize,
   selectedBase,
+  setIsModalOpen,
 }) => {
   return (
     <>
@@ -51,9 +53,10 @@ const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
         onRemoveTopping={removeToppingFromBasket}
       />
       <button
-        onClick={() =>
-          addToBasket(selectedPizza, selectedSize || "", selectedBase || "")
-        }
+        onClick={() => {
+          addToBasket(selectedPizza, selectedSize || "", selectedBase || "");
+          setIsModalOpen(false);
+        }}
         disabled={selectedSize === undefined || selectedBase === undefined}
       >
         Add to Basket

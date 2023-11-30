@@ -63,7 +63,6 @@ const PizzaMenu = () => {
   const { addToBasket, calculateTotalPrice } = useAddToBasket({
     basket,
     setBasket,
-    setIsModalOpen,
     selectedSizePrice,
     selectedBasePrice,
     selectedToppings,
@@ -131,6 +130,7 @@ const PizzaMenu = () => {
             addToBasket={addToBasket}
             selectedSize={selectedSize}
             selectedBase={selectedBase}
+            setIsModalOpen={setIsModalOpen}
           />
         )}
       </Modal>
