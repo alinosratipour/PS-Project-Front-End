@@ -33,18 +33,15 @@ const PizzaMenu = () => {
 
   const { loading: globalLoading, setLoading } = useLoadingContext();
   const { basket, setBasket } = useBasket();
-  const {
-    selectedToppings,
-    setSelectedToppings,
-    toppingsTotal,
-    setToppingsTotal,
-  } = useToppings();
+  const { toppingsTotal } = useToppings();
 
-  const { addToppingToBasket, removeToppingFromBasket } = useAddToppings({
+  const {
+    addToppingToBasket,
+    removeToppingFromBasket,
     selectedToppings,
     setSelectedToppings,
     setToppingsTotal,
-  });
+  } = useAddToppings();
 
   const { increaseQuantity, decreaseQuantity } = useQuantity(basket, setBasket);
 
@@ -53,7 +50,6 @@ const PizzaMenu = () => {
     setToppingsTotal(0);
   }, [selectedSize]);
 
-  // Using useAddToBasket hook
   const { addToBasket, calculateTotalPrice } = useAddToBasket({
     basket,
     setBasket,

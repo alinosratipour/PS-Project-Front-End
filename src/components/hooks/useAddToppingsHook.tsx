@@ -1,21 +1,11 @@
-// ToppingsHook.tsx
-import React from "react";
 import { ToppingType } from "../SharedTypes";
 import { calculateToppingsTotal } from "../../utils";
+import useToppings from "./useToppings";
 
-interface ToppingsHookProps {
-  selectedToppings: ToppingType[];
-  setSelectedToppings: React.Dispatch<React.SetStateAction<ToppingType[]>>;
-  setToppingsTotal?:
-    | React.Dispatch<React.SetStateAction<number>>
-    | ((prevTotal: number) => number);
-}
+const useAddToppings = () => {
+  const { selectedToppings, setSelectedToppings, setToppingsTotal } =
+    useToppings();
 
-const useAddToppings = ({
-  selectedToppings,
-  setSelectedToppings,
-  setToppingsTotal,
-}: ToppingsHookProps) => {
   const updateToppingsTotal = (toppings: ToppingType[]) => {
     if (setToppingsTotal) {
       setToppingsTotal(calculateToppingsTotal(toppings));
@@ -56,6 +46,9 @@ const useAddToppings = ({
   };
 
   return {
+    selectedToppings,
+    setSelectedToppings,
+    setToppingsTotal,
     addToppingToBasket,
     removeToppingFromBasket,
   };
