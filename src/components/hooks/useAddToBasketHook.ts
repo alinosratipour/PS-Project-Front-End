@@ -1,15 +1,14 @@
+// useAddToBasket.tsx
+import { Dispatch, SetStateAction } from "react";
 import { BasketItem, Pizza, ToppingType } from "../SharedTypes";
 import { calculateToppingsTotal } from "../../utils";
 
 interface UseAddToBasketProps {
   basket: BasketItem[];
-  setBasket: React.Dispatch<React.SetStateAction<BasketItem[]>>;
+  setBasket: Dispatch<SetStateAction<BasketItem[]>>;
   selectedSizePrice?: number;
   selectedBasePrice?: number;
   selectedToppings: ToppingType[];
-  setSelectedToppings: React.Dispatch<React.SetStateAction<ToppingType[]>>;
-  setToppingsTotal: React.Dispatch<React.SetStateAction<number>>;
-   
 }
 
 const useAddToBasket = ({
@@ -49,7 +48,6 @@ const useAddToBasket = ({
 
         setBasket([...basket, pizzaWithPrice]);
       }
-
     }
   };
 

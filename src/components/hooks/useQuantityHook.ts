@@ -1,3 +1,5 @@
+// useQuantity.tsx
+import { Dispatch, SetStateAction } from "react";
 import { BasketItem } from "../SharedTypes";
 
 interface UseQuantity {
@@ -7,9 +9,8 @@ interface UseQuantity {
 
 const useQuantity = (
   basket: BasketItem[],
-  setBasket: React.Dispatch<React.SetStateAction<BasketItem[]>>
+  setBasket: Dispatch<SetStateAction<BasketItem[]>>
 ): UseQuantity => {
- 
   const increaseQuantity = (basketItem: BasketItem) => {
     const updatedBasket = basket.map((item) => {
       if (
@@ -37,7 +38,7 @@ const useQuantity = (
       return item;
     });
 
-    setBasket(updatedBasket.filter((item) => item !== null));
+    setBasket(updatedBasket.filter((item) => item !== null) as BasketItem[]);
   };
 
   return {

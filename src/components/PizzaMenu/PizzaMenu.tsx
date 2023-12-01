@@ -1,23 +1,35 @@
+// PizzaMenu.tsx
 import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import Modal from "../UI-Liberary/Modal/Modal";
 import Basket from "../Basket/Basket";
 import AddPizzaModal from "../AddPizza/AddPizzaModal";
 import PizzaItem from "../PizzaItems/PizzaItem";
-import { Pizza, BasketItem, ToppingType } from "../SharedTypes";
+import { Pizza } from "../SharedTypes";
 import { GET_ALL_PIZZAS_LIST } from "../../queries/queries";
 import useAddToppings from "../hooks/useAddToppingsHook";
 import useQuantity from "../hooks/useQuantityHook";
 import useAddToBasket from "../hooks/useAddToBasketHook";
+import useBasket from "../hooks/useBasket";
 import { useLoadingContext } from "../Context/LoadingContext";
 import "./PizzaMenu.scss";
+
+import useToppings from "../hooks/useToppings";
 
 const PizzaMenu = () => {
   const { loading: globalLoading, setLoading } = useLoadingContext();
   const [localLoading, setLocalLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPizza, setSelectedPizza] = useState<Pizza | null>(null);
-  const [basket, setBasket] = useState<BasketItem[]>([]);
+
+  // Using useBasket hook
+  const { basket, setBasket } = useBasket();
+  const {
+    selectedToppings,
+    setSelectedToppings,
+    toppingsTotal,
+    setToppingsTotal,
+  } = useToppings();
   const [selectedSize, setSelectedSize] = useState<string | undefined>(
     undefined
   );
@@ -30,8 +42,6 @@ const PizzaMenu = () => {
   const [selectedBasePrice, setSelectedBasePrice] = useState<
     number | undefined
   >(0);
-  const [selectedToppings, setSelectedToppings] = useState<ToppingType[]>([]);
-  const [toppingsTotal, setToppingsTotal] = useState<number>(0);
 
   const { error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(
     GET_ALL_PIZZAS_LIST,
@@ -60,14 +70,13 @@ const PizzaMenu = () => {
     setToppingsTotal(0);
   }, [selectedSize]);
 
+  // Using useAddToBasket hook
   const { addToBasket, calculateTotalPrice } = useAddToBasket({
     basket,
     setBasket,
     selectedSizePrice,
     selectedBasePrice,
     selectedToppings,
-    setSelectedToppings,
-    setToppingsTotal,
   });
 
   const openAddPizzaModal = (pizza: Pizza | null) => {
@@ -107,7 +116,7 @@ const PizzaMenu = () => {
             calculateTotalPrice={calculateTotalPrice}
             increaseQuantity={increaseQuantity}
             decreaseQuantity={decreaseQuantity}
-            selectedToppings={selectedToppings}
+            //selectedToppings={selectedToppings}
             toppingsTotal={toppingsTotal}
             setBasket={setBasket}
             onBasketToppingsChange={(updatedToppings) =>

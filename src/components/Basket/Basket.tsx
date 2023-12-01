@@ -8,7 +8,7 @@ interface BasketProps {
   increaseQuantity: (item: BasketItem) => void;
   decreaseQuantity: (item: BasketItem) => void;
   calculateTotalPrice: () => number;
-  selectedToppings: ToppingType[];
+  //selectedToppings: ToppingType[];
   toppingsTotal: number;
   onSizeChange?: (newSize: number) => void;
   onBaseChange?: (newBase: string) => void;
