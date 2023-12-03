@@ -3,7 +3,8 @@ import Modal from "../UI-Liberary/Modal/Modal";
 import SizeRadioButtons from "../UI-Liberary/SizeRadioButton/SizeRadioButtons";
 import { useSizeContext } from "../Context/SizeContext";
 import { useBaseContext } from "../Context/BaseContext";
-import { useToppingContext } from "../Context/ToppingContaxt";
+//import { useToppingContext } from "../Context/ToppingContaxt";
+import { useToppingStore } from '../Context/toppingsStore';
 import BaseRadioButtons from "../UI-Liberary/BaseRadioButton/BaseRadioButtons";
 import SizePrice from "../AddPizza/SizePrice";
 import { BasketItem, SizeType, ToppingType } from "../SharedTypes";
@@ -32,7 +33,8 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
 }) => {
   const { availableSizes } = useSizeContext();
   const { availableBases, refetchBases } = useBaseContext();
-  const { availableToppings, refetchToppings } = useToppingContext();
+  //const { availableToppings, refetchToppings } = useToppingContext();
+  const { availableToppings, refetchToppings } = useToppingStore();
 
   const [editedPizza, setEditedPizza] = useState<BasketItem | null>(item);
   const [selectedSize, setSelectedSize] = useState<SizeType | undefined>(
