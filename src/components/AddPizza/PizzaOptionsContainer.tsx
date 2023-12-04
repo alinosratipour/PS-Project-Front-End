@@ -10,12 +10,11 @@ import SizePrice from "./SizePrice";
 import ToppingsList from "./ToppingsList";
 import SizeRadioButtons from "../UI-Liberary/SizeRadioButton/SizeRadioButtons";
 import BaseRadioButtons from "../UI-Liberary/BaseRadioButton/BaseRadioButtons";
-import { BaseWithPrice, SizeWithPrice, ToppingOnPizza, ToppingType, ToppingsData } from "../SharedTypes";
+import { BaseWithPrice, SizeWithPrice,ToppingType } from "../SharedTypes";
 import { useSizeContext } from "../Context/SizeContext";
 import { useBaseContext } from "../Context/BaseContext";
-//import { useToppingContext } from "../Context/ToppingContaxt";
  import { useToppingStore } from '../Context/toppingsStore';
-import PizzaToppings from "./PizzaToppings";
+
 
 interface PizzaOptionsContainerProps {
   pizzaId: number;
@@ -39,8 +38,7 @@ const PizzaOptionsContainer = ({
 }: PizzaOptionsContainerProps) => {
   const { availableSizes, setSizes } = useSizeContext();
   const { availableBases, setAvailableBases, refetchBases } = useBaseContext();
-  //const { availableToppings, refetchToppings } = useToppingContext();
-  const { availableToppings, loading, refetchToppings } = useToppingStore();
+  const { availableToppings, refetchToppings } = useToppingStore();
 
   const [selectedSize, setSelectedSize] = useState<number>(1);
   const [isSizeSelected, setIsSizeSelected] = useState(false);
@@ -59,21 +57,11 @@ const PizzaOptionsContainer = ({
     }
   );
   const [toppingsForPizza, setToppingsForPizza] = useState<ToppingType[]>([]);
-  // const { data } = useQuery<ToppingOnPizza>(
-  //   GET_TOPPINGS_ON_PIZZA,
-  //   {
-  //     variables: { id_pizza: pizzaId },
-  //   }
-  // );
-  // const toppingsOnPizza = data?.getToppingsOnPizza || [];
-
   const { data: toppingsData ,error:toppingsError} = useQuery(GET_TOPPINGS_ON_PIZZA, {
     variables: { id_pizza: pizzaId },
   });
 
   useEffect(() => {
-    console.log("toppingsData:", toppingsData);
-  
     if (toppingsData && toppingsData.getToppingsOnPizza) {
       const toppingsForPizza = toppingsData.getToppingsOnPizza;
   
@@ -84,18 +72,11 @@ const PizzaOptionsContainer = ({
         console.log("No toppings found for this pizza.");
         // Handle the case when there are no toppings for this pizza
       }
-    // } else if (toppingsData) {
-    //   console.error("Unexpected structure in toppingsData:", toppingsData);
-    // } else if (toppingsError) {
-    //   console.error("Error fetching toppings:", toppingsError);
-    // } else {
-    //   console.error("Error fetching toppings. Check the network tab for details.");
+
     }
   }, [toppingsData, toppingsError]);
   
   
-  
-
   useEffect(() => {
     if (!sizesLoading && sizesData) {
       const pizzaSizesData = sizesData.getpizzasWithSizesAndPrices.find(
@@ -168,7 +149,7 @@ const PizzaOptionsContainer = ({
             bases={availableBases}
             onBaseChange={handleBaseChange}
           />
-          {/* <PizzaToppings pizzaId={pizzaId} /> */}
+      
           <ToppingsList
             availableToppings={availableToppings}
             onAddTopping={onAddTopping}
