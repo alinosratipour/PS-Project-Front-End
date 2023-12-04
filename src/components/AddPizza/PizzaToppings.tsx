@@ -4,7 +4,7 @@ import { useQuery } from "@apollo/client";
 import { GET_TOPPINGS_ON_PIZZA } from "../../queries/queries";
 import "./PizzaToppings.scss";
 import classNames from "classnames";
-import useToppingsSelection from "../hooks/ useToppingsSelection";
+import useToppingsSelection from "../hooks/useToppingsSelection";
 import { ToppingsData, ToppingType } from "../SharedTypes";
 
 interface PizzaToppingsProps {
@@ -12,7 +12,10 @@ interface PizzaToppingsProps {
   onRemoveTopping: (topping: ToppingType) => void; // New prop
 }
 
-const PizzaToppings: React.FC<PizzaToppingsProps> = ({ pizzaId, onRemoveTopping }) => {
+const PizzaToppings: React.FC<PizzaToppingsProps> = ({
+  pizzaId,
+  onRemoveTopping,
+}) => {
   const { data, loading, error } = useQuery<ToppingsData>(
     GET_TOPPINGS_ON_PIZZA,
     {
@@ -23,6 +26,7 @@ const PizzaToppings: React.FC<PizzaToppingsProps> = ({ pizzaId, onRemoveTopping 
   const { selectedToppings, handleToppingClick } = useToppingsSelection({
     onRemoveTopping,
   });
+  const removedToppingFromPizza = selectedToppings;
 
   if (loading) return <p>Loading toppings...</p>;
   if (error) return <p>Error fetching toppings: {error.message}</p>;
@@ -35,7 +39,7 @@ const PizzaToppings: React.FC<PizzaToppingsProps> = ({ pizzaId, onRemoveTopping 
         <div
           key={toppingOnPizza.id}
           className={classNames("box", {
-            selected: selectedToppings.includes(toppingOnPizza.id),
+            selected: removedToppingFromPizza.includes(toppingOnPizza.id),
           })}
           onClick={() =>
             handleToppingClick(toppingOnPizza.id, toppingOnPizza.toppings.name)

@@ -1,0 +1,24 @@
+.topping-name {
+
+  }
+  
+  .in-pizza {
+    color: green;
+  }
+  
+  .in-basket {
+    color: red;
+  }
+
+  ul {
+    list-style-type: none;
+  }
+
+  /* Add this to your styles */
+.visible {
+  display: inline-block; /* or any other style to make it visible */
+}
+
+.hidden {
+  display: none;
+}

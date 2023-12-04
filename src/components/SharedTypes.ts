@@ -44,12 +44,25 @@ export type BaseWithPrice = {
 };
 
 export interface ToppingType {
-  id?:number;
+  id?: number;
   id_size: number;
   name: string;
   price: number;
   quantity: number;
+  toppings?: {
+    __typename: string;
+    pizzas: null;
+    id: number;
+    name: string;
+    toppingPrice: {
+      __typename: string;
+      id: number;
+      id_size: number;
+      price_topping: number;
+    }[];
+  };
 }
+
 
 export interface ToppingsData {
   getToppingsOnPizza: ToppingOnPizza[];
