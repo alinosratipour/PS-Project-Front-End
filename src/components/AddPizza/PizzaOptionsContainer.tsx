@@ -4,17 +4,17 @@ import { If } from "tsx-control-statements/components";
 import {
   GET_PIZZAS_WITH_SIZES_AND_PRICES,
   GET_ALL_SIZES_WITH_RELATED_BASES,
-  GET_TOPPINGS_ON_PIZZA
+  GET_TOPPINGS_ON_PIZZA,
 } from "../../queries/queries";
 import SizePrice from "./SizePrice";
 import ToppingsList from "./ToppingsList";
 import SizeRadioButtons from "../UI-Liberary/SizeRadioButton/SizeRadioButtons";
 import BaseRadioButtons from "../UI-Liberary/BaseRadioButton/BaseRadioButtons";
-import { BaseWithPrice, SizeWithPrice,ToppingType } from "../SharedTypes";
+import { BaseWithPrice, SizeWithPrice, ToppingType } from "../SharedTypes";
 import { useSizeContext } from "../Context/SizeContext";
 import { useBaseContext } from "../Context/BaseContext";
- import { useToppingStore } from '../Context/toppingsStore';
-
+import { useToppingStore } from "../Context/toppingsStore";
+import useToppingsForPizza from "../hooks/useToppingsForPizza";
 
 interface PizzaOptionsContainerProps {
   pizzaId: number;
@@ -39,13 +39,12 @@ const PizzaOptionsContainer = ({
   const { availableSizes, setSizes } = useSizeContext();
   const { availableBases, setAvailableBases, refetchBases } = useBaseContext();
   const { availableToppings, refetchToppings } = useToppingStore();
-
+  const { toppingsForPizza } = useToppingsForPizza(pizzaId);
   const [selectedSize, setSelectedSize] = useState<number>(1);
   const [isSizeSelected, setIsSizeSelected] = useState(false);
   const [selectedSizePrice, setSelectedSizePrice] = useState<
     number | undefined
   >(0);
-
 
   const { loading: sizesLoading, data: sizesData } = useQuery(
     GET_PIZZAS_WITH_SIZES_AND_PRICES
@@ -56,27 +55,26 @@ const PizzaOptionsContainer = ({
       variables: { id_size: Number(selectedSize) },
     }
   );
-  const [toppingsForPizza, setToppingsForPizza] = useState<ToppingType[]>([]);
-  const { data: toppingsData ,error:toppingsError} = useQuery(GET_TOPPINGS_ON_PIZZA, {
-    variables: { id_pizza: pizzaId },
-  });
+  //const [toppingsForPizza, setToppingsForPizza] = useState<ToppingType[]>([]);
+  // const { data: toppingsData ,error:toppingsError} = useQuery(GET_TOPPINGS_ON_PIZZA, {
+  //   variables: { id_pizza: pizzaId },
+  // });
 
-  useEffect(() => {
-    if (toppingsData && toppingsData.getToppingsOnPizza) {
-      const toppingsForPizza = toppingsData.getToppingsOnPizza;
-  
-      if (toppingsForPizza.length > 0) {
-        // Update your state or do something with the toppings
-        setToppingsForPizza(toppingsForPizza);
-      } else {
-        console.log("No toppings found for this pizza.");
-        // Handle the case when there are no toppings for this pizza
-      }
+  // useEffect(() => {
+  //   if (toppingsData && toppingsData.getToppingsOnPizza) {
+  //     const toppingsForPizza = toppingsData.getToppingsOnPizza;
 
-    }
-  }, [toppingsData, toppingsError]);
-  
-  
+  //     if (toppingsForPizza.length > 0) {
+  //       // Update your state or do something with the toppings
+  //       setToppingsForPizza(toppingsForPizza);
+  //     } else {
+  //       console.log("No toppings found for this pizza.");
+  //       // Handle the case when there are no toppings for this pizza
+  //     }
+
+  //   }
+  // }, [toppingsData, toppingsError]);
+
   useEffect(() => {
     if (!sizesLoading && sizesData) {
       const pizzaSizesData = sizesData.getpizzasWithSizesAndPrices.find(
@@ -134,8 +132,6 @@ const PizzaOptionsContainer = ({
 
   if (sizesLoading) return "Loading sizes...";
 
-
-
   return (
     <div>
       <SizeRadioButtons
@@ -149,7 +145,7 @@ const PizzaOptionsContainer = ({
             bases={availableBases}
             onBaseChange={handleBaseChange}
           />
-      
+
           <ToppingsList
             availableToppings={availableToppings}
             onAddTopping={onAddTopping}
