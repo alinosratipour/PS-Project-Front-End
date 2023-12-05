@@ -30,7 +30,8 @@ function ToppingsList({
   const [showQuantity, setShowQuantity] = useState<{ [key: string]: boolean }>(
     {}
   );
-  const [count, setCount] = useState(0);
+  
+console.log("pizzaToppings",pizzaToppings);
 
   const isToppingInBasket = (topping: ToppingType) =>
     selectedToppings && selectedToppings.some((t) => t.name === topping.name);
@@ -73,11 +74,6 @@ function ToppingsList({
       ...prevQuantity,
       [topping.name]: true,
     }));
-  // Always show the quantity span when adding
-  setShowQuantity((prevQuantity) => ({
-    ...prevQuantity,
-    [topping.name]: true,
-  }));
   };
 
   useEffect(() => {
@@ -96,8 +92,6 @@ function ToppingsList({
       setShowQuantity(initialQuantity);
     }
   }, [pizzaToppings]);
-  
-  
 
   return (
     <ul>
@@ -113,12 +107,12 @@ function ToppingsList({
               {topping.name}: £{topping.price}
               {isToppingInPizza(topping) && (
                 <>
-                  {showQuantity[topping.name] && (
-                    <span className="quantity">
-                      Qty: {toppingQuantities[topping.name]}
-                      {/* {count} */}
-                    </span>
-                  )}
+                  {showQuantity[topping.name] &&
+                    toppingQuantities[topping.name] >= 1 && (
+                      <span className="quantity">
+                        Qty: {toppingQuantities[topping.name]}
+                      </span>
+                    )}
                   {showRemoveButtons[topping.name] && (
                     <button onClick={() => handleRemoveClick(topping)}>
                       remove
