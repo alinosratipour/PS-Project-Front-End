@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ToppingType } from "../SharedTypes";
 import classnames from "classnames";
 import "./ToppingsList.scss";
@@ -22,16 +22,15 @@ function ToppingsList({
   onAddTopping,
   onRemoveTopping,
 }: ToppingsListProps) {
-  const { toppingQuantities, updateToppingQuantity } =
-    useToppingQuantity(pizzaToppings);
+  const { toppingQuantities, updateToppingQuantity } = useToppingQuantity(
+    pizzaToppings || []
+  );
   const [showRemoveButtons, setShowRemoveButtons] = useState<{
     [key: string]: boolean;
   }>({});
   const [showQuantity, setShowQuantity] = useState<{ [key: string]: boolean }>(
     {}
   );
-  
-
 
   const isToppingInBasket = (topping: ToppingType) =>
     selectedToppings && selectedToppings.some((t) => t.name === topping.name);
