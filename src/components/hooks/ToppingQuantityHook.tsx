@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
-
+import { ToppingType } from "../SharedTypes";
 interface ToppingQuantityHook {
   toppingQuantities: { [key: string]: number };
   updateToppingQuantity: (toppingName: string, quantity: number) => void;
   resetToppingQuantity: (toppingName: string) => void;
 }
 
-const useToppingQuantity: (pizzaToppings: any) => ToppingQuantityHook = (
-  pizzaToppings
-) => {
+const useToppingQuantity: (
+  pizzaToppings: ToppingType[]
+) => ToppingQuantityHook = (pizzaToppings) => {
   const [toppingQuantities, setToppingQuantities] = useState<{
     [key: string]: number;
   }>({});
