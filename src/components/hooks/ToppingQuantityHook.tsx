@@ -18,6 +18,7 @@ const useToppingQuantity: (pizzaToppings: any) => ToppingQuantityHook = (pizzaTo
         {}
       );
 
+
       setToppingQuantities(initialQuantities);
     }
   }, [pizzaToppings]);

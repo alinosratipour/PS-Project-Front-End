@@ -13,7 +13,7 @@ interface ToppingsListProps {
   refetchToppings?: (idSize: number) => Promise<void>;
 }
 
-// ... (your existing imports)
+// ... (import statements)
 
 function ToppingsList({
   availableToppings,
@@ -22,55 +22,52 @@ function ToppingsList({
   onAddTopping,
   onRemoveTopping,
 }: ToppingsListProps) {
-  const { toppingQuantities, updateToppingQuantity } =
-    useToppingQuantity(pizzaToppings);
-  const [initialQuantitySet, setInitialQuantitySet] = useState(false);
-
-  // Initialize quantities from pizzaToppings if it is present
-  useEffect(() => {
-    if (!initialQuantitySet && pizzaToppings) {
-      pizzaToppings.forEach((toppingOnPizza) => {
-        const name = toppingOnPizza.toppings?.name;
-        const quantity = toppingOnPizza.quantity || 1;
-
-        // Check if the quantity has changed before updating
-        if (name && toppingQuantities[name] !== quantity) {
-          updateToppingQuantity(name, quantity);
-        }
-      });
-
-      // Set the initial quantity only once
-      setInitialQuantitySet(true);
-    }
-  }, []); // Empty dependency array ensures this effect runs only once on mount
+  const { toppingQuantities, updateToppingQuantity } = useToppingQuantity(pizzaToppings);
+  const [showRemoveButtons, setShowRemoveButtons] = useState<{ [key: string]: boolean }>({});
 
   const isToppingInBasket = (topping: ToppingType) =>
     selectedToppings && selectedToppings.some((t) => t.name === topping.name);
 
   const isToppingInPizza = (topping: ToppingType) =>
-    pizzaToppings &&
-    pizzaToppings.some((t) => t.toppings && t.toppings.name === topping.name);
+    pizzaToppings && pizzaToppings.some((t) => t.toppings && t.toppings.name === topping.name);
 
   const handleRemoveClick = (topping: ToppingType) => {
+    const updatedQuantity = toppingQuantities[topping.name] - 1;
+    updateToppingQuantity(topping.name, updatedQuantity);
     onRemoveTopping(topping);
 
-    const updatedQuantity = toppingQuantities[topping.name] - 1;
-
-    // Ensure the quantity doesn't go below 0
-    const newQuantity = Math.max(updatedQuantity, 0);
-
-    updateToppingQuantity(topping.name, newQuantity);
-
-    // If the new quantity is 0, set the initial quantity flag to false
-    if (newQuantity === 0) {
-      setInitialQuantitySet(false);
-    }
+    // Update the state to show/hide remove button based on quantity
+    setShowRemoveButtons((prevButtons) => ({
+      ...prevButtons,
+      [topping.name]: updatedQuantity > 0,
+    }));
   };
 
   const handleAddClick = (topping: ToppingType) => {
+    const updatedQuantity = toppingQuantities[topping.name] + 1;
+    updateToppingQuantity(topping.name, updatedQuantity);
     onAddTopping(topping);
-    updateToppingQuantity(topping.name, toppingQuantities[topping.name] + 1);
+
+    // Always show the remove button when adding
+    setShowRemoveButtons((prevButtons) => ({
+      ...prevButtons,
+      [topping.name]: true,
+    }));
   };
+
+  useEffect(() => {
+    // Initialize showRemoveButtons based on existing pizza toppings
+    if (pizzaToppings) {
+      const initialButtons: { [key: string]: boolean } = {};
+      pizzaToppings.forEach((topping) => {
+        const name = topping.toppings?.name;
+        if (name) {
+          initialButtons[name] = true; // Show remove button initially
+        }
+      });
+      setShowRemoveButtons(initialButtons);
+    }
+  }, [pizzaToppings]);
 
   return (
     <ul>
@@ -88,43 +85,37 @@ function ToppingsList({
                 <>
                   {toppingQuantities[topping.name] > 0 && (
                     <span className="quantity">
-                      Quantity: {toppingQuantities[topping.name]}
+                      Qty: {toppingQuantities[topping.name]}
                     </span>
                   )}
-                  {toppingQuantities[topping.name] > 0 ? (
-                    <>
-                      <button onClick={() => handleRemoveClick(topping)}>
-                        remove
-                      </button>
-                      <button onClick={() => handleAddClick(topping)}>
-                        add
-                      </button>
-                    </>
-                  ) : (
-                    <button onClick={() => handleAddClick(topping)}>add</button>
-                  )}
-                </>
-              )}
-            </span>
-            {!isToppingInPizza(topping) && (
-              <>
-                {toppingQuantities[topping.name] > 0 && (
-                  <span className="quantity">
-                    Quantity: {toppingQuantities[topping.name]}
-                  </span>
-                )}
-                {toppingQuantities[topping.name] > 0 ? (
-                  <>
+                  {showRemoveButtons[topping.name] && (
                     <button onClick={() => handleRemoveClick(topping)}>
                       remove
                     </button>
-                    <button onClick={() => handleAddClick(topping)}>add</button>
-                  </>
-                ) : (
-                  <button onClick={() => handleAddClick(topping)}>add</button>
-                )}
-              </>
-            )}
+                  )}
+                  <button onClick={() => handleAddClick(topping)}>
+                    add
+                  </button>
+                </>
+              )}
+              {!isToppingInPizza(topping) && (
+                <>
+                  {toppingQuantities[topping.name] > 0 && (
+                    <span className="quantity">
+                      Qty: {toppingQuantities[topping.name]}
+                    </span>
+                  )}
+                  {showRemoveButtons[topping.name] && (
+                    <button onClick={() => handleRemoveClick(topping)}>
+                      remove
+                    </button>
+                  )}
+                  <button onClick={() => handleAddClick(topping)}>
+                    add
+                  </button>
+                </>
+              )}
+            </span>
           </li>
         ))}
     </ul>
@@ -132,3 +123,4 @@ function ToppingsList({
 }
 
 export default ToppingsList;
+
