@@ -10,15 +10,13 @@ const useToppingQuantity: (pizzaToppings: any) => ToppingQuantityHook = (pizzaTo
 
   useEffect(() => {
     if (pizzaToppings) {
-      const initialQuantities: { [key: string]: number } = pizzaToppings.reduce(
-        (quantities: { [key: string]: number }, topping: any) => {
-          quantities[topping.name] = topping.quantity || 1; // Set the default quantity to 1
-          return quantities;
-        },
-        {}
-      );
-
-
+      const initialQuantities: { [key: string]: number } = {};
+      pizzaToppings.forEach((topping) => {
+        const name = topping.toppings?.name;
+        if (name) {
+          initialQuantities[name] = 0;
+        }
+      });
       setToppingQuantities(initialQuantities);
     }
   }, [pizzaToppings]);
@@ -26,13 +24,14 @@ const useToppingQuantity: (pizzaToppings: any) => ToppingQuantityHook = (pizzaTo
   const updateToppingQuantity = (toppingName: string, quantity: number) => {
     setToppingQuantities((prevQuantities) => ({
       ...prevQuantities,
-      [toppingName]: isNaN(quantity) ? 1 : quantity,
+      [toppingName]:  isNaN(quantity) ? 1 : quantity,
     }));
   };
 
   return {
     toppingQuantities,
     updateToppingQuantity,
+    setToppingQuantities, // Add this line if you need to access setToppingQuantities externally
   };
 };
 

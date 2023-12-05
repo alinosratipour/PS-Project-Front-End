@@ -22,14 +22,22 @@ function ToppingsList({
   onAddTopping,
   onRemoveTopping,
 }: ToppingsListProps) {
-  const { toppingQuantities, updateToppingQuantity } = useToppingQuantity(pizzaToppings);
-  const [showRemoveButtons, setShowRemoveButtons] = useState<{ [key: string]: boolean }>({});
+  const { toppingQuantities, updateToppingQuantity } =
+    useToppingQuantity(pizzaToppings);
+  const [showRemoveButtons, setShowRemoveButtons] = useState<{
+    [key: string]: boolean;
+  }>({});
+  const [showQuantity, setShowQuantity] = useState<{ [key: string]: boolean }>(
+    {}
+  );
+  const [count, setCount] = useState(0);
 
   const isToppingInBasket = (topping: ToppingType) =>
     selectedToppings && selectedToppings.some((t) => t.name === topping.name);
 
   const isToppingInPizza = (topping: ToppingType) =>
-    pizzaToppings && pizzaToppings.some((t) => t.toppings && t.toppings.name === topping.name);
+    pizzaToppings &&
+    pizzaToppings.some((t) => t.toppings && t.toppings.name === topping.name);
 
   const handleRemoveClick = (topping: ToppingType) => {
     const updatedQuantity = toppingQuantities[topping.name] - 1;
@@ -39,6 +47,12 @@ function ToppingsList({
     // Update the state to show/hide remove button based on quantity
     setShowRemoveButtons((prevButtons) => ({
       ...prevButtons,
+      [topping.name]: updatedQuantity > 0,
+    }));
+
+    // Update the state to show/hide quantity span based on quantity
+    setShowQuantity((prevQuantity) => ({
+      ...prevQuantity,
       [topping.name]: updatedQuantity > 0,
     }));
   };
@@ -53,21 +67,37 @@ function ToppingsList({
       ...prevButtons,
       [topping.name]: true,
     }));
+
+    // Always show the quantity span when adding
+    setShowQuantity((prevQuantity) => ({
+      ...prevQuantity,
+      [topping.name]: true,
+    }));
+  // Always show the quantity span when adding
+  setShowQuantity((prevQuantity) => ({
+    ...prevQuantity,
+    [topping.name]: true,
+  }));
   };
 
   useEffect(() => {
-    // Initialize showRemoveButtons based on existing pizza toppings
+    // Initialize showRemoveButtons and showQuantity based on existing pizza toppings
     if (pizzaToppings) {
       const initialButtons: { [key: string]: boolean } = {};
+      const initialQuantity: { [key: string]: boolean } = {};
       pizzaToppings.forEach((topping) => {
         const name = topping.toppings?.name;
         if (name) {
           initialButtons[name] = true; // Show remove button initially
+          initialQuantity[name] = toppingQuantities[name] > 0; // Show quantity span initially if quantity is greater than 0
         }
       });
       setShowRemoveButtons(initialButtons);
+      setShowQuantity(initialQuantity);
     }
   }, [pizzaToppings]);
+  
+  
 
   return (
     <ul>
@@ -83,9 +113,10 @@ function ToppingsList({
               {topping.name}: £{topping.price}
               {isToppingInPizza(topping) && (
                 <>
-                  {toppingQuantities[topping.name] > 0 && (
+                  {showQuantity[topping.name] && (
                     <span className="quantity">
                       Qty: {toppingQuantities[topping.name]}
+                      {/* {count} */}
                     </span>
                   )}
                   {showRemoveButtons[topping.name] && (
@@ -93,14 +124,12 @@ function ToppingsList({
                       remove
                     </button>
                   )}
-                  <button onClick={() => handleAddClick(topping)}>
-                    add
-                  </button>
+                  <button onClick={() => handleAddClick(topping)}>add</button>
                 </>
               )}
               {!isToppingInPizza(topping) && (
                 <>
-                  {toppingQuantities[topping.name] > 0 && (
+                  {showQuantity[topping.name] && (
                     <span className="quantity">
                       Qty: {toppingQuantities[topping.name]}
                     </span>
@@ -110,9 +139,7 @@ function ToppingsList({
                       remove
                     </button>
                   )}
-                  <button onClick={() => handleAddClick(topping)}>
-                    add
-                  </button>
+                  <button onClick={() => handleAddClick(topping)}>add</button>
                 </>
               )}
             </span>
@@ -123,4 +150,3 @@ function ToppingsList({
 }
 
 export default ToppingsList;
-
