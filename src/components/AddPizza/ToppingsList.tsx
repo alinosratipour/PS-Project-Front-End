@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { ToppingType } from "../SharedTypes";
 import classnames from "classnames";
 import "./ToppingsList.scss";
@@ -31,7 +31,7 @@ function ToppingsList({
     {}
   );
   
-console.log("pizzaToppings",pizzaToppings);
+
 
   const isToppingInBasket = (topping: ToppingType) =>
     selectedToppings && selectedToppings.some((t) => t.name === topping.name);

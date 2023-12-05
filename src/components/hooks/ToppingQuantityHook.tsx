@@ -29,14 +29,14 @@ const useToppingQuantity: (pizzaToppings: any) => ToppingQuantityHook = (
   const updateToppingQuantity = (toppingName: string, quantity: number) => {
     setToppingQuantities((prevQuantities) => ({
       ...prevQuantities,
-      [toppingName]: quantity,
+      [toppingName]: isNaN(quantity) ? 1 : quantity,
     }));
   };
 
-  const resetToppingQuantity = (toppingName: string, quantity: number) => {
+  const resetToppingQuantity = (toppingName: string) => {
     setToppingQuantities((prevQuantities) => ({
       ...prevQuantities,
-      [toppingName]: isNaN(quantity) ? 1 : quantity,
+      [toppingName]: 1,
     }));
   };
 
