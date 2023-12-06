@@ -27,9 +27,9 @@ function ToppingsList({
     onAddTopping(topping);
 
     // Update topping quantity
-    setToppingQuantities((prev) => ({
-      ...prev,
-      [topping.name]: (prev[topping.name] || 0) + 1,
+    setToppingQuantities((previousToppingQuantities) => ({
+      ...previousToppingQuantities,
+      [topping.name]: (previousToppingQuantities[topping.name] || 0) + 1,
     }));
   };
 
