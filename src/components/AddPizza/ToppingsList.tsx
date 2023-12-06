@@ -31,12 +31,12 @@ function ToppingsList({
       const currentQuantity = previousToppingQuantities[topping.name] || 0;
 
       // Check if the quantity is less than 10 before incrementing
-      const newQuantity =
+      const newToppingQuantity =
         currentQuantity < 10 ? currentQuantity + 1 : currentQuantity;
 
       return {
         ...previousToppingQuantities,
-        [topping.name]: newQuantity,
+        [topping.name]: newToppingQuantity,
       };
     });
   };
