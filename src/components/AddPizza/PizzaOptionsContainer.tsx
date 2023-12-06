@@ -146,7 +146,7 @@ const PizzaOptionsContainer = ({
             bases={availableBases}
             onBaseChange={handleBaseChange}
           />
-     <PizzaToppings pizzaId={pizzaId}/>
+          <PizzaToppings pizzaId={pizzaId} />
           <ToppingsList
             availableToppings={availableToppings}
             onAddTopping={onAddTopping}
