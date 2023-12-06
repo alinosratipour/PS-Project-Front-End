@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { ToppingType } from "../SharedTypes";
+import { ToppingType } from "../../components/SharedTypes";
 import classnames from "classnames";
 import "./ToppingsList.scss";
-import useToppingQuantity from "../hooks/ToppingQuantityHook";
+import useToppingQuantity from "../../components/hooks/ToppingQuantityHook";
 
 interface ToppingsListProps {
   onAddTopping: (topping: ToppingType) => void;
