@@ -27,19 +27,30 @@ function ToppingsList({
     onAddTopping(topping);
 
     // Update topping quantity
-    setToppingQuantities((previousToppingQuantities) => ({
-      ...previousToppingQuantities,
-      [topping.name]: (previousToppingQuantities[topping.name] || 0) + 1,
-    }));
+    setToppingQuantities((previousToppingQuantities) => {
+      const currentQuantity = previousToppingQuantities[topping.name] || 0;
+
+      // Check if the quantity is less than 10 before incrementing
+      const newQuantity =
+        currentQuantity < 10 ? currentQuantity + 1 : currentQuantity;
+
+      return {
+        ...previousToppingQuantities,
+        [topping.name]: newQuantity,
+      };
+    });
   };
 
   const handleRemoveClick = (topping: ToppingType) => {
     onRemoveTopping(topping);
 
     // Update topping quantity
-    setToppingQuantities((prev) => ({
-      ...prev,
-      [topping.name]: Math.max((prev[topping.name] || 0) - 1, 0),
+    setToppingQuantities((previousToppingQuantities) => ({
+      ...previousToppingQuantities,
+      [topping.name]: Math.max(
+        (previousToppingQuantities[topping.name] || 0) - 1,
+        0
+      ),
     }));
   };
 
@@ -62,7 +73,7 @@ function ToppingsList({
                 <span>({toppingQuantities[topping.name]})</span>
               )}
             </span>
-            
+
             {(isToppingInBasket(topping) && (
               <>
                 <button onClick={() => handleRemoveClick(topping)}>
@@ -70,8 +81,8 @@ function ToppingsList({
                 </button>
                 <button onClick={() => handleAddClick(topping)}>add</button>
               </>
-            )) || (
-              toppingQuantities[topping.name] >0 ? (
+            )) ||
+              (toppingQuantities[topping.name] > 0 ? (
                 <>
                   <button onClick={() => handleRemoveClick(topping)}>
                     remove
@@ -80,11 +91,7 @@ function ToppingsList({
                 </>
               ) : (
                 <button onClick={() => handleAddClick(topping)}>add</button>
-              )
-            )}
-          
-
-            
+              ))}
           </li>
         ))}
     </ul>
