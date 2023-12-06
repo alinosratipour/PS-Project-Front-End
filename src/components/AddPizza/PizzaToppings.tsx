@@ -18,6 +18,7 @@ const PizzaToppings: React.FC<PizzaToppingsProps> = ({ pizzaId }) => {
       variables: { id_pizza: pizzaId },
     }
   );
+console.log("data",data);
 
   //const [removedToppings, setRemovedToppings] = useState<ToppingType[]>([]);
 const {removedToppings, setRemovedToppings} = useToppingsStore();

@@ -8,7 +8,6 @@ interface BasketProps {
   increaseQuantity: (item: BasketItem) => void;
   decreaseQuantity: (item: BasketItem) => void;
   calculateTotalPrice: () => number;
-  //selectedToppings: ToppingType[];
   toppingsTotal: number;
   onSizeChange?: (newSize: number) => void;
   onBaseChange?: (newBase: string) => void;
@@ -35,8 +34,6 @@ function Basket({
     setSelectedBasketItem(pizza);
     setIsEditModalOpen(true);
   };
-
-  console.log("basket", basket);
 
   useEffect(() => {
     // Load basket from local storage on component mount
@@ -116,7 +113,12 @@ function Basket({
                     <strong>Removed Toppings:</strong>
                     <ul>
                       {item.removedToppings.map((removedTopping, index) => (
-                        <li key={index} >No--  <span className="NoTopping">{removedTopping.name}</span> </li>
+                        <li key={index}>
+                          No--{" "}
+                          <span className="NoTopping">
+                            {removedTopping.name}
+                          </span>{" "}
+                        </li>
                       ))}
                     </ul>
                   </div>
