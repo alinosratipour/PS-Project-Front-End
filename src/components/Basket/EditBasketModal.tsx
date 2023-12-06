@@ -60,6 +60,7 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
     setSelectedToppings(item?.toppings || []);
   }, [item, availableSizes]);
 
+
   const handleSizeChange = (newSize: number, sizeName: string) => {
     refetchBases(newSize);
     setSelectedBasePrice(newSize);

@@ -1,4 +1,4 @@
-import { ToppingType } from "../SharedTypes";
+import { ToppingType } from "../../components/SharedTypes";
 import classnames from "classnames";
 import "./ToppingsList.scss";
 import { useState } from "react";
