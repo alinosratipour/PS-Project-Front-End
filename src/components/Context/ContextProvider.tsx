@@ -4,17 +4,20 @@ import { SizeProvider } from "./SizeContext";
 import { LoadingProvider } from "./LoadingContext";
 import { PizzaProvider } from "./PizzaContext";
 
+
 interface ContextProviderProps {
   children: ReactNode;
 }
 
 const ContextProvider: React.FC<ContextProviderProps> = ({ children }) => (
   <LoadingProvider>
+  
     <BaseProvider>
       <SizeProvider>
         <PizzaProvider>{children}</PizzaProvider>
       </SizeProvider>
     </BaseProvider>
+   
   </LoadingProvider>
 );
 

@@ -14,6 +14,8 @@ interface AddPizzaModalProps {
   selectedSize: string | undefined;
 
   setIsModalOpen: (isOpen: boolean) => void;
+  removedToppings: ToppingType[];
+  setRemovedToppings: React.Dispatch<React.SetStateAction<ToppingType[]>>;
 }
 
 const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
@@ -26,8 +28,14 @@ const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
   addToBasket,
   selectedSize,
   setIsModalOpen,
+  removedToppings:updatedRemovedToppings,
+  setRemovedToppings,
 }) => {
   const { selectedBase, setSelectedBase } = useBaseState();
+
+  React.useEffect(() => {
+    setRemovedToppings(updatedRemovedToppings);
+  }, [updatedRemovedToppings]);
   return (
     <>
       <div className="addPizzaContainer">

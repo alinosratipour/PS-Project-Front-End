@@ -35,6 +35,9 @@ function Basket({
     setSelectedBasketItem(pizza);
     setIsEditModalOpen(true);
   };
+
+  console.log("basket", basket);
+
   useEffect(() => {
     // Load basket from local storage on component mount
     const storedBasket = localStorage.getItem(BASKET_STORAGE_KEY);
@@ -47,7 +50,7 @@ function Basket({
     // Save basket to local storage whenever it changes
     localStorage.setItem(BASKET_STORAGE_KEY, JSON.stringify(basket));
   }, [basket]);
-  
+
   const handleSaveChanges = (updatedItem: BasketItem) => {
     const toppingsTotal = updatedItem.toppings
       ? updatedItem.toppings.reduce((total, topping) => {
@@ -97,7 +100,6 @@ function Basket({
                 <button onClick={() => decreaseQuantity(item)}>-</button>
                 {item.toppings && item.toppings.length > 0 && (
                   <div>
-                  
                     <strong>Extra Toppings : £{item.toppingsTotal}</strong>
                     <ul>
                       {item.toppings.map((topping, index) => (
@@ -105,6 +107,16 @@ function Basket({
                           {topping.name}: Quantity: {topping.quantity} - £
                           {topping.price}
                         </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {item.removedToppings && item.removedToppings.length > 0 && (
+                  <div>
+                    <strong>Removed Toppings:</strong>
+                    <ul>
+                      {item.removedToppings.map((removedTopping, index) => (
+                        <li key={index} >No--  <span className="NoTopping">{removedTopping.name}</span> </li>
                       ))}
                     </ul>
                   </div>

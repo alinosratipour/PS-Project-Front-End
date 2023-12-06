@@ -15,6 +15,7 @@ import { useSizeContext } from "../Context/SizeContext";
 import { useBaseContext } from "../Context/BaseContext";
 import { useToppingStore } from "../Context/toppingsStore";
 import useToppingsForPizza from "../hooks/useToppingsForPizza";
+import PizzaToppings from "./PizzaToppings";
 
 interface PizzaOptionsContainerProps {
   pizzaId: number;
@@ -145,12 +146,12 @@ const PizzaOptionsContainer = ({
             bases={availableBases}
             onBaseChange={handleBaseChange}
           />
-
+     <PizzaToppings pizzaId={pizzaId}/>
           <ToppingsList
             availableToppings={availableToppings}
             onAddTopping={onAddTopping}
             onRemoveTopping={onRemoveTopping}
-            pizzaToppings={toppingsForPizza}
+            //pizzaToppings={toppingsForPizza}
           />
         </>
       </If>

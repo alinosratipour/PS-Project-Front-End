@@ -36,7 +36,7 @@ const PizzaMenu = () => {
     removeToppingFromBasket,
     selectedToppings,
     setSelectedToppings,
-    setToppingsTotal,
+    setToppingsTotal, 
   } = useAddToppings();
 
   const { increaseQuantity, decreaseQuantity } = useQuantity(basket, setBasket);
@@ -48,12 +48,13 @@ const PizzaMenu = () => {
     setToppingsTotal(0);
   }, [selectedSize]);
 
-  const { addToBasket, calculateTotalPrice } = useAddToBasket({
+  const { addToBasket, calculateTotalPrice,setRemovedToppings ,removedToppings } = useAddToBasket({
     basket,
     setBasket,
     selectedSizePrice,
     selectedBasePrice,
     selectedToppings,
+ 
   });
 
 
@@ -129,6 +130,8 @@ const PizzaMenu = () => {
             addToBasket={addToBasket}
             selectedSize={selectedSize}
             setIsModalOpen={setIsModalOpen}
+            removedToppings={removedToppings}
+            setRemovedToppings={setRemovedToppings}
           />
         )}
       </Modal>

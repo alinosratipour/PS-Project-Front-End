@@ -1,8 +1,8 @@
 // useAddToBasket.tsx
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { BasketItem, Pizza, ToppingType } from "../SharedTypes";
 import { calculateToppingsTotal } from "../../utils";
-
+import {useToppingsStore} from "../store/ToppingOnPizza"
 interface UseAddToBasketProps {
   basket: BasketItem[];
   setBasket: Dispatch<SetStateAction<BasketItem[]>>;
@@ -18,6 +18,10 @@ const useAddToBasket = ({
   selectedBasePrice,
   selectedToppings,
 }: UseAddToBasketProps) => {
+  
+  const {removedToppings, setRemovedToppings} = useToppingsStore();
+
+
   const addToBasket = (pizza: Pizza, size: string, base: string) => {
     if (size !== undefined) {
       const existingPizzaIndex = basket.findIndex(
@@ -44,9 +48,11 @@ const useAddToBasket = ({
           basePrice: selectedBasePrice,
           toppings: selectedToppings,
           toppingsTotal: calculateToppingsTotal(selectedToppings),
+          removedToppings: removedToppings,
         };
 
         setBasket([...basket, pizzaWithPrice]);
+        setRemovedToppings([]); // Clear removed toppings after adding to the basket
       }
     }
   };
@@ -64,7 +70,7 @@ const useAddToBasket = ({
     return Number(pizzasTotalPrice.toFixed(2));
   };
 
-  return { addToBasket, calculateTotalPrice };
+  return { addToBasket, calculateTotalPrice, removedToppings, setRemovedToppings };
 };
 
 export default useAddToBasket;
