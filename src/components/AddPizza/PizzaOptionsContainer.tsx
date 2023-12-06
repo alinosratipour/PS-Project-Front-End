@@ -4,7 +4,6 @@ import { If } from "tsx-control-statements/components";
 import {
   GET_PIZZAS_WITH_SIZES_AND_PRICES,
   GET_ALL_SIZES_WITH_RELATED_BASES,
-  GET_TOPPINGS_ON_PIZZA,
 } from "../../queries/queries";
 import SizePrice from "./SizePrice";
 import ToppingsList from "./ToppingsList";
@@ -14,7 +13,6 @@ import { BaseWithPrice, SizeWithPrice, ToppingType } from "../SharedTypes";
 import { useSizeContext } from "../Context/SizeContext";
 import { useBaseContext } from "../Context/BaseContext";
 import { useToppingStore } from "../Context/toppingsStore";
-import useToppingsForPizza from "../hooks/useToppingsForPizza";
 import PizzaToppings from "./PizzaToppings";
 
 interface PizzaOptionsContainerProps {
@@ -40,7 +38,6 @@ const PizzaOptionsContainer = ({
   const { availableSizes, setSizes } = useSizeContext();
   const { availableBases, setAvailableBases, refetchBases } = useBaseContext();
   const { availableToppings, refetchToppings } = useToppingStore();
-  const { toppingsForPizza } = useToppingsForPizza(pizzaId);
   const [selectedSize, setSelectedSize] = useState<number>(1);
   const [isSizeSelected, setIsSizeSelected] = useState(false);
   const [selectedSizePrice, setSelectedSizePrice] = useState<
@@ -56,25 +53,6 @@ const PizzaOptionsContainer = ({
       variables: { id_size: Number(selectedSize) },
     }
   );
-  //const [toppingsForPizza, setToppingsForPizza] = useState<ToppingType[]>([]);
-  // const { data: toppingsData ,error:toppingsError} = useQuery(GET_TOPPINGS_ON_PIZZA, {
-  //   variables: { id_pizza: pizzaId },
-  // });
-
-  // useEffect(() => {
-  //   if (toppingsData && toppingsData.getToppingsOnPizza) {
-  //     const toppingsForPizza = toppingsData.getToppingsOnPizza;
-
-  //     if (toppingsForPizza.length > 0) {
-  //       // Update your state or do something with the toppings
-  //       setToppingsForPizza(toppingsForPizza);
-  //     } else {
-  //       console.log("No toppings found for this pizza.");
-  //       // Handle the case when there are no toppings for this pizza
-  //     }
-
-  //   }
-  // }, [toppingsData, toppingsError]);
 
   useEffect(() => {
     if (!sizesLoading && sizesData) {
@@ -151,7 +129,6 @@ const PizzaOptionsContainer = ({
             availableToppings={availableToppings}
             onAddTopping={onAddTopping}
             onRemoveTopping={onRemoveTopping}
-            //pizzaToppings={toppingsForPizza}
           />
         </>
       </If>
