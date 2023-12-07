@@ -2,7 +2,7 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { BasketItem, Pizza, ToppingType } from "../SharedTypes";
 import { calculateToppingsTotal } from "../../utils";
-import { useToppingsStore } from "../store/ToppingOnPizza";
+import { useToppingsRemovalFromPizza } from "../store/ToppingOnPizzaStore ";
 import useBasket from "./useBasket";
 interface UseAddToBasketProps {
   // basket: BasketItem[];
@@ -19,7 +19,7 @@ const useAddToBasket = ({
   //selectedBasePrice,
   selectedToppings,
 }: UseAddToBasketProps) => {
-  const { removedToppings, setRemovedToppings } = useToppingsStore();
+  const { removedToppings, setRemovedToppings } = useToppingsRemovalFromPizza();
   const [selectedSizePrice, setSelectedSizePrice] = useState<
     number | undefined
   >(0);
@@ -85,7 +85,7 @@ const useAddToBasket = ({
     selectedBasePrice,
     selectedSizePrice,
     setSelectedBasePrice,
-    setSelectedSizePrice
+    setSelectedSizePrice,
   };
 };
 

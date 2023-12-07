@@ -7,7 +7,7 @@ interface ToppingsStore {
   setRemovedToppings: (toppings: ToppingType[] | ((prevToppings: ToppingType[]) => ToppingType[])) => void;
 }
 
-export const useToppingsStore = create<ToppingsStore>((set) => ({
+export const useToppingsRemovalFromPizza= create<ToppingsStore>((set) => ({
   removedToppings: [],
   setRemovedToppings: (toppings) => set((state) => ({ removedToppings: typeof toppings === 'function' ? toppings(state.removedToppings) : toppings })),
 }));

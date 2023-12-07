@@ -5,7 +5,7 @@ import { GET_TOPPINGS_ON_PIZZA } from "../../queries/queries";
 import "./PizzaToppings.scss";
 import classNames from "classnames";
 import { ToppingsData, ToppingType } from "../SharedTypes";
-import {useToppingsStore} from "../store/ToppingOnPizza"
+import { useToppingsRemovalFromPizza } from "../store/ToppingOnPizzaStore ";
 
 interface PizzaToppingsProps {
   pizzaId: number;
@@ -19,18 +19,27 @@ const PizzaToppings: React.FC<PizzaToppingsProps> = ({ pizzaId }) => {
     }
   );
 
-const {removedToppings, setRemovedToppings} = useToppingsStore();
+  const { removedToppings, setRemovedToppings } = useToppingsRemovalFromPizza();
 
   const handleToppingClick = (toppingId: number, toppingName: string) => {
     setRemovedToppings((prevRemoved: ToppingType[]) => {
       const existingTopping = prevRemoved.find((t) => t.id === toppingId);
-  
+
       if (existingTopping) {
         // Topping is already removed, so undo removal
         return prevRemoved.filter((t) => t.id !== toppingId);
       } else {
         // Topping is not removed, so add to removedToppings
-        return [...prevRemoved, { id: toppingId, name: toppingName, id_size: 0, price: 0, quantity: 0 }];
+        return [
+          ...prevRemoved,
+          {
+            id: toppingId,
+            name: toppingName,
+            id_size: 0,
+            price: 0,
+            quantity: 0,
+          },
+        ];
       }
     });
   };
@@ -45,15 +54,10 @@ const {removedToppings, setRemovedToppings} = useToppingsStore();
         <div
           key={toppingOnPizza.id}
           className={classNames("box", {
-            selected: removedToppings.some(
-              (t) => t.id === toppingOnPizza.id
-            ),
+            selected: removedToppings.some((t) => t.id === toppingOnPizza.id),
           })}
           onClick={() =>
-            handleToppingClick(
-              toppingOnPizza.id,
-              toppingOnPizza.toppings.name
-            )
+            handleToppingClick(toppingOnPizza.id, toppingOnPizza.toppings.name)
           }
         >
           {toppingOnPizza.toppings.name}
