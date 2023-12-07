@@ -3,13 +3,13 @@ import { ToppingType } from '../SharedTypes';
 import apolloClient from '../../apolloClient'
 import { GET_TOPPING_PRICES } from '../../queries/queries';
 
-interface ToppingStore {
+interface AllAvailableToppingsStoreProps {
   availableToppings: ToppingType[];
   loading: boolean;
   refetchToppings: (idSize: number) => Promise<void>;
 }
 
-export const useToppingStore = create<ToppingStore>((set) => ({
+export const useAllAvailableToppingsStore = create<AllAvailableToppingsStoreProps>((set) => ({
   availableToppings: [],
   loading: false,
   refetchToppings: async (idSize: number) => {

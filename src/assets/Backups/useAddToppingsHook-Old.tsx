@@ -1,16 +1,10 @@
-// useAddToppingsHook.js
 import { ToppingType } from "../SharedTypes";
 import { calculateToppingsTotal } from "../../utils";
 import useToppings from "./useToppings";
-import { useState } from "react";
 
 const useAddToppings = () => {
-  const { selectedToppings: internalSelectedToppings, setToppingsTotal } =
+  const { selectedToppings, setSelectedToppings, setToppingsTotal } =
     useToppings();
-
-  const [selectedToppings, setSelectedToppings] = useState<ToppingType[]>(
-    internalSelectedToppings
-  );
 
   const updateToppingsTotal = (toppings: ToppingType[]) => {
     if (setToppingsTotal) {
@@ -19,7 +13,6 @@ const useAddToppings = () => {
   };
 
   const addToppingToBasket = (topping: ToppingType) => {
-   
     const existingToppingIndex = selectedToppings.findIndex(
       (t) => t.name === topping.name
     );
@@ -40,27 +33,17 @@ const useAddToppings = () => {
 
   const removeToppingFromBasket = (topping: ToppingType) => {
     setSelectedToppings((prevToppings) => {
-      // Log for debugging
-      console.log("Before removal:", prevToppings);
-  
-      const updatedToppings = prevToppings.map((t: ToppingType) =>
-        t.name === topping.name ? { ...t, quantity: t.quantity - 1 } : t
-      );
-  
-      // Log for debugging
-      console.log("After removal:", updatedToppings);
-  
-      const filteredToppings = updatedToppings.filter((t: ToppingType) => t.quantity > 0);
-  
-      // Log for debugging
-      console.log("After filter:", filteredToppings);
-  
-      updateToppingsTotal(filteredToppings);
-  
-      return filteredToppings;
+      const updatedToppings = prevToppings
+        .map((t: ToppingType) =>
+          t.name === topping.name ? { ...t, quantity: t.quantity - 1 } : t
+        )
+        .filter((t: ToppingType) => t.quantity > 0);
+
+      updateToppingsTotal(updatedToppings);
+
+      return updatedToppings;
     });
   };
-  
 
   return {
     selectedToppings,

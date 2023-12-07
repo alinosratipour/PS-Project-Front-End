@@ -4,7 +4,7 @@ import SizeRadioButtons from "../UI-Liberary/SizeRadioButton/SizeRadioButtons";
 import { useSizeContext } from "../Context/SizeContext";
 import { useBaseContext } from "../Context/BaseContext";
 //import { useToppingContext } from "../Context/ToppingContaxt";
-import { useToppingStore } from '../Context/toppingsStore';
+import { useAllAvailableToppingsStore } from "../store/AllAvailableToppingsStore";
 import BaseRadioButtons from "../UI-Liberary/BaseRadioButton/BaseRadioButtons";
 import SizePrice from "../AddPizza/SizePrice";
 import { BasketItem, SizeType, ToppingType } from "../SharedTypes";
@@ -34,7 +34,7 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
   const { availableSizes } = useSizeContext();
   const { availableBases, refetchBases } = useBaseContext();
   //const { availableToppings, refetchToppings } = useToppingContext();
-  const { availableToppings, refetchToppings } = useToppingStore();
+  const { availableToppings, refetchToppings } = useAllAvailableToppingsStore();
 
   const [editedPizza, setEditedPizza] = useState<BasketItem | null>(item);
   const [selectedSize, setSelectedSize] = useState<SizeType | undefined>(
@@ -59,7 +59,6 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
     setSelectedSize(availableSizes.find((size) => size.p_size === item?.size));
     setSelectedToppings(item?.toppings || []);
   }, [item, availableSizes]);
-
 
   const handleSizeChange = (newSize: number, sizeName: string) => {
     refetchBases(newSize);
