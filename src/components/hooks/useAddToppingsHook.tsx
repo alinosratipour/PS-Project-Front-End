@@ -1,16 +1,19 @@
 import { ToppingType } from "../SharedTypes";
 import { calculateToppingsTotal } from "../../utils";
 import useToppings from "./StateHooks/useToppings";
-import { useState } from "react";
-
 const useAddToppings = () => {
-  const { selectedToppings: internalSelectedToppings, setToppingsTotal } =
+  const { selectedToppings, setToppingsTotal,setSelectedToppings } =
     useToppings();
 
-  const [selectedToppings, setSelectedToppings] = useState<ToppingType[]>(
-    internalSelectedToppings
-  );
 
+  
+
+    // const { selectedToppings: internalSelectedToppings, setToppingsTotal } =
+    // useToppings();
+  // const [selectedToppings, setSelectedToppings] = useState<ToppingType[]>(
+  //   internalSelectedToppings
+  // );
+  
   const updateToppingsTotal = (toppings: ToppingType[]) => {
     if (setToppingsTotal) {
       setToppingsTotal(calculateToppingsTotal(toppings));
