@@ -25,7 +25,7 @@ export const useToppingsOnPizza = create<useToppingsOnPizza>((set) => ({
         query: GET_TOPPINGS_ON_PIZZA,
         variables: { id_pizza: pizzaId },
       });
-      console.log("kkkk",result);
+      
       
       set({ toppingsData: result.data, toppingsError: null });
     } catch (error) {
