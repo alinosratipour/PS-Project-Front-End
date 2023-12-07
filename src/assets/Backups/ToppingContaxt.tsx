@@ -7,7 +7,7 @@ import React, {
   Dispatch,
   SetStateAction,
 } from "react";
-import { ToppingType } from "../SharedTypes";
+import { ToppingType } from "../../components/SharedTypes";
 import { useQuery } from "@apollo/client";
 import { GET_TOPPING_PRICES } from "../../queries/queries";
 

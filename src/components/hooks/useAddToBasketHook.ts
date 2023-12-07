@@ -1,22 +1,14 @@
-// useAddToBasket.tsx
-import { Dispatch, SetStateAction, useState } from "react";
-import { BasketItem, Pizza, ToppingType } from "../SharedTypes";
+
+import {  useState } from "react";
+import {  Pizza, ToppingType } from "../SharedTypes";
 import { calculateToppingsTotal } from "../../utils";
 import { useToppingsRemovalFromPizza } from "../store/ToppingOnPizzaStore ";
 import useBasket from "./StateHooks/useBasket";
 interface UseAddToBasketProps {
-  // basket: BasketItem[];
-  //setBasket: Dispatch<SetStateAction<BasketItem[]>>;
-  //selectedSizePrice?: number;
-  //selectedBasePrice?: number;
   selectedToppings: ToppingType[];
 }
 
 const useAddToBasket = ({
-  //basket,
-  //setBasket,
-  //selectedSizePrice,
-  //selectedBasePrice,
   selectedToppings,
 }: UseAddToBasketProps) => {
   const { removedToppings, setRemovedToppings } = useToppingsRemovalFromPizza();

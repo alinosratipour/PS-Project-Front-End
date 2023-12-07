@@ -1,5 +1,5 @@
 import {create} from 'zustand';
-import { ToppingType } from '../SharedTypes';
+import { ToppingType } from '../../components/SharedTypes';
 import apolloClient from '../../apolloClient'
 import { GET_TOPPINGS_ON_PIZZA } from '../../queries/queries';
 interface useToppingsOnPizza {

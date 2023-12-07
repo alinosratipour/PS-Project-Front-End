@@ -1,6 +1,6 @@
-// toppingsOnPizzaStore.ts
+
 import { create } from 'zustand';
-import { ToppingType } from '../SharedTypes';
+import { ToppingType } from '../../components/SharedTypes';
 import { useQuery } from '@apollo/client';
 import { GET_TOPPINGS_ON_PIZZA } from '../../queries/queries';
 

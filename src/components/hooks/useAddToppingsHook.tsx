@@ -1,4 +1,3 @@
-// useAddToppingsHook.js
 import { ToppingType } from "../SharedTypes";
 import { calculateToppingsTotal } from "../../utils";
 import useToppings from "./StateHooks/useToppings";
@@ -46,15 +45,9 @@ const useAddToppings = () => {
         t.name === topping.name ? { ...t, quantity: t.quantity - 1 } : t
       );
 
-      // Log for debugging
-      console.log("After removal:", updatedToppings);
-
       const filteredToppings = updatedToppings.filter(
         (t: ToppingType) => t.quantity > 0
       );
-
-      // Log for debugging
-      console.log("After filter:", filteredToppings);
 
       updateToppingsTotal(filteredToppings);
 
