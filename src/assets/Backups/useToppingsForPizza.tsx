@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_TOPPINGS_ON_PIZZA } from '../../queries/queries';
-import { ToppingType } from '../SharedTypes';
+import { ToppingType } from '../../components/SharedTypes';
 
 const useToppingsForPizza = ( pizzaId: number) => {
   const [toppingsForPizza, setToppingsForPizza] = useState<ToppingType[]>([]);

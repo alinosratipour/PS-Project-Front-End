@@ -1,7 +1,7 @@
 import React from "react";
 import PizzaOptionsContainer from "./PizzaOptionsContainer";
 import { Pizza, ToppingType } from "../SharedTypes";
-import useBaseState from "../hooks/useBaseStateHook";
+import useBaseState from "../hooks/StateHooks/useBase";
 
 interface AddPizzaModalProps {
   selectedPizza: Pizza;

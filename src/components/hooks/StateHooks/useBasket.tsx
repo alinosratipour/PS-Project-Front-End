@@ -1,6 +1,6 @@
 // useBasket.tsx
 import { useState, Dispatch, SetStateAction } from "react";
-import { BasketItem } from "../SharedTypes";
+import { BasketItem } from "../../SharedTypes";
 
 interface UseBasket {
   basket: BasketItem[];

@@ -10,9 +10,9 @@ import useAddToppings from "../hooks/useAddToppingsHook";
 import useQuantity from "../hooks/useQuantityHook";
 import useAddToBasket from "../hooks/useAddToBasketHook";
 import { useLoadingContext } from "../Context/LoadingContext";
-import useToppings from "../hooks/useToppings";
+import useToppings from "../hooks/StateHooks/useToppings";
 import "./PizzaMenu.scss";
-import useSize from "../hooks/useSize";
+import useSize from "../hooks/StateHooks/useSize";
 
 const PizzaMenu = () => {
   const [localLoading, setLocalLoading] = useState(true);

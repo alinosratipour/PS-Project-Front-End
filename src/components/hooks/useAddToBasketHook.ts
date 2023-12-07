@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { BasketItem, Pizza, ToppingType } from "../SharedTypes";
 import { calculateToppingsTotal } from "../../utils";
 import { useToppingsRemovalFromPizza } from "../store/ToppingOnPizzaStore ";
-import useBasket from "./useBasket";
+import useBasket from "./StateHooks/useBasket";
 interface UseAddToBasketProps {
   // basket: BasketItem[];
   //setBasket: Dispatch<SetStateAction<BasketItem[]>>;
