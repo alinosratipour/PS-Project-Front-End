@@ -2,26 +2,31 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { BasketItem, Pizza, ToppingType } from "../SharedTypes";
 import { calculateToppingsTotal } from "../../utils";
-import {useToppingsStore} from "../store/ToppingOnPizza"
+import { useToppingsStore } from "../store/ToppingOnPizza";
+import useBasket from "./useBasket";
 interface UseAddToBasketProps {
-  basket: BasketItem[];
-  setBasket: Dispatch<SetStateAction<BasketItem[]>>;
-  selectedSizePrice?: number;
-  selectedBasePrice?: number;
+  // basket: BasketItem[];
+  //setBasket: Dispatch<SetStateAction<BasketItem[]>>;
+  //selectedSizePrice?: number;
+  //selectedBasePrice?: number;
   selectedToppings: ToppingType[];
 }
 
 const useAddToBasket = ({
-  basket,
-  setBasket,
-  selectedSizePrice,
-  selectedBasePrice,
+  //basket,
+  //setBasket,
+  //selectedSizePrice,
+  //selectedBasePrice,
   selectedToppings,
 }: UseAddToBasketProps) => {
-  
-  const {removedToppings, setRemovedToppings} = useToppingsStore();
-
-
+  const { removedToppings, setRemovedToppings } = useToppingsStore();
+  const [selectedSizePrice, setSelectedSizePrice] = useState<
+    number | undefined
+  >(0);
+  const [selectedBasePrice, setSelectedBasePrice] = useState<
+    number | undefined
+  >(0);
+  const { basket, setBasket } = useBasket();
   const addToBasket = (pizza: Pizza, size: string, base: string) => {
     if (size !== undefined) {
       const existingPizzaIndex = basket.findIndex(
@@ -70,7 +75,18 @@ const useAddToBasket = ({
     return Number(pizzasTotalPrice.toFixed(2));
   };
 
-  return { addToBasket, calculateTotalPrice, removedToppings, setRemovedToppings };
+  return {
+    addToBasket,
+    calculateTotalPrice,
+    removedToppings,
+    setRemovedToppings,
+    basket,
+    setBasket,
+    selectedBasePrice,
+    selectedSizePrice,
+    setSelectedBasePrice,
+    setSelectedSizePrice
+  };
 };
 
 export default useAddToBasket;

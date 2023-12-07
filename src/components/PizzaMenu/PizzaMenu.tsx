@@ -9,7 +9,6 @@ import { GET_ALL_PIZZAS_LIST } from "../../queries/queries";
 import useAddToppings from "../hooks/useAddToppingsHook";
 import useQuantity from "../hooks/useQuantityHook";
 import useAddToBasket from "../hooks/useAddToBasketHook";
-import useBasket from "../hooks/useBasket";
 import { useLoadingContext } from "../Context/LoadingContext";
 import useToppings from "../hooks/useToppings";
 import "./PizzaMenu.scss";
@@ -20,15 +19,7 @@ const PizzaMenu = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPizza, setSelectedPizza] = useState<Pizza | null>(null);
 
-  const [selectedSizePrice, setSelectedSizePrice] = useState<
-    number | undefined
-  >(0);
-  const [selectedBasePrice, setSelectedBasePrice] = useState<
-    number | undefined
-  >(0);
-
   const { loading: globalLoading, setLoading } = useLoadingContext();
-  const { basket, setBasket } = useBasket();
   const { toppingsTotal } = useToppings();
 
   const {
@@ -36,27 +27,30 @@ const PizzaMenu = () => {
     removeToppingFromBasket,
     selectedToppings,
     setSelectedToppings,
-    setToppingsTotal, 
+    setToppingsTotal,
   } = useAddToppings();
 
-  const { increaseQuantity, decreaseQuantity } = useQuantity(basket, setBasket);
-
-  const { selectedSize,setSelectedSize } = useSize();
+  const { selectedSize, setSelectedSize } = useSize();
 
   useEffect(() => {
     setSelectedToppings([]);
     setToppingsTotal(0);
   }, [selectedSize]);
 
-  const { addToBasket, calculateTotalPrice,setRemovedToppings ,removedToppings } = useAddToBasket({
+  const {
+    addToBasket,
+    calculateTotalPrice,
+    setRemovedToppings,
+    removedToppings,
     basket,
     setBasket,
-    selectedSizePrice,
-    selectedBasePrice,
+    setSelectedBasePrice,
+    setSelectedSizePrice,
+  } = useAddToBasket({
     selectedToppings,
- 
   });
 
+  const { increaseQuantity, decreaseQuantity } = useQuantity(basket, setBasket);
 
   const { error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(
     GET_ALL_PIZZAS_LIST,
