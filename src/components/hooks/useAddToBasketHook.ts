@@ -5,7 +5,7 @@ import { calculateToppingsTotal } from "../../utils";
 import { useToppingsRemovalFromPizza } from "../store/ToppingOnPizzaStore ";
 import useBasket from "./StateHooks/useBasket";
 interface UseAddToBasketProps {
-  selectedToppings: ToppingType[];
+  selectedToppings?: ToppingType[];
 }
 
 const useAddToBasket = ({

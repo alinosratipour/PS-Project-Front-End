@@ -11,7 +11,6 @@ import { useLoadingContext } from "../Context/LoadingContext";
 
 import "./PizzaMenu.scss";
 import useSize from "../hooks/StateHooks/useSize";
-import { useToppingsStore } from "../store/SelectedToppingsStore";
 import { useToppings } from "../Context/selectedTopping";
 
 const PizzaMenu = () => {
@@ -19,8 +18,7 @@ const PizzaMenu = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPizza, setSelectedPizza] = useState<Pizza | null>(null);
   const { loading: globalLoading, setLoading } = useLoadingContext();
-  const { toppingsTotal } = useToppingsStore();
-  const { selectedToppings, setSelectedToppings, setToppingsTotal } =
+  const { selectedToppings, setSelectedToppings, setToppingsTotal,toppingsTotal } =
     useToppings();
   const { selectedSize, setSelectedSize } = useSize();
 

@@ -4,7 +4,7 @@ import { SizeProvider } from "./SizeContext";
 import { LoadingProvider } from "./LoadingContext";
 import { PizzaProvider } from "./PizzaContext";
 import { ToppingsProvider } from "./selectedTopping";
-
+import { BasketProvider } from "./BasketContext";
 
 interface ContextProviderProps {
   children: ReactNode;
@@ -12,15 +12,15 @@ interface ContextProviderProps {
 
 const ContextProvider: React.FC<ContextProviderProps> = ({ children }) => (
   <LoadingProvider>
-  <ToppingsProvider>
-    <BaseProvider>
-      <SizeProvider>
-        <PizzaProvider>{children}</PizzaProvider>
-      </SizeProvider>
-    </BaseProvider>
-  </ToppingsProvider>
-    
-   
+    <BasketProvider>
+      <ToppingsProvider>
+        <BaseProvider>
+          <SizeProvider>
+            <PizzaProvider>{children}</PizzaProvider>
+          </SizeProvider>
+        </BaseProvider>
+      </ToppingsProvider>
+    </BasketProvider>
   </LoadingProvider>
 );
 
