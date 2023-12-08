@@ -3,6 +3,7 @@ import { BaseProvider } from "./BaseContext";
 import { SizeProvider } from "./SizeContext";
 import { LoadingProvider } from "./LoadingContext";
 import { PizzaProvider } from "./PizzaContext";
+import { ToppingsProvider } from "./selectedTopping";
 
 
 interface ContextProviderProps {
@@ -11,12 +12,14 @@ interface ContextProviderProps {
 
 const ContextProvider: React.FC<ContextProviderProps> = ({ children }) => (
   <LoadingProvider>
-  
+  <ToppingsProvider>
     <BaseProvider>
       <SizeProvider>
         <PizzaProvider>{children}</PizzaProvider>
       </SizeProvider>
     </BaseProvider>
+  </ToppingsProvider>
+    
    
   </LoadingProvider>
 );

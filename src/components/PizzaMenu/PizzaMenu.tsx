@@ -6,30 +6,22 @@ import AddPizzaModal from "../AddPizza/AddPizzaModal";
 import PizzaItem from "../PizzaItems/PizzaItem";
 import { Pizza } from "../SharedTypes";
 import { GET_ALL_PIZZAS_LIST } from "../../queries/queries";
-import useAddToppings from "../hooks/useAddToppingsHook";
 import useAddToBasket from "../hooks/useAddToBasketHook";
 import { useLoadingContext } from "../Context/LoadingContext";
 
 import "./PizzaMenu.scss";
 import useSize from "../hooks/StateHooks/useSize";
 import { useToppingsStore } from "../store/SelectedToppingsStore";
+import { useToppings } from "../Context/selectedTopping";
 
 const PizzaMenu = () => {
   const [localLoading, setLocalLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPizza, setSelectedPizza] = useState<Pizza | null>(null);
-
   const { loading: globalLoading, setLoading } = useLoadingContext();
-  //const { toppingsTotal } = useToppings();
   const { toppingsTotal } = useToppingsStore();
-  const {
-    addToppingToBasket,
-    removeToppingFromBasket,
-    selectedToppings,
-    setSelectedToppings,
-    setToppingsTotal,
-  } = useAddToppings();
-
+  const { selectedToppings, setSelectedToppings, setToppingsTotal } =
+    useToppings();
   const { selectedSize, setSelectedSize } = useSize();
 
   useEffect(() => {
@@ -115,8 +107,6 @@ const PizzaMenu = () => {
             setSelectedSize={setSelectedSize}
             setSelectedSizePrice={setSelectedSizePrice}
             setSelectedBasePrice={setSelectedBasePrice}
-            addToppingToBasket={addToppingToBasket}
-            removeToppingFromBasket={removeToppingFromBasket}
             addToBasket={addToBasket}
             selectedSize={selectedSize}
             setIsModalOpen={setIsModalOpen}
