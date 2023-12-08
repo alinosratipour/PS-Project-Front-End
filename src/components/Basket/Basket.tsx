@@ -2,11 +2,10 @@ import React, { useEffect } from "react";
 import EditBasketModal from "./EditBasketModal";
 import { BasketItem, ToppingType } from "../SharedTypes";
 import "./Basket.scss";
+import useQuantity from "../hooks/useQuantityHook";
 interface BasketProps {
   basket: BasketItem[];
   setBasket: React.Dispatch<React.SetStateAction<BasketItem[]>>;
-  increaseQuantity: (item: BasketItem) => void;
-  decreaseQuantity: (item: BasketItem) => void;
   calculateTotalPrice: () => number;
   toppingsTotal: number;
   onSizeChange?: (newSize: number) => void;
@@ -18,8 +17,6 @@ const BASKET_STORAGE_KEY = "basket";
 function Basket({
   basket,
   setBasket,
-  increaseQuantity,
-  decreaseQuantity,
   calculateTotalPrice,
   onSizeChange,
   onBaseChange,
@@ -34,7 +31,7 @@ function Basket({
     setSelectedBasketItem(pizza);
     setIsEditModalOpen(true);
   };
-
+  const { increaseQuantity, decreaseQuantity } = useQuantity(basket, setBasket);
   useEffect(() => {
     // Load basket from local storage on component mount
     const storedBasket = localStorage.getItem(BASKET_STORAGE_KEY);

@@ -7,10 +7,9 @@ import PizzaItem from "../PizzaItems/PizzaItem";
 import { Pizza } from "../SharedTypes";
 import { GET_ALL_PIZZAS_LIST } from "../../queries/queries";
 import useAddToppings from "../hooks/useAddToppingsHook";
-import useQuantity from "../hooks/useQuantityHook";
 import useAddToBasket from "../hooks/useAddToBasketHook";
 import { useLoadingContext } from "../Context/LoadingContext";
-import useToppings from "../hooks/StateHooks/useToppings";
+
 import "./PizzaMenu.scss";
 import useSize from "../hooks/StateHooks/useSize";
 import { useToppingsStore } from "../store/SelectedToppingsStore";
@@ -50,8 +49,6 @@ const PizzaMenu = () => {
   } = useAddToBasket({
     selectedToppings,
   });
-
-  const { increaseQuantity, decreaseQuantity } = useQuantity(basket, setBasket);
 
   const { error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(
     GET_ALL_PIZZAS_LIST,
@@ -102,8 +99,6 @@ const PizzaMenu = () => {
           <Basket
             basket={basket}
             calculateTotalPrice={calculateTotalPrice}
-            increaseQuantity={increaseQuantity}
-            decreaseQuantity={decreaseQuantity}
             toppingsTotal={toppingsTotal}
             setBasket={setBasket}
             onBasketToppingsChange={(updatedToppings) =>
