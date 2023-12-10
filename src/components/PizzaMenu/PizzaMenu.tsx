@@ -13,6 +13,7 @@ import "./PizzaMenu.scss";
 import useSize from "../hooks/StateHooks/useSize";
 import { useToppings } from "../Context/selectedTopping";
 
+
 const PizzaMenu = () => {
   const [localLoading, setLocalLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,6 +21,9 @@ const PizzaMenu = () => {
   const { loading: globalLoading, setLoading } = useLoadingContext();
   const { selectedToppings, setSelectedToppings, setToppingsTotal,toppingsTotal } =
     useToppings();
+
+
+
   const { selectedSize, setSelectedSize } = useSize();
 
   useEffect(() => {
@@ -28,14 +32,9 @@ const PizzaMenu = () => {
   }, [selectedSize]);
 
   const {
-    addToBasket,
     calculateTotalPrice,
-    setRemovedToppings,
-    removedToppings,
     basket,
     setBasket,
-    setSelectedBasePrice,
-    setSelectedSizePrice,
   } = useAddToBasket({
     selectedToppings,
   });
@@ -103,13 +102,9 @@ const PizzaMenu = () => {
           <AddPizzaModal
             selectedPizza={selectedPizza}
             setSelectedSize={setSelectedSize}
-            setSelectedSizePrice={setSelectedSizePrice}
-            setSelectedBasePrice={setSelectedBasePrice}
-            addToBasket={addToBasket}
             selectedSize={selectedSize}
             setIsModalOpen={setIsModalOpen}
-            removedToppings={removedToppings}
-            setRemovedToppings={setRemovedToppings}
+       
           />
         )}
       </Modal>

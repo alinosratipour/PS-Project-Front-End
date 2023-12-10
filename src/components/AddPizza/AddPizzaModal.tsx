@@ -1,35 +1,37 @@
 import React from "react";
 import PizzaOptionsContainer from "./PizzaOptionsContainer";
-import { Pizza, ToppingType } from "../SharedTypes";
+import { Pizza } from "../SharedTypes";
 import useBaseState from "../hooks/StateHooks/useBase";
 import useAddToppings from "../hooks/useAddToppingsHook";
+import useAddToBasket from "../hooks/useAddToBasketHook";
 
 interface AddPizzaModalProps {
   selectedPizza: Pizza;
   setSelectedSize: (size: string | undefined) => void;
-  setSelectedSizePrice: (price: number | undefined) => void;
-  setSelectedBasePrice: (basePrice: number | undefined) => void;
-  addToBasket: (pizza: Pizza, size: string, base: string) => void;
   selectedSize: string | undefined;
   setIsModalOpen: (isOpen: boolean) => void;
-  removedToppings: ToppingType[];
-  setRemovedToppings: React.Dispatch<React.SetStateAction<ToppingType[]>>;
 }
 
 const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
   selectedPizza,
   setSelectedSize,
-  setSelectedSizePrice,
-  setSelectedBasePrice,
-  addToBasket,
   selectedSize,
   setIsModalOpen,
-  removedToppings: updatedRemovedToppings,
-  setRemovedToppings,
 }) => {
   const { selectedBase, setSelectedBase } = useBaseState();
 
-  const { addToppingToBasket, removeToppingFromBasket } = useAddToppings();
+  const { addToppingToBasket, removeToppingFromBasket, selectedToppings } =
+    useAddToppings();
+
+  const {
+    addToBasket,
+    setRemovedToppings,
+    removedToppings: updatedRemovedToppings,
+    setSelectedBasePrice,
+    setSelectedSizePrice,
+  } = useAddToBasket({
+    selectedToppings,
+  });
 
   React.useEffect(() => {
     setRemovedToppings(updatedRemovedToppings);

@@ -3,7 +3,7 @@ import {  useState } from "react";
 import {  Pizza, ToppingType } from "../SharedTypes";
 import { calculateToppingsTotal } from "../../utils";
 import { useToppingsRemovalFromPizza } from "../store/ToppingOnPizzaStore ";
-import useBasket from "./StateHooks/useBasket";
+import { useBasketContext } from "../Context/BasketContext";
 interface UseAddToBasketProps {
   selectedToppings?: ToppingType[];
 }
@@ -18,7 +18,8 @@ const useAddToBasket = ({
   const [selectedBasePrice, setSelectedBasePrice] = useState<
     number | undefined
   >(0);
-  const { basket, setBasket } = useBasket();
+  // const { basket, setBasket } = useBasket();
+  const {basket, setBasket} =useBasketContext();
   const addToBasket = (pizza: Pizza, size: string, base: string) => {
     if (size !== undefined) {
       const existingPizzaIndex = basket.findIndex(
