@@ -6,6 +6,7 @@ import "./PizzaToppings.scss";
 import classNames from "classnames";
 import { ToppingsData, ToppingType } from "../SharedTypes";
 import { useToppingsRemovalFromPizza } from "../store/ToppingOnPizzaStore ";
+import { useToppings } from "../Context/selectedTopping";
 
 interface PizzaToppingsProps {
   pizzaId: number;
@@ -20,6 +21,9 @@ const PizzaToppings: React.FC<PizzaToppingsProps> = ({ pizzaId }) => {
   );
 
   const { removedToppings, setRemovedToppings } = useToppingsRemovalFromPizza();
+  const { selectedToppings } =
+  useToppings();
+
 
   const handleToppingClick = (toppingId: number, toppingName: string) => {
     setRemovedToppings((prevRemoved: ToppingType[]) => {
@@ -63,6 +67,16 @@ const PizzaToppings: React.FC<PizzaToppingsProps> = ({ pizzaId }) => {
           {toppingOnPizza.toppings.name}
         </div>
       ))}
+      {
+        selectedToppings.map(extraToppings=>{
+          return(
+            <div key={extraToppings.id} className="box">
+              {extraToppings.name}
+
+            </div>
+          )
+        })
+      }
     </div>
   );
 };
