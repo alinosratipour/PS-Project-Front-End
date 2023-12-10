@@ -33,9 +33,6 @@ const useAddToppings = () => {
 
   const removeToppingFromBasket = (topping: ToppingType) => {
     setSelectedToppings((prevToppings) => {
-      // Log for debugging
-      console.log("Before removal:", prevToppings);
-
       const updatedToppings = prevToppings.map((t: ToppingType) =>
         t.name === topping.name ? { ...t, quantity: t.quantity - 1 } : t
       );
