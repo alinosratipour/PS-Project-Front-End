@@ -12,12 +12,13 @@ import { useLoadingContext } from "../Context/LoadingContext";
 import "./PizzaMenu.scss";
 import useSize from "../hooks/StateHooks/useSize";
 import { useToppings } from "../Context/selectedTopping";
+import { usePizzaContext } from "../Context/PizzaContext";
 
 
 const PizzaMenu = () => {
   const [localLoading, setLocalLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPizza, setSelectedPizza] = useState<Pizza | null>(null);
+ // const [selectedPizza, setSelectedPizza] = useState<Pizza | null>(null);
   const { loading: globalLoading, setLoading } = useLoadingContext();
   const { selectedToppings, setSelectedToppings, setToppingsTotal,toppingsTotal } =
     useToppings();
@@ -25,7 +26,7 @@ const PizzaMenu = () => {
 
 
   const { selectedSize, setSelectedSize } = useSize();
-
+  const { pizzaData, selectedPizza, setSelectedPizza } = usePizzaContext();
   useEffect(() => {
     setSelectedToppings([]);
     setToppingsTotal(0);
@@ -75,8 +76,8 @@ const PizzaMenu = () => {
     <div>
       <div className="pizza-menu-container">
         <div className="pizza-items-container">
-          {data &&
-            data.getAllPizzasList.map((pizza) => (
+          {pizzaData &&
+            pizzaData.map((pizza) => (
               <PizzaItem
                 key={pizza.id_pizza}
                 pizza={pizza}
