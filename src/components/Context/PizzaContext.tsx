@@ -1,14 +1,22 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import { useQuery, ApolloError } from "@apollo/client";
 import { GET_ALL_PIZZAS_LIST } from "../../queries/queries";
 import { Pizza } from "../SharedTypes";
+import { useLoadingContext } from "./LoadingContext";
 
 interface PizzaContextProps {
   pizzaData: Pizza[];
-  pizzaLoading: boolean;
   pizzaError?: ApolloError;
   selectedPizza: Pizza | null;
   setSelectedPizza: React.Dispatch<React.SetStateAction<Pizza | null>>;
+  globalLoading:boolean;
+  localLoading:boolean;
 }
 
 interface PizzaProviderProps {
@@ -27,20 +35,24 @@ export const usePizzaContext = (): PizzaContextProps => {
 
 export const PizzaProvider: React.FC<PizzaProviderProps> = ({ children }) => {
   const [pizzaData, setPizzaData] = useState<Pizza[]>([]);
-  const [pizzaLoading, setPizzaLoading] = useState(true);
-  const [pizzaError, setPizzaError] = useState<ApolloError | undefined>(undefined);
+  const [pizzaError, setPizzaError] = useState<ApolloError | undefined>(
+    undefined
+  );
   const [selectedPizza, setSelectedPizza] = useState<Pizza | null>(null);
-
-  const { error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(
+  const { loading: globalLoading, setLoading } = useLoadingContext();
+  const [localLoading, setLocalLoading] = useState(true);
+  const { data } = useQuery<{ getAllPizzasList: Pizza[] }>(
     GET_ALL_PIZZAS_LIST,
     {
       onCompleted: () => {
-        setPizzaData(data?.getAllPizzasList || []);
-        setPizzaLoading(false);
+        //setPizzaData(data?.getAllPizzasList || []);
+        setLocalLoading(false);
+       setLoading(false)
       },
       onError: (err) => {
+        setLocalLoading(false);
         setPizzaError(err);
-        setPizzaLoading(false);
+        setLoading(false)
       },
     }
   );
@@ -51,14 +63,13 @@ export const PizzaProvider: React.FC<PizzaProviderProps> = ({ children }) => {
     }
   }, [data]);
 
-  
-
   const contextValue: PizzaContextProps = {
     pizzaData,
-    pizzaLoading,
+    globalLoading,
     pizzaError,
     selectedPizza,
     setSelectedPizza,
+    localLoading
   };
 
   return (

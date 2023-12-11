@@ -72,3 +72,26 @@ function ToppingsList({
 }
 
 export default ToppingsList;
+
+
+  // const totalToppingsQuantity = selectedToppings
+        //   ? selectedToppings.reduce(
+        //       (total, topping) => total + (topping.quantity || 0),
+        //       0
+        //     )
+        //   : 0;
+
+        // const toppingsTotal =
+        //   totalToppingsQuantity > numberOfFreeToppings
+        //     ? totalToppingsQuantity - numberOfFreeToppings
+        //     : 0;
+
+
+        //import { ToppingType } from "./components/SharedTypes";
+
+// export const calculateToppingsTotal = (toppings: ToppingType[]) => {
+//   return toppings.reduce((total, topping) => {
+//     const toppingTotal = (topping.price || 0) * (topping.quantity || 1);
+//     return total + toppingTotal;
+//   }, 0);
+// };
