@@ -15,8 +15,8 @@ interface PizzaContextProps {
   pizzaError?: ApolloError;
   selectedPizza: Pizza | null;
   setSelectedPizza: React.Dispatch<React.SetStateAction<Pizza | null>>;
-  globalLoading:boolean;
-  localLoading:boolean;
+  globalLoading: boolean;
+  localLoading: boolean;
 }
 
 interface PizzaProviderProps {
@@ -45,14 +45,13 @@ export const PizzaProvider: React.FC<PizzaProviderProps> = ({ children }) => {
     GET_ALL_PIZZAS_LIST,
     {
       onCompleted: () => {
-        //setPizzaData(data?.getAllPizzasList || []);
         setLocalLoading(false);
-       setLoading(false)
+        setLoading(false);
       },
       onError: (err) => {
         setLocalLoading(false);
         setPizzaError(err);
-        setLoading(false)
+        setLoading(false);
       },
     }
   );
@@ -69,7 +68,7 @@ export const PizzaProvider: React.FC<PizzaProviderProps> = ({ children }) => {
     pizzaError,
     selectedPizza,
     setSelectedPizza,
-    localLoading
+    localLoading,
   };
 
   return (
