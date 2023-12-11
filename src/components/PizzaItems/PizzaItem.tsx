@@ -1,6 +1,7 @@
 import React from "react";
 import { Pizza } from "../SharedTypes";
 import "./PizzaItem.scss";
+import Button from "../UI-Liberary/Button/Button";
 
 interface PizzaItemProps {
   pizza: Pizza;
@@ -22,9 +23,12 @@ const PizzaItem: React.FC<PizzaItemProps> = ({ pizza, onAddPizza }) => {
           <div className="text-container">
             <h2>{pizza.name}</h2>
             <p>{pizza.description}</p>
-            <button onClick={() => onAddPizza(pizza)} className="addPizza">
-              Add Pizza
-            </button>
+
+            <div className="addPizza">
+              <Button size="lg" onClick={() => onAddPizza(pizza)} fontSize="1.2">
+                Add Pizza
+              </Button>
+            </div>
           </div>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { Pizza } from "../SharedTypes";
 import useBaseState from "../hooks/StateHooks/useBase";
 import useAddToppings from "../hooks/useAddToppingsHook";
 import useAddToBasket from "../hooks/useAddToBasketHook";
+import Button from "../UI-Liberary/Button/Button";
 
 interface AddPizzaModalProps {
   selectedPizza: Pizza;
@@ -58,7 +59,7 @@ const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
           onAddTopping={addToppingToBasket}
           onRemoveTopping={removeToppingFromBasket}
         />
-        <button
+        {/* <button
           onClick={() => {
             addToBasket(selectedPizza, selectedSize || "", selectedBase || "");
             setIsModalOpen(false);
@@ -66,7 +67,18 @@ const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
           disabled={selectedSize === undefined || selectedBase === undefined}
         >
           Add to Basket
-        </button>   
+        </button>    */}
+        <Button
+        onClick={() => {
+          addToBasket(selectedPizza, selectedSize || "", selectedBase || "");
+          setIsModalOpen(false);
+        }}
+        disabled={selectedSize === undefined || selectedBase === undefined}
+        size="lg"
+      >
+        Add to Basket
+      </Button>
+  
     </>
   );
 };

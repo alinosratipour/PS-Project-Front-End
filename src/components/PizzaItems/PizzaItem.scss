@@ -11,7 +11,6 @@
   align-items: center;
   padding: 10px;
   border-radius: 8px;
-
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -53,30 +52,14 @@
 
   p {
     text-align: center;
-    font-size: 1em;
-
+    font-size: 1.2em;
+    font-family: var(--font-roboto-condensed);
     box-sizing: border-box;
   }
   h2 {
     margin-bottom: 100px;
+    font-family: var(--font-roboto);
+    
   }
-}
-button.addPizza {
-  background-color: #070807;
-  color: white;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  align-self: flex-end;
-  width: 100%;
-  margin-top: auto;
-  font-size: 1.5em;
-  transition: background-color 0.3s, color 0.3s;
-  border: 1px solid black;
-  &:hover {
-    background-color: white;
-    color: #070807;
-    border: 1px solid black;
-  }
+
 }
