@@ -1,25 +1,25 @@
-import { BasketItem, Pizza, ToppingType } from "../SharedTypes";
-import { calculateToppingsTotal } from "../../utils";
 
+import {  useState } from "react";
+import {  Pizza, ToppingType } from "../SharedTypes";
+import { calculateToppingsTotal } from "../../utils";
+import { useToppingsRemovalFromPizza } from "../store/ToppingOnPizzaStore ";
+import { useBasketContext } from "../Context/BasketContext";
 interface UseAddToBasketProps {
-  basket: BasketItem[];
-  setBasket: React.Dispatch<React.SetStateAction<BasketItem[]>>;
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>; // Pass setIsModalOpen
-  selectedSizePrice?: number;
-  selectedBasePrice?: number;
-  selectedToppings: ToppingType[];
-  setSelectedToppings: React.Dispatch<React.SetStateAction<ToppingType[]>>;
-  setToppingsTotal: React.Dispatch<React.SetStateAction<number>>;
+  selectedToppings?: ToppingType[];
 }
 
 const useAddToBasket = ({
-  basket,
-  setBasket,
-  setIsModalOpen, // Receive setIsModalOpen
-  selectedSizePrice,
-  selectedBasePrice,
   selectedToppings,
 }: UseAddToBasketProps) => {
+  const { removedToppings, setRemovedToppings } = useToppingsRemovalFromPizza();
+  const [selectedSizePrice, setSelectedSizePrice] = useState<
+    number | undefined
+  >(0);
+  const [selectedBasePrice, setSelectedBasePrice] = useState<
+    number | undefined
+  >(0);
+  // const { basket, setBasket } = useBasket();
+  const {basket, setBasket} =useBasketContext();
   const addToBasket = (pizza: Pizza, size: string, base: string) => {
     if (size !== undefined) {
       const existingPizzaIndex = basket.findIndex(
@@ -46,12 +46,12 @@ const useAddToBasket = ({
           basePrice: selectedBasePrice,
           toppings: selectedToppings,
           toppingsTotal: calculateToppingsTotal(selectedToppings),
+          removedToppings: removedToppings,
         };
 
         setBasket([...basket, pizzaWithPrice]);
+        setRemovedToppings([]); // Clear removed toppings after adding to the basket
       }
-
-      setIsModalOpen(false); // Use setIsModalOpen here
     }
   };
 
@@ -68,7 +68,18 @@ const useAddToBasket = ({
     return Number(pizzasTotalPrice.toFixed(2));
   };
 
-  return { addToBasket, calculateTotalPrice };
+  return {
+    addToBasket,
+    calculateTotalPrice,
+    removedToppings,
+    setRemovedToppings,
+    basket,
+    setBasket,
+    selectedBasePrice,
+    selectedSizePrice,
+    setSelectedBasePrice,
+    setSelectedSizePrice,
+  };
 };
 
 export default useAddToBasket;

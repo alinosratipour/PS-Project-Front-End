@@ -1,18 +1,18 @@
 // PizzaToppings.tsx
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_TOPPINGS_ON_PIZZA } from "../../queries/queries";
 import "./PizzaToppings.scss";
 import classNames from "classnames";
-import useToppingsSelection from "../hooks/ useToppingsSelection";
 import { ToppingsData, ToppingType } from "../SharedTypes";
+import { useToppingsRemovalFromPizza } from "../store/ToppingOnPizzaStore ";
+import { useToppings } from "../Context/selectedTopping";
 
 interface PizzaToppingsProps {
   pizzaId: number;
-  onRemoveTopping: (topping: ToppingType) => void; // New prop
 }
 
-const PizzaToppings: React.FC<PizzaToppingsProps> = ({ pizzaId, onRemoveTopping }) => {
+const PizzaToppings: React.FC<PizzaToppingsProps> = ({ pizzaId }) => {
   const { data, loading, error } = useQuery<ToppingsData>(
     GET_TOPPINGS_ON_PIZZA,
     {
@@ -20,10 +20,33 @@ const PizzaToppings: React.FC<PizzaToppingsProps> = ({ pizzaId, onRemoveTopping 
     }
   );
 
-  const { selectedToppings, handleToppingClick } = useToppingsSelection({
-    onRemoveTopping,
-  });
+  const { removedToppings, setRemovedToppings } = useToppingsRemovalFromPizza();
+  const { selectedToppings } =
+  useToppings();
 
+
+  const handleToppingClick = (toppingId: number, toppingName: string) => {
+    setRemovedToppings((prevRemoved: ToppingType[]) => {
+      const existingTopping = prevRemoved.find((t) => t.id === toppingId);
+
+      if (existingTopping) {
+        // Topping is already removed, so undo removal
+        return prevRemoved.filter((t) => t.id !== toppingId);
+      } else {
+        // Topping is not removed, so add to removedToppings
+        return [
+          ...prevRemoved,
+          {
+            id: toppingId,
+            name: toppingName,
+            id_size: 0,
+            price: 0,
+            quantity: 0,
+          },
+        ];
+      }
+    });
+  };
   if (loading) return <p>Loading toppings...</p>;
   if (error) return <p>Error fetching toppings: {error.message}</p>;
 
@@ -35,7 +58,7 @@ const PizzaToppings: React.FC<PizzaToppingsProps> = ({ pizzaId, onRemoveTopping 
         <div
           key={toppingOnPizza.id}
           className={classNames("box", {
-            selected: selectedToppings.includes(toppingOnPizza.id),
+            selected: removedToppings.some((t) => t.id === toppingOnPizza.id),
           })}
           onClick={() =>
             handleToppingClick(toppingOnPizza.id, toppingOnPizza.toppings.name)
@@ -44,6 +67,16 @@ const PizzaToppings: React.FC<PizzaToppingsProps> = ({ pizzaId, onRemoveTopping 
           {toppingOnPizza.toppings.name}
         </div>
       ))}
+      {
+        selectedToppings.map(extraToppings=>{
+          return(
+            <div key={extraToppings.id} className="box">
+              {extraToppings.name}
+
+            </div>
+          )
+        })
+      }
     </div>
   );
 };

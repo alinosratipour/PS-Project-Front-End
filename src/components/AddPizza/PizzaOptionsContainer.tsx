@@ -12,7 +12,7 @@ import BaseRadioButtons from "../UI-Liberary/BaseRadioButton/BaseRadioButtons";
 import { BaseWithPrice, SizeWithPrice, ToppingType } from "../SharedTypes";
 import { useSizeContext } from "../Context/SizeContext";
 import { useBaseContext } from "../Context/BaseContext";
-import { useToppingContext } from "../Context/ToppingContaxt";
+import { useAllAvailableToppingsStore } from "../store/AllAvailableToppingsStore";
 import PizzaToppings from "./PizzaToppings";
 
 interface PizzaOptionsContainerProps {
@@ -37,7 +37,7 @@ const PizzaOptionsContainer = ({
 }: PizzaOptionsContainerProps) => {
   const { availableSizes, setSizes } = useSizeContext();
   const { availableBases, setAvailableBases, refetchBases } = useBaseContext();
-  const { availableToppings, refetchToppings } = useToppingContext();
+  const { availableToppings, refetchToppings } = useAllAvailableToppingsStore();
   const [selectedSize, setSelectedSize] = useState<number>(1);
   const [isSizeSelected, setIsSizeSelected] = useState(false);
   const [selectedSizePrice, setSelectedSizePrice] = useState<
@@ -124,7 +124,7 @@ const PizzaOptionsContainer = ({
             bases={availableBases}
             onBaseChange={handleBaseChange}
           />
-          {/* <PizzaToppings pizzaId={pizzaId} /> */}
+          <PizzaToppings pizzaId={pizzaId} />
           <ToppingsList
             availableToppings={availableToppings}
             onAddTopping={onAddTopping}

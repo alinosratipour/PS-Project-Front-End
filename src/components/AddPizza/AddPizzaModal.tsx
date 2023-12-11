@@ -1,33 +1,41 @@
-// PizzaModalContent.js
 import React from "react";
 import PizzaOptionsContainer from "./PizzaOptionsContainer";
-import { Pizza, ToppingType } from "../SharedTypes";
+import { Pizza } from "../SharedTypes";
+import useBaseState from "../hooks/StateHooks/useBase";
+import useAddToppings from "../hooks/useAddToppingsHook";
+import useAddToBasket from "../hooks/useAddToBasketHook";
 
 interface AddPizzaModalProps {
   selectedPizza: Pizza;
   setSelectedSize: (size: string | undefined) => void;
-  setSelectedSizePrice: (price: number | undefined) => void;
-  setSelectedBase: (base: string | undefined) => void;
-  setSelectedBasePrice: (basePrice: number | undefined) => void;
-  addToppingToBasket: (topping: ToppingType) => void;
-  removeToppingFromBasket: (topping: ToppingType) => void;
-  addToBasket: (pizza: Pizza, size: string, base: string) => void;
   selectedSize: string | undefined;
-  selectedBase: string | undefined;
+  setIsModalOpen: (isOpen: boolean) => void;
 }
 
 const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
   selectedPizza,
   setSelectedSize,
-  setSelectedSizePrice,
-  setSelectedBase,
-  setSelectedBasePrice,
-  addToppingToBasket,
-  removeToppingFromBasket,
-  addToBasket,
   selectedSize,
-  selectedBase,
+  setIsModalOpen,
 }) => {
+  const { selectedBase, setSelectedBase } = useBaseState();
+
+  const { addToppingToBasket, removeToppingFromBasket, selectedToppings } =
+    useAddToppings();
+
+  const {
+    addToBasket,
+    setRemovedToppings,
+    removedToppings: updatedRemovedToppings,
+    setSelectedBasePrice,
+    setSelectedSizePrice,
+  } = useAddToBasket({
+    selectedToppings,
+  });
+
+  React.useEffect(() => {
+    setRemovedToppings(updatedRemovedToppings);
+  }, [updatedRemovedToppings]);
   return (
     <>
       <div className="addPizzaContainer">
@@ -51,9 +59,10 @@ const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
         onRemoveTopping={removeToppingFromBasket}
       />
       <button
-        onClick={() =>
-          addToBasket(selectedPizza, selectedSize || "", selectedBase || "")
-        }
+        onClick={() => {
+          addToBasket(selectedPizza, selectedSize || "", selectedBase || "");
+          setIsModalOpen(false);
+        }}
         disabled={selectedSize === undefined || selectedBase === undefined}
       >
         Add to Basket

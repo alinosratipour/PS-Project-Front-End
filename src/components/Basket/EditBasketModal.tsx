@@ -1,15 +1,15 @@
-// EditBasketModal.tsx
 import React, { useState, useEffect } from "react";
 import Modal from "../UI-Liberary/Modal/Modal";
 import SizeRadioButtons from "../UI-Liberary/SizeRadioButton/SizeRadioButtons";
 import { useSizeContext } from "../Context/SizeContext";
 import { useBaseContext } from "../Context/BaseContext";
-import { useToppingContext } from "../Context/ToppingContaxt";
+//import { useToppingContext } from "../Context/ToppingContaxt";
+import { useAllAvailableToppingsStore } from "../store/AllAvailableToppingsStore";
 import BaseRadioButtons from "../UI-Liberary/BaseRadioButton/BaseRadioButtons";
 import SizePrice from "../AddPizza/SizePrice";
 import { BasketItem, SizeType, ToppingType } from "../SharedTypes";
 import ToppingsList from "../AddPizza/ToppingsList";
-import useAddToppings from "../hooks/useAddToppingsHook"; // import the useToppings hook
+import useAddToppings from "../hooks/useAddToppingsHook";
 
 interface EditBasketModalProps {
   item: BasketItem | null;
@@ -18,7 +18,6 @@ interface EditBasketModalProps {
   onSizeChange?: (newSize: number, sizeName: string) => void;
   onBaseChange?: (newBase: string, price: number) => void;
   onToppingsChange: (toppings: ToppingType[]) => void;
-  // onToppingsTotalChange: React.Dispatch<React.SetStateAction<number>> | ((prevTotal: number) => number);
   onToppingsTotalChange:
     | React.Dispatch<React.SetStateAction<number>>
     | ((prevTotal: number) => number)
@@ -31,11 +30,11 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
   onSave,
   onSizeChange,
   onBaseChange,
-  onToppingsTotalChange,
 }) => {
   const { availableSizes } = useSizeContext();
   const { availableBases, refetchBases } = useBaseContext();
-  const { availableToppings, refetchToppings } = useToppingContext();
+  //const { availableToppings, refetchToppings } = useToppingContext();
+  const { availableToppings, refetchToppings } = useAllAvailableToppingsStore();
 
   const [editedPizza, setEditedPizza] = useState<BasketItem | null>(item);
   const [selectedSize, setSelectedSize] = useState<SizeType | undefined>(
@@ -49,17 +48,12 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
     number | undefined
   >(item?.basePrice || 0);
 
-  const [selectedToppings, setSelectedToppings] = useState<ToppingType[]>(
-    item?.toppings || []
-  );
-
-  // Use the useToppings hook
-  const { addToppingToBasket, removeToppingFromBasket } = useAddToppings({
+  const {
+    addToppingToBasket,
+    removeToppingFromBasket,
     selectedToppings,
     setSelectedToppings,
-    setToppingsTotal: onToppingsTotalChange, // Pass the onToppingsTotalChange directly
-  });
-
+  } = useAddToppings();
   useEffect(() => {
     setEditedPizza(item);
     setSelectedSize(availableSizes.find((size) => size.p_size === item?.size));
@@ -139,8 +133,8 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
       <ToppingsList
         availableToppings={availableToppings}
         refetchToppings={refetchToppings}
-        onAddTopping={addToppingToBasket} // Use the addToppingToBasket from useToppings
-        onRemoveTopping={removeToppingFromBasket} // Use the removeToppingFromBasket from useToppings
+        onAddTopping={addToppingToBasket}
+        onRemoveTopping={removeToppingFromBasket}
         selectedToppings={selectedToppings}
       />
       <button onClick={handleSave}>Save Changes</button>

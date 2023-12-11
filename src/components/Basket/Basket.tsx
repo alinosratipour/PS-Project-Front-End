@@ -2,13 +2,11 @@ import React, { useEffect } from "react";
 import EditBasketModal from "./EditBasketModal";
 import { BasketItem, ToppingType } from "../SharedTypes";
 import "./Basket.scss";
+import useQuantity from "../hooks/useQuantityHook";
 interface BasketProps {
   basket: BasketItem[];
   setBasket: React.Dispatch<React.SetStateAction<BasketItem[]>>;
-  increaseQuantity: (item: BasketItem) => void;
-  decreaseQuantity: (item: BasketItem) => void;
   calculateTotalPrice: () => number;
-  selectedToppings: ToppingType[];
   toppingsTotal: number;
   onSizeChange?: (newSize: number) => void;
   onBaseChange?: (newBase: string) => void;
@@ -19,8 +17,6 @@ const BASKET_STORAGE_KEY = "basket";
 function Basket({
   basket,
   setBasket,
-  increaseQuantity,
-  decreaseQuantity,
   calculateTotalPrice,
   onSizeChange,
   onBaseChange,
@@ -35,6 +31,7 @@ function Basket({
     setSelectedBasketItem(pizza);
     setIsEditModalOpen(true);
   };
+  const { increaseQuantity, decreaseQuantity } = useQuantity(basket, setBasket);
   useEffect(() => {
     // Load basket from local storage on component mount
     const storedBasket = localStorage.getItem(BASKET_STORAGE_KEY);
@@ -47,7 +44,7 @@ function Basket({
     // Save basket to local storage whenever it changes
     localStorage.setItem(BASKET_STORAGE_KEY, JSON.stringify(basket));
   }, [basket]);
-  
+
   const handleSaveChanges = (updatedItem: BasketItem) => {
     const toppingsTotal = updatedItem.toppings
       ? updatedItem.toppings.reduce((total, topping) => {
@@ -97,13 +94,27 @@ function Basket({
                 <button onClick={() => decreaseQuantity(item)}>-</button>
                 {item.toppings && item.toppings.length > 0 && (
                   <div>
-                  
                     <strong>Extra Toppings : £{item.toppingsTotal}</strong>
                     <ul>
                       {item.toppings.map((topping, index) => (
                         <li key={index}>
                           {topping.name}: Quantity: {topping.quantity} - £
                           {topping.price}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {item.removedToppings && item.removedToppings.length > 0 && (
+                  <div>
+                    <strong>Removed Toppings:</strong>
+                    <ul>
+                      {item.removedToppings.map((removedTopping, index) => (
+                        <li key={index}>
+                          No--{" "}
+                          <span className="NoTopping">
+                            {removedTopping.name}
+                          </span>{" "}
                         </li>
                       ))}
                     </ul>

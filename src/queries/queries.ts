@@ -52,6 +52,9 @@ export const GET_TOPPINGS_ON_PIZZA = gql`
       id
       id_pizza
       toppings {
+        pizzas {
+          id_pizza
+        }
         id
         name
         toppingPrice {

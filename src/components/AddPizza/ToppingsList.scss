@@ -1,0 +1,31 @@
+.topping-name {
+
+  }
+  
+  .in-ToppingList {
+    color: green;
+  }
+  
+  .in-Basket {
+    color: red;
+  }
+
+  .in-Default{
+    color:black;
+  }
+
+  .in-green{
+    color: blueviolet;
+  }
+  ul {
+    list-style-type: none;
+  }
+
+  /* Add this to your styles */
+.visible {
+  display: inline-block; /* or any other style to make it visible */
+}
+
+.hidden {
+  display: none;
+}

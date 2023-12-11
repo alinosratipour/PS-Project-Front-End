@@ -1,7 +1,7 @@
 import { ToppingType } from "../SharedTypes";
 import { calculateToppingsTotal } from "../../utils";
+import useToppings from "./useToppings";
 
-import { useToppings } from "../Context/selectedTopping";
 const useAddToppings = () => {
   const { selectedToppings, setSelectedToppings, setToppingsTotal } =
     useToppings();
@@ -33,17 +33,15 @@ const useAddToppings = () => {
 
   const removeToppingFromBasket = (topping: ToppingType) => {
     setSelectedToppings((prevToppings) => {
-      const updatedToppings = prevToppings.map((t: ToppingType) =>
-        t.name === topping.name ? { ...t, quantity: t.quantity - 1 } : t
-      );
+      const updatedToppings = prevToppings
+        .map((t: ToppingType) =>
+          t.name === topping.name ? { ...t, quantity: t.quantity - 1 } : t
+        )
+        .filter((t: ToppingType) => t.quantity > 0);
 
-      const filteredToppings = updatedToppings.filter(
-        (t: ToppingType) => t.quantity > 0
-      );
+      updateToppingsTotal(updatedToppings);
 
-      updateToppingsTotal(filteredToppings);
-
-      return filteredToppings;
+      return updatedToppings;
     });
   };
 
