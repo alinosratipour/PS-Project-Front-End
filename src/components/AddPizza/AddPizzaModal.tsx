@@ -37,36 +37,36 @@ const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
     setRemovedToppings(updatedRemovedToppings);
   }, [updatedRemovedToppings]);
   return (
-    <>
-      <div className="addPizzaContainer">
-        <h2>{selectedPizza.name}</h2>
-        <p>{selectedPizza.description}</p>
-        <div className="img-container">
-          <img src={selectedPizza.image} alt={selectedPizza.name} />
+    <> 
+        <div className="addPizzaContainer">
+          <h2>{selectedPizza.name}</h2>
+          <p>{selectedPizza.description}</p>
+          <div className="img-container">
+            <img src={selectedPizza.image} alt={selectedPizza.name} />
+          </div>
         </div>
-      </div>
-      <PizzaOptionsContainer
-        pizzaId={selectedPizza.id_pizza}
-        onSizePriceChange={(price, size) => {
-          setSelectedSize(size);
-          setSelectedSizePrice(price);
-        }}
-        onBaseChange={(base, basePrice) => {
-          setSelectedBase(base);
-          setSelectedBasePrice(basePrice);
-        }}
-        onAddTopping={addToppingToBasket}
-        onRemoveTopping={removeToppingFromBasket}
-      />
-      <button
-        onClick={() => {
-          addToBasket(selectedPizza, selectedSize || "", selectedBase || "");
-          setIsModalOpen(false);
-        }}
-        disabled={selectedSize === undefined || selectedBase === undefined}
-      >
-        Add to Basket
-      </button>
+        <PizzaOptionsContainer
+          pizzaId={selectedPizza.id_pizza}
+          onSizePriceChange={(price, size) => {
+            setSelectedSize(size);
+            setSelectedSizePrice(price);
+          }}
+          onBaseChange={(base, basePrice) => {
+            setSelectedBase(base);
+            setSelectedBasePrice(basePrice);
+          }}
+          onAddTopping={addToppingToBasket}
+          onRemoveTopping={removeToppingFromBasket}
+        />
+        <button
+          onClick={() => {
+            addToBasket(selectedPizza, selectedSize || "", selectedBase || "");
+            setIsModalOpen(false);
+          }}
+          disabled={selectedSize === undefined || selectedBase === undefined}
+        >
+          Add to Basket
+        </button>   
     </>
   );
 };

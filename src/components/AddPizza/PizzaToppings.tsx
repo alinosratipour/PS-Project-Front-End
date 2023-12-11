@@ -7,6 +7,9 @@ import classNames from "classnames";
 import { ToppingsData, ToppingType } from "../SharedTypes";
 import { useToppingsRemovalFromPizza } from "../store/ToppingOnPizzaStore ";
 import { useToppings } from "../Context/selectedTopping";
+import useQuantity from "../hooks/useQuantityHook";
+import { useBasketContext } from "../Context/BasketContext";
+import useAddToppings from "../hooks/useAddToppingsHook";
 
 interface PizzaToppingsProps {
   pizzaId: number;
@@ -21,9 +24,10 @@ const PizzaToppings: React.FC<PizzaToppingsProps> = ({ pizzaId }) => {
   );
 
   const { removedToppings, setRemovedToppings } = useToppingsRemovalFromPizza();
-  const { selectedToppings } =
-  useToppings();
-
+  const { selectedToppings } = useToppings();
+  // const { basket, setBasket } = useBasketContext();
+  // const { increaseQuantity, decreaseQuantity } = useQuantity(basket, setBasket);
+  const { addToppingToBasket, removeToppingFromBasket } = useAddToppings();
 
   const handleToppingClick = (toppingId: number, toppingName: string) => {
     setRemovedToppings((prevRemoved: ToppingType[]) => {
@@ -67,16 +71,15 @@ const PizzaToppings: React.FC<PizzaToppingsProps> = ({ pizzaId }) => {
           {toppingOnPizza.toppings.name}
         </div>
       ))}
-      {
-        selectedToppings.map(extraToppings=>{
-          return(
-            <div key={extraToppings.id} className="box">
-              {extraToppings.name}
-
-            </div>
-          )
-        })
-      }
+      {selectedToppings.map((extraToppings) => (
+        <div
+          key={extraToppings.id}
+          className="box"
+       //   onClick={() => removeToppingFromBasket(extraToppings)}
+        >
+          {extraToppings.name} Qty: ({extraToppings.quantity})
+        </div>
+      ))}
     </div>
   );
 };

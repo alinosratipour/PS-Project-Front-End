@@ -5,11 +5,10 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7); 
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
 
 /* Modal.css */
@@ -18,11 +17,11 @@
   padding: 20px;
   border-radius: 5px;
   position: relative;
- width: 500px;
- text-align: center;
+  width: 500px;
+  text-align: center;
+
 
 }
-
 
 .modal-close {
   position: absolute;
