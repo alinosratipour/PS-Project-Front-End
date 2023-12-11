@@ -1,57 +1,46 @@
 import { useEffect, useState } from "react";
-import { useQuery } from "@apollo/client";
 import Modal from "../UI-Liberary/Modal/Modal";
 import Basket from "../Basket/Basket";
 import AddPizzaModal from "../AddPizza/AddPizzaModal";
 import PizzaItem from "../PizzaItems/PizzaItem";
 import { Pizza } from "../SharedTypes";
-import { GET_ALL_PIZZAS_LIST } from "../../queries/queries";
 import useAddToBasket from "../hooks/useAddToBasketHook";
-import { useLoadingContext } from "../Context/LoadingContext";
-
 import "./PizzaMenu.scss";
 import useSize from "../hooks/StateHooks/useSize";
 import { useToppings } from "../Context/selectedTopping";
-
+import { usePizzaContext } from "../Context/PizzaContext";
 
 const PizzaMenu = () => {
-  const [localLoading, setLocalLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPizza, setSelectedPizza] = useState<Pizza | null>(null);
-  const { loading: globalLoading, setLoading } = useLoadingContext();
-  const { selectedToppings, setSelectedToppings, setToppingsTotal,toppingsTotal } =
-    useToppings();
 
-
+  const {
+    selectedToppings,
+    setSelectedToppings,
+    setToppingsTotal,
+    toppingsTotal,
+  } = useToppings();
 
   const { selectedSize, setSelectedSize } = useSize();
+  const {
+    pizzaData,
+    selectedPizza,
+    setSelectedPizza,
+    globalLoading,
+    pizzaError,
+    localLoading,
+  } = usePizzaContext();
 
   useEffect(() => {
-    setSelectedToppings([]);
+    if(!selectedSize){
+       setSelectedToppings([]);
+    }
+   
     setToppingsTotal(0);
   }, [selectedSize]);
 
-  const {
-    calculateTotalPrice,
-    basket,
-    setBasket,
-  } = useAddToBasket({
+  const { calculateTotalPrice, basket, setBasket } = useAddToBasket({
     selectedToppings,
   });
-
-  const { error, data } = useQuery<{ getAllPizzasList: Pizza[] }>(
-    GET_ALL_PIZZAS_LIST,
-    {
-      onCompleted: () => {
-        setLocalLoading(false);
-        setLoading(false);
-      },
-      onError: () => {
-        setLocalLoading(false);
-        setLoading(false);
-      },
-    }
-  );
 
   const openAddPizzaModal = (pizza: Pizza | null) => {
     setSelectedPizza(pizza);
@@ -67,7 +56,7 @@ const PizzaMenu = () => {
     );
   }
 
-  if (error) {
+  if (pizzaError) {
     return <p>Error fetching data</p>;
   }
 
@@ -75,8 +64,8 @@ const PizzaMenu = () => {
     <div>
       <div className="pizza-menu-container">
         <div className="pizza-items-container">
-          {data &&
-            data.getAllPizzasList.map((pizza) => (
+          {pizzaData &&
+            pizzaData.map((pizza) => (
               <PizzaItem
                 key={pizza.id_pizza}
                 pizza={pizza}
@@ -104,7 +93,6 @@ const PizzaMenu = () => {
             setSelectedSize={setSelectedSize}
             selectedSize={selectedSize}
             setIsModalOpen={setIsModalOpen}
-       
           />
         )}
       </Modal>

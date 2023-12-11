@@ -1,8 +1,15 @@
 import { ToppingType } from "./components/SharedTypes";
 
-export const calculateToppingsTotal = (toppings: ToppingType[]) => {
-  return toppings.reduce((total, topping) => {
-    const toppingTotal = (topping.price || 0) * (topping.quantity || 1);
-    return total + toppingTotal;
-  }, 0);
+export const calculateToppingsTotal = (
+  toppings: ToppingType[] = [],
+  numberOfFreeToppings: number = 0
+) => {
+  const totalToppingsQuantity = toppings.reduce(
+    (total, topping) => total + (topping.quantity || 0),
+    0
+  );
+
+  return totalToppingsQuantity > numberOfFreeToppings
+    ? totalToppingsQuantity - numberOfFreeToppings
+    : 0;
 };

@@ -1,16 +1,14 @@
-
-import {  useState } from "react";
-import {  Pizza, ToppingType } from "../SharedTypes";
+import { useState } from "react";
+import { Pizza, ToppingType } from "../SharedTypes";
 import { calculateToppingsTotal } from "../../utils";
 import { useToppingsRemovalFromPizza } from "../store/ToppingOnPizzaStore ";
 import { useBasketContext } from "../Context/BasketContext";
+import { usePizzaContext } from "../Context/PizzaContext";
 interface UseAddToBasketProps {
   selectedToppings?: ToppingType[];
 }
 
-const useAddToBasket = ({
-  selectedToppings,
-}: UseAddToBasketProps) => {
+const useAddToBasket = ({ selectedToppings }: UseAddToBasketProps) => {
   const { removedToppings, setRemovedToppings } = useToppingsRemovalFromPizza();
   const [selectedSizePrice, setSelectedSizePrice] = useState<
     number | undefined
@@ -18,8 +16,12 @@ const useAddToBasket = ({
   const [selectedBasePrice, setSelectedBasePrice] = useState<
     number | undefined
   >(0);
-  // const { basket, setBasket } = useBasket();
-  const {basket, setBasket} =useBasketContext();
+
+  const { basket, setBasket } = useBasketContext();
+
+  const { selectedPizza } = usePizzaContext();
+
+  const numberOfFreeToppings = selectedPizza?.top_quantity ?? 0;
   const addToBasket = (pizza: Pizza, size: string, base: string) => {
     if (size !== undefined) {
       const existingPizzaIndex = basket.findIndex(
@@ -35,6 +37,10 @@ const useAddToBasket = ({
         updatedBasket[existingPizzaIndex].quantity += 1;
         setBasket(updatedBasket);
       } else {
+        const toppingsTotal = calculateToppingsTotal(
+          selectedToppings || [],
+          numberOfFreeToppings
+        );
         // Add a new pizza to the basket
         const pizzaWithPrice = {
           id_pizza: pizza.id_pizza,
@@ -45,7 +51,7 @@ const useAddToBasket = ({
           base: base,
           basePrice: selectedBasePrice,
           toppings: selectedToppings,
-          toppingsTotal: calculateToppingsTotal(selectedToppings),
+          toppingsTotal: toppingsTotal,
           removedToppings: removedToppings,
         };
 
@@ -61,7 +67,6 @@ const useAddToBasket = ({
         (item.price || 0) * item.quantity +
         (item.basePrice || 0) * item.quantity +
         (item.toppingsTotal || 0) * item.quantity;
-
       return total + pizzaPrice;
     }, 0);
 
