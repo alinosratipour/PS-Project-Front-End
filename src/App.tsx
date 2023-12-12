@@ -8,7 +8,7 @@ function App() {
     
       <main>
         <ContextProvider>
-             <NavBar />
+             {/* <NavBar /> */}
              <PizzaMenu />
      
        

@@ -12,7 +12,7 @@ interface PizzaItemProps {
 const PizzaItem: React.FC<PizzaItemProps> = ({ pizza, onAddPizza }) => {
   return (
      <div className="container">
-      <Card title={pizza.name} imageSrc={pizza.image} imageHeight={300} imageWidth={300} >
+      <Card title={pizza.name} imageSrc={pizza.image}  >
         <p className="container__text">{pizza.description}</p>
         <div className="button-Container">
             <Button size="lg" onClick={() => onAddPizza(pizza)} fontSize="1.2">
