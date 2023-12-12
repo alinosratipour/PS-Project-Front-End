@@ -1,19 +1,33 @@
-
-
+// NavBar.scss
 .top-navbar {
-  background-color: #333;
-  color: #fff;
-  padding: 10px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  color: white;
   width: 100%;
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-.brand{
-    text-align: center;
-   padding-left: 60px;
+  background-color: #343a40;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
+ 
 }
 
+.brand {
+  font-size: 1.5rem;
+  background-color: red;
+}
+
+.basket-icon {
+  display: none;
+
+}
+
+// Styles for smaller screens
+@media (max-width: 768px) {
+  .basket-icon {
+    display: block;
+    //width: 0;
+    background-color: green;
+ 
+   
+  }
+}

@@ -10,7 +10,7 @@ function App() {
       </header>
       <main>
         <ContextProvider>
-             <NavBar showBasketIcon={false}/>
+             <NavBar />
              <PizzaMenu />
      
        
