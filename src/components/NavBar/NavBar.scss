@@ -3,31 +3,36 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px;
+  height: 90px;
   color: white;
   width: 100%;
   background-color: #343a40;
   box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
- 
 }
 
 .brand {
   font-size: 1.5rem;
-  background-color: red;
 }
 
 .basket-icon {
   display: none;
-
 }
 
 // Styles for smaller screens
 @media (max-width: 768px) {
   .basket-icon {
     display: block;
-    //width: 0;
-    background-color: green;
- 
-   
+
+    font-size: 2rem;
+    margin-right: 20px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .basket-icon {
+    display: block;
+
+    font-size: 2rem;
+    margin-right: 20px;
   }
 }

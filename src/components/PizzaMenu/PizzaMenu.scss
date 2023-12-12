@@ -2,28 +2,51 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Adjust to fit your needs */
+  height: 100vh;
 }
 .pizza-menu-container {
   display: flex;
   flex-direction: row;
+
 }
 
 .pizza-items-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  margin: auto;
+flex: 2;
 }
 
 .basket-container {
-  width: 100%;
+ background-color: aqua;
+width: 20%;
 }
 @media (max-width: 768px) {
   .pizza-items-container {
     grid-template-columns: repeat(1, 1fr);
+    margin: auto;
+    width: 100%;
   }
 
   .basket-container {
-   display: none;
+    display: none;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .pizza-items-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pizza-menu-container {
+    display: flex;
+    flex-direction: row;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .basket-container {
+    display: none;
   }
 }

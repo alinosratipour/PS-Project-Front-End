@@ -5,7 +5,7 @@ import useBaseState from "../hooks/StateHooks/useBase";
 import useAddToppings from "../hooks/useAddToppingsHook";
 import useAddToBasket from "../hooks/useAddToBasketHook";
 import Button from "../UI-Liberary/Button/Button";
-
+import "./AddPizzaModal.scss";
 interface AddPizzaModalProps {
   selectedPizza: Pizza;
   setSelectedSize: (size: string | undefined) => void;
@@ -43,7 +43,7 @@ const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
           <h2>{selectedPizza.name}</h2>
           <p>{selectedPizza.description}</p>
           <div className="img-container">
-            <img src={selectedPizza.image} alt={selectedPizza.name} />
+            <img src={selectedPizza.image} alt={selectedPizza.name}  />
           </div>
         </div>
         <PizzaOptionsContainer
