@@ -2,7 +2,7 @@
 
 .card {
   border: 1px solid #ddd;
-  //border-radius: 8px;
+
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   padding: 16px;
   margin: 16px;
@@ -11,11 +11,12 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  min-height: 400px; // Adjust this value based on your design
+  min-height: 400px; 
   margin: auto;
   margin-top: 5px;
   margin-left: 5px;
   margin-right: 5px;
+ 
 
   &__title {
     font-size: 1.5rem;
@@ -29,11 +30,21 @@
     border-radius: 8px;
     margin-bottom: 12px;
     object-fit: cover;
+    
   }
 
   &__placeholder {
     width: 100%;
+    height:170px; /* Set the desired height */
+    max-height: 100%; /* Ensure it doesn't exceed 100% of the container height */
+    border-radius: 8px;
+    margin-bottom: 12px;
+    background-image: url('../../../assets/img/1.jpg');
+    background-size: cover; /* Adjust this based on your requirements */
+    background-repeat: no-repeat;
+    background-position: center;
     padding-top: 60%;
+    object-fit: cover;
   }
 
   &__content {
