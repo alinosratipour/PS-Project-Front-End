@@ -44,9 +44,9 @@
     font-size: 0.8rem;
     color: var(--content-color);
   }
-  @include responsive-card-styles;
+ 
 }
-
+ @include responsive-card-styles;
 @media (min-width: 1024px) {
   .card {
     max-width: 260px;
