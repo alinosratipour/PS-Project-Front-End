@@ -77,7 +77,7 @@ const PizzaToppings: React.FC<PizzaToppingsProps> = ({ pizzaId }) => {
           className="box"
        //   onClick={() => removeToppingFromBasket(extraToppings)}
         >
-          {extraToppings.name} Qty: ({extraToppings.quantity})
+          {extraToppings.name} {extraToppings.quantity}
         </div>
       ))}
     </div>

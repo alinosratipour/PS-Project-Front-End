@@ -2,7 +2,8 @@ import { ToppingType } from "../../components/SharedTypes";
 import { useState } from "react";
 import classnames from "classnames"; // Import classnames package
 import "./ToppingsList.scss";
-
+import { IoIosAddCircle } from "react-icons/io";
+import Button from "../UI-Liberary/Button/Button";
 interface ToppingsListProps {
   onAddTopping: (topping: ToppingType) => void;
   onRemoveTopping: (topping: ToppingType) => void;
@@ -79,7 +80,7 @@ function ToppingsList({
                 <button onClick={() => handleRemoveClick(topping)}>
                   remove
                 </button>
-                <button onClick={() => handleAddClick(topping)}>add</button>
+                <button onClick={() => handleAddClick(topping)}>add2</button>
               </>
             )) ||
               (toppingQuantities[topping.name] > 0 ? (
@@ -87,10 +88,13 @@ function ToppingsList({
                   <button onClick={() => handleRemoveClick(topping)}>
                     remove
                   </button>
-                  <button onClick={() => handleAddClick(topping)}>add</button>
+                  <button onClick={() => handleAddClick(topping)}>add2</button>
+                  {/* <IoIosAddCircle onClick={() => handleAddClick(topping)} /> */}
                 </>
               ) : (
                 <button onClick={() => handleAddClick(topping)}>add</button>
+                
+                // <Button onClick={() => handleAddClick(topping)}><IoIosAddCircle   style={{  fontSize: '30px' }}/></Button>
               ))}
           </li>
         ))}

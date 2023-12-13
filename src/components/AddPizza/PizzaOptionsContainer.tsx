@@ -14,6 +14,8 @@ import { useSizeContext } from "../Context/SizeContext";
 import { useBaseContext } from "../Context/BaseContext";
 import { useAllAvailableToppingsStore } from "../store/AllAvailableToppingsStore";
 import PizzaToppings from "./PizzaToppings";
+import AccordionMenu from "../UI-Liberary/AccordionMenu/AccordionMenu";
+import "./PizzaOptionsContainer.scss";
 
 interface PizzaOptionsContainerProps {
   pizzaId: number;
@@ -124,12 +126,22 @@ const PizzaOptionsContainer = ({
             bases={availableBases}
             onBaseChange={handleBaseChange}
           />
-          <PizzaToppings pizzaId={pizzaId} />
-          <ToppingsList
-            availableToppings={availableToppings}
-            onAddTopping={onAddTopping}
-            onRemoveTopping={onRemoveTopping}
-          />
+          <div className="AccordionMenu-Wrapper">
+            <AccordionMenu title="Extra">
+              <>
+                <div className="PizzaToppings">
+                  <h3 className="PizzaToppingTitle">Your Toppings</h3>
+                  <PizzaToppings pizzaId={pizzaId} />
+                </div>
+
+                <ToppingsList
+                  availableToppings={availableToppings}
+                  onAddTopping={onAddTopping}
+                  onRemoveTopping={onRemoveTopping}
+                />
+              </>
+            </AccordionMenu>
+          </div>
         </>
       </If>
 

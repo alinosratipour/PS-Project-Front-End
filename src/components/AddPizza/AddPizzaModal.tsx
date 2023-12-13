@@ -38,47 +38,41 @@ const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
     setRemovedToppings(updatedRemovedToppings);
   }, [updatedRemovedToppings]);
   return (
-    <> 
-        <div className="addPizzaContainer">
-          <h2>{selectedPizza.name}</h2>
-          <p>{selectedPizza.description}</p>
-          <div className="img-container">
-            <img src={selectedPizza.image} alt={selectedPizza.name}  />
-          </div>
+    <>
+      <div className="addPizzaContainer">
+        <h2>{selectedPizza.name}</h2>
+        <p>{selectedPizza.description}</p>
+        <div className="img-container">
+          <img src={selectedPizza.image} alt={selectedPizza.name} />
         </div>
-        <PizzaOptionsContainer
-          pizzaId={selectedPizza.id_pizza}
-          onSizePriceChange={(price, size) => {
-            setSelectedSize(size);
-            setSelectedSizePrice(price);
-          }}
-          onBaseChange={(base, basePrice) => {
-            setSelectedBase(base);
-            setSelectedBasePrice(basePrice);
-          }}
-          onAddTopping={addToppingToBasket}
-          onRemoveTopping={removeToppingFromBasket}
-        />
-        {/* <button
+      </div>
+      <div className="PizzaObtions-Container">
+      <PizzaOptionsContainer
+        pizzaId={selectedPizza.id_pizza}
+        onSizePriceChange={(price, size) => {
+          setSelectedSize(size);
+          setSelectedSizePrice(price);
+        }}
+        onBaseChange={(base, basePrice) => {
+          setSelectedBase(base);
+          setSelectedBasePrice(basePrice);
+        }}
+        onAddTopping={addToppingToBasket}
+        onRemoveTopping={removeToppingFromBasket}
+      />
+      </div>
+      <div className="Button-container">
+        <Button
           onClick={() => {
             addToBasket(selectedPizza, selectedSize || "", selectedBase || "");
             setIsModalOpen(false);
           }}
           disabled={selectedSize === undefined || selectedBase === undefined}
+          size="md"
         >
           Add to Basket
-        </button>    */}
-        <Button
-        onClick={() => {
-          addToBasket(selectedPizza, selectedSize || "", selectedBase || "");
-          setIsModalOpen(false);
-        }}
-        disabled={selectedSize === undefined || selectedBase === undefined}
-        size="lg"
-      >
-        Add to Basket
-      </Button>
-  
+        </Button>
+      </div>
     </>
   );
 };
