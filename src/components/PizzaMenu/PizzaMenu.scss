@@ -9,8 +9,6 @@
 .pizza-items-container {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  // grid-gap: 1px;
-  // flex: 2;
   margin: auto;
 }
 .basket-container {
@@ -20,9 +18,20 @@
 @media (min-width: 768px) and (max-width: 1023px) {
   .pizza-items-container {
     grid-template-columns: repeat(2, 1fr);
+    background-color: brown;
   }
+  .pizza-menu-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 70%;
+    margin: auto;
 
-  
+    padding: 0px;
+  }
+  .basket-container {
+    display: none;
+  }
 }
 
 @media (min-width: 1676px) {
@@ -44,8 +53,8 @@
     display: block;
     background-color: #ffffff;
     height: 400px;
-    min-width: 20%;
-    max-width: 20%;
+    min-width: 28%;
+    max-width: 28%;
     border-radius: 8px;
     margin-top: 30px;
     margin-right: 50px;
@@ -56,6 +65,7 @@
 @media (min-width: 1024px) and (max-width: 1675px) {
   .pizza-items-container {
     grid-template-columns: repeat(2, 1fr);
+    background-color: chartreuse;
   }
   .basket-container {
     display: none;
