@@ -4,14 +4,16 @@
   text-align: left;
   width: 88%;
   margin: auto;
+  font-family:var( --font-roboto-condensed);
+  font-size:0.8rem;
 }
 .test {
   margin-top: 2px;
   display: flex;
-  background-color: blanchedalmond;
+  background-color: var(--list-color);
 }
 .ToppingName {
-  background-color: blanchedalmond;
+  background-color: var(--list-color);
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -20,10 +22,10 @@
 }
 .in-ToppingList {
   color: green;
-  background-color: blanchedalmond;
+  background-color: var(--list-color);;
 }
 .initialRenderClass {
-  background-color: blanchedalmond;
+  background-color: var(--list-color);;
   margin-top: 2px;
 }
 .in-Basket {
@@ -32,8 +34,9 @@
 
 .in-Default {
   color: black;
-  background-color: blanchedalmond;
+  background-color: var(--list-color);;
   margin-top: 2px;
+ 
 }
 
 .in-green {

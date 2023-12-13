@@ -85,7 +85,7 @@ function ToppingsList({
                   </button> */}
                   <Button
                     onClick={() => handleRemoveClick(topping)}
-                    icon={<GrSubtractCircle style={{ fontSize: "20px" }} />}
+                    icon={<GrSubtractCircle style={{ fontSize: "22px" }} />}
                     colorscheme="gost"
                     size="sm"
                     iconPosition="right"
@@ -101,8 +101,8 @@ function ToppingsList({
 
                     <Button
                       onClick={() => handleRemoveClick(topping)}
-                      icon={<GrSubtractCircle style={{ fontSize: "27px" }} />}
-                      colorscheme="gost"
+                      icon={<GrSubtractCircle style={{ fontSize: "22px" }} />}
+                      colorscheme="gost-secondery"
                       size="sm"
                       iconPosition="right"
                     ></Button>
@@ -111,8 +111,8 @@ function ToppingsList({
                     </button> */}
                     <Button
                       onClick={() => handleAddClick(topping)}
-                      icon={<IoMdAddCircleOutline  style={{ fontSize: "30px" }} />}
-                      colorscheme="gost"
+                      icon={<IoMdAddCircleOutline  style={{ fontSize: "25px" }} />}
+                      colorscheme="gost-primary"
                       size="sm"
                       iconPosition="right"
                     ></Button>
@@ -123,8 +123,8 @@ function ToppingsList({
 
                   <Button
                     onClick={() => handleAddClick(topping)}
-                    icon={<IoMdAddCircleOutline  style={{ fontSize: "30px" }} />}
-                    colorscheme="gost"
+                    icon={<IoMdAddCircleOutline  style={{ fontSize: "25px" }} />}
+                    colorscheme="gost-primary"
                     size="sm"
                     iconPosition="right"
                   ></Button>

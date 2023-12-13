@@ -30,7 +30,8 @@ const Button: React.FC<ButtonType> = ({
     "button--large": size === "lg",
     "button--primary": colorscheme === "primary",
     "button--secondery": colorscheme === "secondery",
-    "button--gost": colorscheme === "gost",
+    "button--gost-primary": colorscheme === "gost-primary",
+    "button--gost-secondery": colorscheme === "gost-secondery",
     "button--disabled": disabled === true,
   });
   
