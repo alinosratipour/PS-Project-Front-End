@@ -7,7 +7,6 @@
   height: 100vh;
 }
 
-
 .pizza-items-container {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
@@ -33,21 +32,19 @@
   .basket-container {
     display: none;
   }
- 
- 
 }
- @include responsive-Pizza-Menu-styles; 
+
+@include responsive-Pizza-Menu-styles;
 @media (min-width: 1676px) {
   .pizza-items-container {
     grid-template-columns: repeat(3, 1fr);
-    column-gap: 16px; 
- 
+    column-gap: 16px;
   }
 
   .pizza-menu-container {
     display: flex;
     flex-direction: row;
-    justify-content: space-between; 
+    justify-content: space-between;
     width: 70%;
     margin: auto;
     padding: 0px;
@@ -63,23 +60,4 @@
     margin-right: 50px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
-
 }
-
-// @media (min-width: 1024px) and (max-width: 1675px) {
-//   .pizza-items-container {
-//     grid-template-columns: repeat(2, 1fr);
-//   }
-//   .basket-container {
-//     display: none;
-//   }
-//   .pizza-menu-container {
-//     display: flex;
-//     flex-direction: row;
-//     justify-content: space-between;
-//     width: 70%;
-//     margin: auto;
-
-//     padding: 0px;
-//   }
-// }
