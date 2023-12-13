@@ -1,3 +1,5 @@
+@import "../../globalStyles.scss";
+
 .loader-container {
   display: flex;
   justify-content: center;
@@ -18,7 +20,6 @@
 @media (min-width: 768px) and (max-width: 1023px) {
   .pizza-items-container {
     grid-template-columns: repeat(2, 1fr);
-    background-color: brown;
   }
   .pizza-menu-container {
     display: flex;
@@ -32,8 +33,10 @@
   .basket-container {
     display: none;
   }
+ 
+ 
 }
-
+ @include responsive-Pizza-Menu-styles; 
 @media (min-width: 1676px) {
   .pizza-items-container {
     grid-template-columns: repeat(3, 1fr);
@@ -60,23 +63,23 @@
     margin-right: 50px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
+
 }
 
-@media (min-width: 1024px) and (max-width: 1675px) {
-  .pizza-items-container {
-    grid-template-columns: repeat(2, 1fr);
-    background-color: chartreuse;
-  }
-  .basket-container {
-    display: none;
-  }
-  .pizza-menu-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 70%;
-    margin: auto;
+// @media (min-width: 1024px) and (max-width: 1675px) {
+//   .pizza-items-container {
+//     grid-template-columns: repeat(2, 1fr);
+//   }
+//   .basket-container {
+//     display: none;
+//   }
+//   .pizza-menu-container {
+//     display: flex;
+//     flex-direction: row;
+//     justify-content: space-between;
+//     width: 70%;
+//     margin: auto;
 
-    padding: 0px;
-  }
-}
+//     padding: 0px;
+//   }
+// }
