@@ -3,7 +3,6 @@ import { Pizza } from "../SharedTypes";
 import "./PizzaItem.scss";
 import Button from "../UI-Liberary/Button/Button";
 import Card from "../UI-Liberary/Card/Card";
-import { IoIosAddCircle } from "react-icons/io";
 
 interface PizzaItemProps {
   pizza: Pizza;

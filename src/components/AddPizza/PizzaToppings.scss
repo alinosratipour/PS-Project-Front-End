@@ -10,13 +10,25 @@
   cursor: pointer;
   padding: 8px;
   border-radius: 4px;
-  background-color: #aaffaa;
+  background-color: #0e985e;
   width: 100%;
   text-align: left;
+  display: flex;
+  justify-content: space-between;
+  color: #ffffff;
+  font-weight: 600;
+  font-family: var(--font-roboto-condensed);
 }
 
 .selected {
   background-color: #ffcccc;
   text-decoration: line-through;
   //display: none;
+}
+
+.ExtraTopping {
+  background-color: #e9b108;
+  color: #000000;
+  font-weight: 600;
+  font-family: var(--font-roboto-condensed);
 }

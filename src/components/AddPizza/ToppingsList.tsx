@@ -69,14 +69,16 @@ function ToppingsList({
               "in-Green": toppingQuantities[topping.name] === 1,
             })}
           >
-            <div className="test">
-              <div className="ToppingName">
-                <div>{topping.name}</div>
-                <div>£{topping.price}</div>
-              </div>
-              {toppingQuantities[topping.name] > 0 && (
-                <span>({toppingQuantities[topping.name]})</span>
+            <div className="list-Container">
+              <div className="ToppingName-Container">
+                {toppingQuantities[topping.name] > 0 && (
+                <span className="Topping-Qauntity">{toppingQuantities[topping.name]}</span>
               )}
+                <div className="Topping-Name">{topping.name}</div>
+                <div>£{topping.price}</div>
+             
+              </div>
+              
 
               {(isToppingInBasket(topping) && (
                 <>
@@ -111,7 +113,9 @@ function ToppingsList({
                     </button> */}
                     <Button
                       onClick={() => handleAddClick(topping)}
-                      icon={<IoMdAddCircleOutline  style={{ fontSize: "25px" }} />}
+                      icon={
+                        <IoMdAddCircleOutline style={{ fontSize: "25px" }} />
+                      }
                       colorscheme="gost-primary"
                       size="sm"
                       iconPosition="right"
@@ -123,7 +127,7 @@ function ToppingsList({
 
                   <Button
                     onClick={() => handleAddClick(topping)}
-                    icon={<IoMdAddCircleOutline  style={{ fontSize: "25px" }} />}
+                    icon={<IoMdAddCircleOutline style={{ fontSize: "25px" }} />}
                     colorscheme="gost-primary"
                     size="sm"
                     iconPosition="right"

@@ -7,12 +7,12 @@
   font-family:var( --font-roboto-condensed);
   font-size:0.8rem;
 }
-.test {
+.list-Container {
   margin-top: 2px;
   display: flex;
   background-color: var(--list-color);
 }
-.ToppingName {
+.ToppingName-Container{
   background-color: var(--list-color);
   width: 100%;
   display: flex;
@@ -20,14 +20,33 @@
   align-items: center;
   padding: 5px 5px 5px 5px;
 }
+
+.Topping-Qauntity{
+  display: flex;
+  max-height: 22px;
+  max-width: 22px;
+  height: 22px;
+  width: 22px;
+  border-radius: 50%;
+  background-color: #0e985e;
+  color: #ffffff;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+
+}
+.Topping-Name{
+width: 90%;
+padding-left: 3px;
+font-weight: bold;
+}
+
 .in-ToppingList {
+  margin-top: 2px;
   color: green;
   background-color: var(--list-color);;
 }
-.initialRenderClass {
-  background-color: var(--list-color);;
-  margin-top: 2px;
-}
+
 .in-Basket {
   color: red;
 }
