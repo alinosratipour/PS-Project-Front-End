@@ -4,7 +4,7 @@ import "./Button.scss";
 
 interface ButtonType {
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   colorscheme?: string | null;
   size?: string | null;
   disabled?: boolean;
@@ -13,7 +13,7 @@ interface ButtonType {
   fontSize?: string | null;
 }
 
-const NewButton: React.FC<ButtonType> = ({
+const Button: React.FC<ButtonType> = ({
   children,
   colorscheme,
   size,
@@ -30,11 +30,13 @@ const NewButton: React.FC<ButtonType> = ({
     "button--large": size === "lg",
     "button--primary": colorscheme === "primary",
     "button--secondery": colorscheme === "secondery",
-    "button--whatsApp": colorscheme === "whatsApp",
+    "button--gost": colorscheme === "gost",
     "button--disabled": disabled === true,
   });
-  const iconClasses = classNames("div", {
-    "iconright": iconPosition === "right",
+  
+  
+  const iconClasses = classNames("icon", {
+    "iconcenter": iconPosition === "right",
     "iconLeft": iconPosition === "left",
   });
   const style: React.CSSProperties = {
@@ -48,12 +50,12 @@ const NewButton: React.FC<ButtonType> = ({
       onClick={onClick}
       style={style} 
     >
-      <div className={iconClasses}>
+      <span className={iconClasses}>
         {icon && iconPosition === "left" && icon} {children}
         {icon && iconPosition === "right" && icon}
-      </div>
+      </span>
     </button>
   );
 };
 
-export default NewButton;
+export default Button;

@@ -3,6 +3,7 @@ import { Pizza } from "../SharedTypes";
 import "./PizzaItem.scss";
 import Button from "../UI-Liberary/Button/Button";
 import Card from "../UI-Liberary/Card/Card";
+import { IoIosAddCircle } from "react-icons/io";
 
 interface PizzaItemProps {
   pizza: Pizza;
@@ -11,19 +12,21 @@ interface PizzaItemProps {
 
 const PizzaItem: React.FC<PizzaItemProps> = ({ pizza, onAddPizza }) => {
   return (
-     <div className="container">
-      <Card title={pizza.name} imageSrc={pizza.image}  >
+    <div className="container">
+      <Card title={pizza.name} imageSrc={pizza.image}>
         <p className="container__text">{pizza.description}</p>
         <div className="button-Container">
-            <Button size="lg" onClick={() => onAddPizza(pizza)} fontSize="1.2">
-          Add Pizza
-        </Button>
+          <Button
+            size="lg"
+            onClick={() => onAddPizza(pizza)}
+            fontSize="1.2"
+            colorscheme="primary"
+          >
+            Add Pizza
+          </Button>
         </div>
-      
       </Card>
-     </div>
-      
-    
+    </div>
   );
 };
 
