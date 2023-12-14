@@ -6,6 +6,7 @@ import useAddToppings from "../hooks/useAddToppingsHook";
 import useAddToBasket from "../hooks/useAddToBasketHook";
 import Button from "../UI-Liberary/Button/Button";
 import "./AddPizzaModal.scss";
+import Tooltip from "../UI-Liberary/ToolTip/ToolTip";
 interface AddPizzaModalProps {
   selectedPizza: Pizza;
   setSelectedSize: (size: string | undefined) => void;
@@ -23,7 +24,8 @@ const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
 
   const { addToppingToBasket, removeToppingFromBasket, selectedToppings } =
     useAddToppings();
-
+  const isButtonDisabled =
+    selectedSize === undefined || selectedBase === undefined;
   const {
     addToBasket,
     setRemovedToppings,
@@ -41,37 +43,47 @@ const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
     <>
       <div className="addPizzaContainer">
         <h2 className="PizzaTitle">{selectedPizza.name}</h2>
-        <p>{selectedPizza.description}</p>
-        <div className="img-container">
+        <p className="PizzaDescription">{selectedPizza.description}</p>
+        <div className="ImageContainer">
           <img src={selectedPizza.image} alt={selectedPizza.name} />
         </div>
       </div>
       <div className="PizzaObtions-Container">
-      <PizzaOptionsContainer
-        pizzaId={selectedPizza.id_pizza}
-        onSizePriceChange={(price, size) => {
-          setSelectedSize(size);
-          setSelectedSizePrice(price);
-        }}
-        onBaseChange={(base, basePrice) => {
-          setSelectedBase(base);
-          setSelectedBasePrice(basePrice);
-        }}
-        onAddTopping={addToppingToBasket}
-        onRemoveTopping={removeToppingFromBasket}
-      />
+        <PizzaOptionsContainer
+          pizzaId={selectedPizza.id_pizza}
+          onSizePriceChange={(price, size) => {
+            setSelectedSize(size);
+            setSelectedSizePrice(price);
+          }}
+          onBaseChange={(base, basePrice) => {
+            setSelectedBase(base);
+            setSelectedBasePrice(basePrice);
+          }}
+          onAddTopping={addToppingToBasket}
+          onRemoveTopping={removeToppingFromBasket}
+        />
       </div>
       <div className="Button-container">
-        <Button
-          onClick={() => {
-            addToBasket(selectedPizza, selectedSize || "", selectedBase || "");
-            setIsModalOpen(false);
-          }}
-          disabled={selectedSize === undefined || selectedBase === undefined}
-          size="md"
+        <Tooltip
+          content="Choose Pizza Size!"
+          conditionToShowTooltip={isButtonDisabled}
         >
-          Add to Basket
-        </Button>
+          <Button
+            onClick={() => {
+              addToBasket(
+                selectedPizza,
+                selectedSize || "",
+                selectedBase || ""
+              );
+              setIsModalOpen(false);
+            }}
+            disabled={isButtonDisabled}
+            size="md"
+            colorscheme="primary"
+          >
+            Add to Basket
+          </Button>
+        </Tooltip>
       </div>
     </>
   );

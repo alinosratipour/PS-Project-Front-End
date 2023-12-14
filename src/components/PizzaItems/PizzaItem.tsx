@@ -13,8 +13,8 @@ const PizzaItem: React.FC<PizzaItemProps> = ({ pizza, onAddPizza }) => {
   return (
     <div className="container">
       <Card title={pizza.name} imageSrc={pizza.image}>
-        <p className="container__text">{pizza.description}</p>
-        <div className="button-Container">
+        <p className="ContainerText">{pizza.description}</p>
+        <div className="ButtonContainer">
           <Button
             size="lg"
             onClick={() => onAddPizza(pizza)}

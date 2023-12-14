@@ -62,6 +62,7 @@
       color: #000000;
       border: 1px solid black;
     }
+    
   }
 
   &.button--secondery {
@@ -90,5 +91,7 @@
     background-color: rgb(223, 219, 219);
     border: none;
     cursor: not-allowed;
+    color: #ffffff;
+    pointer-events: none;
   }
 }
