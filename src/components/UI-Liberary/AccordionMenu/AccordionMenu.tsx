@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import classNames from 'classnames';
-import './AccordionMenu.scss';
-import { If } from 'tsx-control-statements/components';
+import React, { useState } from "react";
+import classNames from "classnames";
+import "./AccordionMenu.scss";
+import { If } from "tsx-control-statements/components";
 
 interface AccordionProps {
-  title: string;
-  children: React.ReactNode;
+  title?: string;
+  children?: React.ReactNode;
 }
 
 const AccordionMenu: React.FC<AccordionProps> = ({ title, children }) => {
@@ -16,12 +16,10 @@ const AccordionMenu: React.FC<AccordionProps> = ({ title, children }) => {
   };
 
   return (
-    <div className={classNames('accordion', { 'open': isOpen })}>
+    <div className={classNames("accordion", { open: isOpen })}>
       <div className="accordion-header" onClick={toggleAccordion}>
         <div className="accordion-title">{title}</div>
-        <div
-          className={classNames('accordion-icon', { 'open': isOpen })}
-        ></div>
+        <div className={classNames("accordion-icon", { open: isOpen })}></div>
       </div>
       <If condition={isOpen}>
         <div className="accordion-content">{children}</div>
