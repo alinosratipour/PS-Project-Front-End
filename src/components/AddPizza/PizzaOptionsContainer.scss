@@ -1,15 +1,30 @@
 .PizzaToppings {
-    margin-top: 15px;
-    padding: 30px;
-
-  }
-  
-.AccordionMenu-Wrapper{
-    padding-top: 15px;
-
+  margin-top: 15px;
+  padding: 30px;
 }
 
-.PizzaToppingTitle{
-    padding-bottom: 10px;
-    font-weight: 400;
+.AccordionMenu-Wrapper {
+  padding-top: 15px;
+  font-family: var(--font-roboto-condensed);
+  font-weight: 700;
+  color: rgb(106, 104, 104);
+}
+
+.PizzaToppingTitle {
+  padding-bottom: 10px;
+  font-weight: 400;
+}
+.SizeRadioButton {
+  padding-bottom: 16px;
+}
+
+.SizeTitle {
+  font-family: var(--font-roboto-condensed);
+  padding-bottom: 16px;
+  padding-top: 55px;
+}
+.BaseTitle {
+  font-family: var(--font-roboto-condensed);
+  padding-bottom: 16px;
+  padding-top: 16px;
 }

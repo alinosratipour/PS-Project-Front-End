@@ -1,0 +1,52 @@
+.Container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  margin-left: 10px;
+
+}
+.label {
+ // margin-right: 12px;
+  cursor: pointer;
+  margin-left: 25px;
+
+}
+
+.SizeName {
+  font-family: var(--font-roboto-condensed);
+  font-weight: 400;
+  font-size: 1.1rem;
+  color: rgb(107, 102, 102);
+}
+
+.Title {
+  padding-bottom: 16px;
+  padding-top: 10px;
+  font-family: var(--font-roboto-condensed);
+  font-weight: 400;
+}
+
+.CustomRadio {
+  margin-right: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+  width: 20px;
+  height: 20px;
+  //padding: 0;
+  border: 1px solid lightgray;
+  border-radius: 50%;
+  appearance: none;
+  background-color: rgb(246, 243, 243);
+}
+
+.CustomRadio:not(:disabled):checked {
+  background-color: orange;
+  transform: scale(1.1);
+  border: none;
+}
+
+// .CustomRadio:not(:disabled):hover {
+//     background-color: rgb(194, 184, 184);
+   
+//   }
+  

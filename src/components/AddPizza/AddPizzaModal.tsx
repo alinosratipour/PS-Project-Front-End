@@ -40,7 +40,7 @@ const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
   return (
     <>
       <div className="addPizzaContainer">
-        <h2>{selectedPizza.name}</h2>
+        <h2 className="PizzaTitle">{selectedPizza.name}</h2>
         <p>{selectedPizza.description}</p>
         <div className="img-container">
           <img src={selectedPizza.image} alt={selectedPizza.name} />

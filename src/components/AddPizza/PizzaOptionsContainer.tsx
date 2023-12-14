@@ -115,19 +115,27 @@ const PizzaOptionsContainer = ({
 
   return (
     <div>
-      <SizeRadioButtons
+      <div className="SizeRadioButton">
+        <h2 className="SizeTitle">Choose Size</h2>
+        <SizeRadioButtons
         sizes={availableSizes}
         onSizeChange={handleSizeChange}
       />
+      </div>
+      
 
       <If condition={isSizeSelected}>
         <>
-          <BaseRadioButtons
+        <div className="BaseRadioButton">
+           <h2 className="BaseTitle">Choose Base</h2>
+           <BaseRadioButtons
             bases={availableBases}
             onBaseChange={handleBaseChange}
           />
+        </div>
+         
           <div className="AccordionMenu-Wrapper">
-            <AccordionMenu title="Extra">
+            <AccordionMenu title="Customise Toppings">
               <>
                 <div className="PizzaToppings">
                   <h3 className="PizzaToppingTitle">Your Toppings</h3>
