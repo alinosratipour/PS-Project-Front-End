@@ -1,18 +1,23 @@
-// Tooltip.tsx
-import React, { ReactNode, useState } from 'react';
-import classNames from 'classnames';
-import './ToolTip.scss'; // Import or define your styles
+import React, { ReactNode, useState } from "react";
+import classNames from "classnames";
+import "./ToolTip.scss";
 
 interface TooltipProps {
   content: string;
   children: ReactNode;
-  conditionToShowTooltip: boolean; // Add a prop to control when to show the tooltip
+  conditionToShowTooltip: boolean;
 }
 
-const Tooltip: React.FC<TooltipProps> = ({ content, children, conditionToShowTooltip }) => {
+const Tooltip: React.FC<TooltipProps> = ({
+  content,
+  children,
+  conditionToShowTooltip,
+}) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  const tooltipClasses = classNames('tooltip', { active: isHovered && conditionToShowTooltip });
+  const tooltipClasses = classNames("tooltip", {
+    active: isHovered && conditionToShowTooltip,
+  });
 
   return (
     <div className="tooltip-container">

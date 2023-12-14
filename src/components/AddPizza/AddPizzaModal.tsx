@@ -65,7 +65,7 @@ const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
       </div>
       <div className="Button-container">
         <Tooltip
-          content="Choose Pizza Size!"
+          content="Choose Pizza Size & Base!"
           conditionToShowTooltip={isButtonDisabled}
         >
           <Button
