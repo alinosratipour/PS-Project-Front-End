@@ -1,15 +1,13 @@
-.Container{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.Container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-left: 10px;
-
 }
 .label {
- // margin-right: 12px;
+  // margin-right: 12px;
   cursor: pointer;
   margin-left: 25px;
-
 }
 
 .SizeName {
@@ -40,13 +38,11 @@
 }
 
 .CustomRadio:not(:disabled):checked {
-  background-color: orange;
+  background-color: rgb(76, 75, 74);
   transform: scale(1.1);
   border: none;
 }
 
-// .CustomRadio:not(:disabled):hover {
-//     background-color: rgb(194, 184, 184);
-   
-//   }
-  
+.CustomRadio:not(:disabled):hover {
+  background-color: rgb(194, 184, 184);
+}
