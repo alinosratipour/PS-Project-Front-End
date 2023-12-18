@@ -52,8 +52,10 @@ const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
         <PizzaOptionsContainer
           pizzaId={selectedPizza.id_pizza}
           onSizePriceChange={(price, size) => {
+          //  setSelectedSize(size !== selectedSize ? size : undefined);
             setSelectedSize(size);
             setSelectedSizePrice(price);
+            
           }}
           onBaseChange={(base, basePrice) => {
             setSelectedBase(base);

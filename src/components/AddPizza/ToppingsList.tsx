@@ -1,5 +1,5 @@
 import { ToppingType } from "../../components/SharedTypes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import classnames from "classnames";
 import "./ToppingsList.scss";
 import { GrSubtractCircle } from "react-icons/gr";
@@ -21,7 +21,18 @@ function ToppingsList({
   const [toppingQuantities, setToppingQuantities] = useState<{
     [key: string]: number;
   }>({});
-
+  useEffect(() => {
+    if (availableToppings) {
+    // Reset topping quantities to 0 when the component mounts
+    const initialQuantities = availableToppings.reduce(
+    (acc, topping) => ({ ...acc, [topping.name]: 0 }),
+    {}
+    );
+    
+    setToppingQuantities(initialQuantities);
+    }
+    }, [availableToppings]);
+    
   const isToppingInBasket = (topping: ToppingType) =>
     selectedToppings && selectedToppings.some((t) => t.name === topping.name);
 
