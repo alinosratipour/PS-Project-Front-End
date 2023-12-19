@@ -44,10 +44,15 @@ const useAddToBasket = ({ selectedToppings }: UseAddToBasketProps) => {
           freeTopping
         );
 
-        const extraToppingsCost = selectedToppings
+        // const extraToppingsCost = selectedToppings
+        //   ? selectedToppings
+        //       .map((topping) => (topping.price || 0) * extraToppingsQuantity)
+        //       .reduce((_total, cost) => cost, 0)
+        //   : 0;
+        const extraToppingsCost: number = selectedToppings
           ? selectedToppings
               .map((topping) => (topping.price || 0) * extraToppingsQuantity)
-              .reduce((_total, cost) => cost, 0)
+              .find((cost) => cost !== 0) || 0
           : 0;
 
         // Add a new pizza to the basket
