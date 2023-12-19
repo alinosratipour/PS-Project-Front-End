@@ -37,26 +37,19 @@ const useAddToBasket = ({ selectedToppings }: UseAddToBasketProps) => {
         updatedBasket[existingPizzaIndex].quantity += 1;
         setBasket(updatedBasket);
       } else {
-        console.log("numberOfFreeToppings", numberOfFreeToppings);
+      
 
-        // const extraToppingsCost =
-        //   calculateToppingsTotal(selectedToppings ?? [], numberOfFreeToppings) *
-        //   (selectedToppings ?? []).reduce(
-        //     (total, topping) => total + (topping.price || 0),
-        //     0
-        //   );
-
+  
         const extraToppingsQuantity = calculateToppingsTotal(
           selectedToppings ?? [],
           numberOfFreeToppings
         );
-        const toppingsList = selectedToppings ?? [];
-        const extraToppingsCost = toppingsList.reduce(
-          (total, topping) => total + (topping.price || 0),
-          0
-        );
-        const totalExtraToppingsCost =
-          extraToppingsQuantity * extraToppingsCost;
+
+        const extraToppingsCost = selectedToppings
+          ? selectedToppings
+              .map((topping) => (topping.price || 0) * extraToppingsQuantity)
+              .reduce((_total, cost) => cost, 0)
+          : 0;
 
         // Add a new pizza to the basket
         const pizzaWithPrice = {
@@ -68,7 +61,7 @@ const useAddToBasket = ({ selectedToppings }: UseAddToBasketProps) => {
           base: base,
           basePrice: selectedBasePrice,
           toppings: selectedToppings,
-          toppingsTotal: totalExtraToppingsCost,
+          toppingsTotal: extraToppingsCost,
           removedToppings: removedToppings,
         };
 
