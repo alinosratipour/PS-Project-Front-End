@@ -1,0 +1,97 @@
+.button {
+  background-color: #070807;
+  //color: white;
+  //padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  align-self: flex-end;
+  width: 100%;
+  margin-top: auto;
+  font-size: 1.5em;
+  transition: background-color 0.3s, color 0.3s;
+  //border: 1px solid black;
+
+  .icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 0;
+  }
+  .iconcenter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    //margin-right: 30px;
+    width: 100%;
+  }
+
+  .iconLeft {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    width: 100%;
+  }
+  // button sizes
+  &.button--small {
+    height: 30px;
+    width: 30px;
+    font-size: 12px;
+  }
+  &.button--medium {
+    height: 40px;
+    width: 200px;
+    font-size: 16px;
+  }
+  &.button--large {
+    height: 50px;
+    width: 250px;
+    font-size: 16px;
+  }
+
+  // button colorScheme
+  &.button--primary {
+    background-color: #000000;
+    color: #ffffff;
+    opacity: 1;
+
+    &:hover {
+      opacity: 0.8;
+      border: none;
+      background-color: white;
+      color: #000000;
+      border: 1px solid black;
+    }
+    
+  }
+
+  &.button--secondery {
+    //background-color: rgb(8, 30, 228);
+    &:hover {
+      background-color: rgb(95, 110, 244);
+    }
+  }
+
+  &.button--gost-primary {
+    background-color: transparent;
+    color: rgb(145, 145, 134);
+    font-weight: 200;
+
+    &:hover{
+      color: rgb(89, 87, 87);
+    }
+  }
+
+  &.button--gost-secondery {
+    background-color: transparent;
+    color: rgb(239, 172, 47);
+    font-weight: 200;
+  }
+  &.button--disabled:disabled {
+    background-color: rgb(223, 219, 219);
+    border: none;
+    cursor: not-allowed;
+    color: #ffffff;
+    pointer-events: none;
+  }
+}

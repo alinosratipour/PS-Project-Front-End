@@ -1,5 +1,38 @@
-.yourToppings{
-    border: 1px solid gray;
-    font-weight:lighter;
-    margin-top: 15px;
+.PizzaToppings {
+  margin-top: 15px;
+  padding: 30px;
+}
+
+.AccordionMenu-Wrapper {
+  padding-top: 15px;
+  font-family: var(--font-roboto-condensed);
+  font-weight: 700;
+  color: rgb(106, 104, 104);
+}
+
+.PizzaToppingTitle {
+  padding-bottom: 6px;
+  font-weight: 400;
+  margin-top: -20px;
+}
+.SizeRadioButton {
+  padding-bottom: 16px;
+}
+
+.SizeTitle {
+  font-family: var(--font-roboto-condensed);
+  padding-bottom: 16px;
+  padding-top: 55px;
+}
+.BaseTitle {
+  font-family: var(--font-roboto-condensed);
+  padding-bottom: 16px;
+  padding-top: 16px;
+}
+
+.PizzaPrice {
+  font-family: var(--font-roboto);
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: lightslategray;
 }

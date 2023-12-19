@@ -1,0 +1,40 @@
+.Container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+}
+.label {
+  cursor: pointer;
+  margin-left: 25px;
+  display: flex;
+}
+
+.BaseName {
+  font-family: var(--font-roboto-condensed);
+  font-weight: 400;
+  font-size: 1.1rem;
+  color: rgb(107, 102, 102);
+}
+
+.BaseCustomRadio {
+  margin-right: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+  width: 22px;
+  height: 22px;
+  border: 1px solid lightgray;
+  border-radius: 50%;
+  appearance: none;
+  background-color: rgb(246, 243, 243);
+}
+
+.BaseCustomRadio:not(:disabled):checked {
+  background-color: rgb(76, 75, 74);
+  transform: scale(1.1);
+  border: none;
+}
+
+.BaseCustomRadio:not(:disabled):hover {
+  background-color: rgb(194, 184, 184);
+}

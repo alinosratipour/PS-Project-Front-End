@@ -73,11 +73,15 @@ const PizzaToppings: React.FC<PizzaToppingsProps> = ({ pizzaId }) => {
       ))}
       {selectedToppings.map((extraToppings) => (
         <div
-          key={extraToppings.id}
-          className="box"
-       //   onClick={() => removeToppingFromBasket(extraToppings)}
+        key={extraToppings.id}
+        className={classNames("box", {
+          ExtraTopping: selectedToppings.length > 0, // Updated this line
+        })}
+          // onClick={() => removeToppingFromBasket(extraToppings)}
         >
-          {extraToppings.name} Qty: ({extraToppings.quantity})
+          <span className="ExtraTopping">{extraToppings.name}</span>
+          <span>{extraToppings.quantity}</span>
+          
         </div>
       ))}
     </div>

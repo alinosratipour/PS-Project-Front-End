@@ -4,7 +4,9 @@ import { Pizza } from "../SharedTypes";
 import useBaseState from "../hooks/StateHooks/useBase";
 import useAddToppings from "../hooks/useAddToppingsHook";
 import useAddToBasket from "../hooks/useAddToBasketHook";
-
+import Button from "../UI-Liberary/Button/Button";
+import "./AddPizzaModal.scss";
+import Tooltip from "../UI-Liberary/ToolTip/ToolTip";
 interface AddPizzaModalProps {
   selectedPizza: Pizza;
   setSelectedSize: (size: string | undefined) => void;
@@ -22,7 +24,8 @@ const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
 
   const { addToppingToBasket, removeToppingFromBasket, selectedToppings } =
     useAddToppings();
-
+  const isButtonDisabled =
+    selectedSize === undefined || selectedBase === undefined;
   const {
     addToBasket,
     setRemovedToppings,
@@ -37,19 +40,22 @@ const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
     setRemovedToppings(updatedRemovedToppings);
   }, [updatedRemovedToppings]);
   return (
-    <> 
-        <div className="addPizzaContainer">
-          <h2>{selectedPizza.name}</h2>
-          <p>{selectedPizza.description}</p>
-          <div className="img-container">
-            <img src={selectedPizza.image} alt={selectedPizza.name} />
-          </div>
+    <>
+      <div className="addPizzaContainer">
+        <h2 className="PizzaTitle">{selectedPizza.name}</h2>
+        <p className="PizzaDescription">{selectedPizza.description}</p>
+        <div className="ImageContainer">
+          <img src={selectedPizza.image} alt={selectedPizza.name} />
         </div>
+      </div>
+      <div className="PizzaObtions-Container">
         <PizzaOptionsContainer
           pizzaId={selectedPizza.id_pizza}
           onSizePriceChange={(price, size) => {
+          //  setSelectedSize(size !== selectedSize ? size : undefined);
             setSelectedSize(size);
             setSelectedSizePrice(price);
+            
           }}
           onBaseChange={(base, basePrice) => {
             setSelectedBase(base);
@@ -58,15 +64,29 @@ const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
           onAddTopping={addToppingToBasket}
           onRemoveTopping={removeToppingFromBasket}
         />
-        <button
-          onClick={() => {
-            addToBasket(selectedPizza, selectedSize || "", selectedBase || "");
-            setIsModalOpen(false);
-          }}
-          disabled={selectedSize === undefined || selectedBase === undefined}
+      </div>
+      <div className="Button-container">
+        <Tooltip
+          content="Choose Pizza Size & Base!"
+          conditionToShowTooltip={isButtonDisabled}
         >
-          Add to Basket
-        </button>   
+          <Button
+            onClick={() => {
+              addToBasket(
+                selectedPizza,
+                selectedSize || "",
+                selectedBase || ""
+              );
+              setIsModalOpen(false);
+            }}
+            disabled={isButtonDisabled}
+            size="md"
+            colorscheme="primary"
+          >
+            Add to Basket
+          </Button>
+        </Tooltip>
+      </div>
     </>
   );
 };

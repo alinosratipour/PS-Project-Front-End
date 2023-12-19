@@ -31,8 +31,8 @@ const PizzaMenu = () => {
   } = usePizzaContext();
 
   useEffect(() => {
-    if(!selectedSize){
-       setSelectedToppings([]);
+    if(selectedSize){
+       setSelectedToppings([]);      
     }
    
     setToppingsTotal(0);

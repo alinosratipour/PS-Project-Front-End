@@ -14,6 +14,8 @@ import { useSizeContext } from "../Context/SizeContext";
 import { useBaseContext } from "../Context/BaseContext";
 import { useAllAvailableToppingsStore } from "../store/AllAvailableToppingsStore";
 import PizzaToppings from "./PizzaToppings";
+import AccordionMenu from "../UI-Liberary/AccordionMenu/AccordionMenu";
+import "./PizzaOptionsContainer.scss";
 
 interface PizzaOptionsContainerProps {
   pizzaId: number;
@@ -113,28 +115,45 @@ const PizzaOptionsContainer = ({
 
   return (
     <div>
-      <SizeRadioButtons
-        sizes={availableSizes}
-        onSizeChange={handleSizeChange}
-      />
+      <div className="SizeRadioButton">
+        <h2 className="SizeTitle">Choose Size</h2>
+        <SizeRadioButtons
+          sizes={availableSizes}
+          onSizeChange={handleSizeChange}
+        />
+      </div>
 
       <If condition={isSizeSelected}>
         <>
-          <BaseRadioButtons
-            bases={availableBases}
-            onBaseChange={handleBaseChange}
-          />
-          <PizzaToppings pizzaId={pizzaId} />
-          <ToppingsList
-            availableToppings={availableToppings}
-            onAddTopping={onAddTopping}
-            onRemoveTopping={onRemoveTopping}
-          />
+          <div className="BaseRadioButton">
+            <h2 className="BaseTitle">Choose Base</h2>
+            <BaseRadioButtons
+              bases={availableBases}
+              onBaseChange={handleBaseChange}
+            />
+          </div>
+
+          <div className="AccordionMenu-Wrapper">
+            <AccordionMenu title="Customise Toppings">
+              <div className="PizzaToppings">
+                <h3 className="PizzaToppingTitle">Your Toppings</h3>
+                <PizzaToppings pizzaId={pizzaId} />
+              </div>
+
+              <ToppingsList
+                availableToppings={availableToppings}
+                onAddTopping={onAddTopping}
+                onRemoveTopping={onRemoveTopping}
+              />
+            </AccordionMenu>
+          </div>
         </>
       </If>
 
       <If condition={selectedSizePrice}>
-        <SizePrice selectedSizePrice={selectedSizePrice} size="" />
+        <div className="PizzaPrice">
+          <SizePrice selectedSizePrice={selectedSizePrice} size="" />
+        </div>
       </If>
     </div>
   );
