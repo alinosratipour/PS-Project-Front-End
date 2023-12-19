@@ -37,12 +37,11 @@ const useAddToBasket = ({ selectedToppings }: UseAddToBasketProps) => {
         updatedBasket[existingPizzaIndex].quantity += 1;
         setBasket(updatedBasket);
       } else {
-      
+        const freeTopping = numberOfFreeToppings + removedToppings.length;
 
-  
         const extraToppingsQuantity = calculateToppingsTotal(
           selectedToppings ?? [],
-          numberOfFreeToppings
+          freeTopping
         );
 
         const extraToppingsCost = selectedToppings
