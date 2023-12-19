@@ -1,5 +1,3 @@
-// PizzaToppings.tsx
-import React, { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_TOPPINGS_ON_PIZZA } from "../../queries/queries";
 import "./PizzaToppings.scss";
@@ -7,9 +5,7 @@ import classNames from "classnames";
 import { ToppingsData, ToppingType } from "../SharedTypes";
 import { useToppingsRemovalFromPizza } from "../store/ToppingOnPizzaStore ";
 import { useToppings } from "../Context/selectedTopping";
-import useQuantity from "../hooks/useQuantityHook";
-import { useBasketContext } from "../Context/BasketContext";
-import useAddToppings from "../hooks/useAddToppingsHook";
+
 
 interface PizzaToppingsProps {
   pizzaId: number;
@@ -25,9 +21,6 @@ const PizzaToppings: React.FC<PizzaToppingsProps> = ({ pizzaId }) => {
 
   const { removedToppings, setRemovedToppings } = useToppingsRemovalFromPizza();
   const { selectedToppings } = useToppings();
-  // const { basket, setBasket } = useBasketContext();
-  // const { increaseQuantity, decreaseQuantity } = useQuantity(basket, setBasket);
-  const { addToppingToBasket, removeToppingFromBasket } = useAddToppings();
 
   const handleToppingClick = (toppingId: number, toppingName: string) => {
     setRemovedToppings((prevRemoved: ToppingType[]) => {
@@ -73,15 +66,14 @@ const PizzaToppings: React.FC<PizzaToppingsProps> = ({ pizzaId }) => {
       ))}
       {selectedToppings.map((extraToppings) => (
         <div
-        key={extraToppings.id}
-        className={classNames("box", {
-          ExtraTopping: selectedToppings.length > 0, // Updated this line
-        })}
+          key={extraToppings.id}
+          className={classNames("box", {
+            ExtraTopping: selectedToppings.length > 0, // Updated this line
+          })}
           // onClick={() => removeToppingFromBasket(extraToppings)}
         >
           <span className="ExtraTopping">{extraToppings.name}</span>
           <span>{extraToppings.quantity}</span>
-          
         </div>
       ))}
     </div>
