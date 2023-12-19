@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import EditBasketModal from "./EditBasketModal";
+import EditBasketModal from "./EditBasketModal/EditBasketModal";
 import { BasketItem, ToppingType } from "../SharedTypes";
 import "./Basket.scss";
 import useQuantity from "../hooks/useQuantityHook";

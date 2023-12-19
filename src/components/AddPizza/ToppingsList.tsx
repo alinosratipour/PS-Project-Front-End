@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import classnames from "classnames";
 import "./ToppingsList.scss";
 import { GrSubtractCircle } from "react-icons/gr";
-import { IoMdAddCircleOutline  } from "react-icons/io";
+import { IoMdAddCircleOutline } from "react-icons/io";
 import Button from "../UI-Liberary/Button/Button";
 interface ToppingsListProps {
   onAddTopping: (topping: ToppingType) => void;
@@ -23,16 +23,14 @@ function ToppingsList({
   }>({});
   useEffect(() => {
     if (availableToppings) {
-    // Reset topping quantities to 0 when the component mounts
-    const initialQuantities = availableToppings.reduce(
-    (acc, topping) => ({ ...acc, [topping.name]: 0 }),
-    {}
-    );
-    
-    setToppingQuantities(initialQuantities);
+      // Reset topping quantities to 0 when the component mounts
+      const initialQuantities = availableToppings.reduce(
+        (acc, topping) => ({ ...acc, [topping.name]: 0 }),
+        {}
+      );
+      setToppingQuantities(initialQuantities);
     }
-    }, [availableToppings]);
-    
+  }, [availableToppings]);
   const isToppingInBasket = (topping: ToppingType) =>
     selectedToppings && selectedToppings.some((t) => t.name === topping.name);
 
@@ -83,13 +81,13 @@ function ToppingsList({
             <div className="list-Container">
               <div className="ToppingName-Container">
                 {toppingQuantities[topping.name] > 0 && (
-                <span className="Topping-Qauntity">{toppingQuantities[topping.name]}</span>
-              )}
+                  <span className="Topping-Qauntity">
+                    {toppingQuantities[topping.name]}
+                  </span>
+                )}
                 <div className="Topping-Name">{topping.name}</div>
                 <div>£{topping.price}</div>
-             
               </div>
-              
 
               {(isToppingInBasket(topping) && (
                 <>
@@ -99,11 +97,18 @@ function ToppingsList({
                   <Button
                     onClick={() => handleRemoveClick(topping)}
                     icon={<GrSubtractCircle style={{ fontSize: "22px" }} />}
-                    colorscheme="gost"
+                    colorscheme="gost-primary"
                     size="sm"
                     iconPosition="right"
                   ></Button>
-                  <button onClick={() => handleAddClick(topping)}>add2</button>
+                  {/* <button onClick={() => handleAddClick(topping)}>add2</button> */}
+                  <Button
+                    onClick={() => handleAddClick(topping)}
+                    icon={<IoMdAddCircleOutline style={{ fontSize: "25px" }} />}
+                    colorscheme="gost-primary"
+                    size="sm"
+                    iconPosition="right"
+                  ></Button>
                 </>
               )) ||
                 (toppingQuantities[topping.name] > 0 ? (

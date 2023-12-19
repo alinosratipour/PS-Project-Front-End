@@ -1,0 +1,27 @@
+.PizzaName {
+  padding-bottom: 30px;
+  color: var(--title-color);
+}
+.container {
+  color: var(--content-color);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-roboto-condensed);
+}
+
+.SizeContainer {
+  padding-bottom: 30px;
+}
+.sizeTitle {
+  padding-bottom: 30px;
+}
+.BaseTitle {
+  padding-bottom: 30px;
+}
+.ButtonContainer1 {
+  width: 88%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}

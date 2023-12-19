@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
-import Modal from "../UI-Liberary/Modal/Modal";
-import SizeRadioButtons from "../UI-Liberary/SizeRadioButton/SizeRadioButtons";
-import { useSizeContext } from "../Context/SizeContext";
-import { useBaseContext } from "../Context/BaseContext";
-//import { useToppingContext } from "../Context/ToppingContaxt";
-import { useAllAvailableToppingsStore } from "../store/AllAvailableToppingsStore";
-import BaseRadioButtons from "../UI-Liberary/BaseRadioButton/BaseRadioButtons";
-import SizePrice from "../AddPizza/SizePrice";
-import { BasketItem, SizeType, ToppingType } from "../SharedTypes";
-import ToppingsList from "../AddPizza/ToppingsList";
-import useAddToppings from "../hooks/useAddToppingsHook";
+import Modal from "../../UI-Liberary/Modal/Modal";
+import SizeRadioButtons from "../../UI-Liberary/SizeRadioButton/SizeRadioButtons";
+import { useSizeContext } from "../../Context/SizeContext";
+import { useBaseContext } from "../../Context/BaseContext";
+import { useAllAvailableToppingsStore } from "../../store/AllAvailableToppingsStore";
+import BaseRadioButtons from "../../UI-Liberary/BaseRadioButton/BaseRadioButtons";
+import SizePrice from "../../AddPizza/SizePrice";
+import { BasketItem, SizeType, ToppingType } from "../../SharedTypes";
+import ToppingsList from "../../AddPizza/ToppingsList";
+import useAddToppings from "../../hooks/useAddToppingsHook";
+import "./EditBasketModal.scss";
+import Button from "../../UI-Liberary/Button/Button";
+import useSize from "../../hooks/StateHooks/useSize";
 
 interface EditBasketModalProps {
   item: BasketItem | null;
@@ -106,38 +108,49 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
       onBaseChange(newBase, price);
     }
   };
+  console.log("item", item);
+  console.log("availableToppings", availableToppings);
 
   return (
     <Modal isOpen={true} onClose={onClose}>
-      <h2>Edit Pizza</h2>
-      <div>
-        <h3>Size:</h3>
-        <SizeRadioButtons
-          sizes={availableSizes}
-          onSizeChange={handleSizeChange}
-          initialCheckedSize={selectedSize?.p_size || ""}
+      <div className="container">
+        <h1 className="PizzaName">{item?.name}</h1>
+        <div className="SizeContainer">
+          <h3 className="sizeTitle">Size: {item?.size}</h3>
+
+          <SizeRadioButtons
+            sizes={availableSizes}
+            onSizeChange={handleSizeChange}
+            initialCheckedSize={selectedSize?.p_size || ""}
+          />
+        </div>
+        <div>
+          <h3 className="BaseTitle">Base: {item?.base}</h3>
+          <BaseRadioButtons
+            bases={availableBases}
+            onBaseChange={handleBaseChange}
+            initialCheckedBase={selectedBase}
+          />
+        </div>
+        <SizePrice
+          selectedSizePrice={selectedSize?.price || 0}
+          size={selectedSize?.p_size || ""}
         />
-      </div>
-      <div>
-        <h3>Base:</h3>
-        <BaseRadioButtons
-          bases={availableBases}
-          onBaseChange={handleBaseChange}
-          initialCheckedBase={selectedBase}
+
+        <ToppingsList
+          availableToppings={availableToppings}
+          refetchToppings={refetchToppings}
+          onAddTopping={addToppingToBasket}
+          onRemoveTopping={removeToppingFromBasket}
+          selectedToppings={selectedToppings}
         />
+        <div className="ButtonContainer1">
+          {/* <button onClick={handleSave}>Save Changes</button> */},
+          <Button size="md" colorscheme="primary" onClick={handleSave}>
+            Save Changes
+          </Button>
+        </div>
       </div>
-      <SizePrice
-        selectedSizePrice={selectedSize?.price || 0}
-        size={selectedSize?.p_size || ""}
-      />
-      <ToppingsList
-        availableToppings={availableToppings}
-        refetchToppings={refetchToppings}
-        onAddTopping={addToppingToBasket}
-        onRemoveTopping={removeToppingFromBasket}
-        selectedToppings={selectedToppings}
-      />
-      <button onClick={handleSave}>Save Changes</button>
     </Modal>
   );
 };
