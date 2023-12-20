@@ -20,7 +20,7 @@ const useAddToBasket = ({ selectedToppings }: UseAddToBasketProps) => {
   const { basket, setBasket } = useBasketContext();
 
   const { selectedPizza } = usePizzaContext();
-
+//sizeId: number | undefined
   const numberOfFreeToppings = selectedPizza?.top_quantity ?? 0;
   const addToBasket = (pizza: Pizza, size: string, base: string) => {
     if (size !== undefined) {
@@ -28,7 +28,8 @@ const useAddToBasket = ({ selectedToppings }: UseAddToBasketProps) => {
         (item) =>
           item.id_pizza === pizza.id_pizza &&
           item.size === size &&
-          item.base === base
+          item.base === base 
+         // && item.size_id === item.size_id
       );
 
       if (existingPizzaIndex !== -1) {
@@ -62,6 +63,7 @@ const useAddToBasket = ({ selectedToppings }: UseAddToBasketProps) => {
           price: selectedSizePrice || 0,
           quantity: 1,
           size: size,
+         // size_id: sizeId, 
           base: base,
           basePrice: selectedBasePrice,
           toppings: selectedToppings,

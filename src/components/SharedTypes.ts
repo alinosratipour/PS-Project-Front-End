@@ -36,6 +36,7 @@ export interface BasketItem {
   availableSizes?: SizeType[];
   toppingsTotal?: number;
   removedToppings?: ToppingType[];
+//  size_id?: number; 
 }
 
 export type BaseWithPrice = {

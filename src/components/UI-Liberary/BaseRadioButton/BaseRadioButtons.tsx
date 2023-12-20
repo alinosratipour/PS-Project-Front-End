@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import "./BaseRadioButtons.scss";
+import useBaseState from "../../hooks/StateHooks/useBase";
 interface BaseRadioButtonsProps {
   bases: { base: string; price: number }[];
   onBaseChange: (base: string, price: number) => void; // Pass both base and price
@@ -11,10 +12,17 @@ const BaseRadioButtons: React.FC<BaseRadioButtonsProps> = ({
   bases,
   onBaseChange,
   initialCheckedBase,
+  selectedSize,
 }) => {
-  const [selectedBase, setSelectedBase] = useState<string | undefined>(
-    initialCheckedBase || undefined
-  );
+  // const [selectedBase, setSelectedBase] = useState<string | undefined>(
+  //   initialCheckedBase || undefined
+  // );
+  const { selectedBase, setSelectedBase } = useBaseState();
+
+  useEffect(() => {
+    // Reset selectedBase when the selectedSize changes
+    setSelectedBase(undefined);
+  }, [selectedSize]);
 
   return (
     <div className="Container">
@@ -34,7 +42,7 @@ const BaseRadioButtons: React.FC<BaseRadioButtonsProps> = ({
             className="BaseCustomRadio"
           />
           <span className="BaseName">
-            {base.base} { base.price !== 0 &&  `£${base.price}`}
+            {base.base} {base.price !== 0 && `£${base.price}`}
           </span>
         </label>
       ))}

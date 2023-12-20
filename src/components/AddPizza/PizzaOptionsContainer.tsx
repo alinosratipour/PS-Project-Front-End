@@ -100,6 +100,7 @@ const PizzaOptionsContainer = ({
       setIsSizeSelected(true);
       refetchToppings(sizeId);
       refetchBases(sizeId);
+      onBaseChange(undefined, 0); 
     }
   };
 
@@ -130,6 +131,7 @@ const PizzaOptionsContainer = ({
             <BaseRadioButtons
               bases={availableBases}
               onBaseChange={handleBaseChange}
+              selectedSize={selectedSize}
             />
           </div>
 
