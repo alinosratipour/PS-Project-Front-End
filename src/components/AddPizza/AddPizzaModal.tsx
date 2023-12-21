@@ -39,6 +39,24 @@ const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
   React.useEffect(() => {
     setRemovedToppings(updatedRemovedToppings);
   }, [updatedRemovedToppings]);
+
+  const handleSizePriceChange = (
+    price: number | undefined,
+    size: string | undefined
+  ) => {
+    setSelectedSize(size);
+    setSelectedSizePrice(price);
+  };
+  const handleBaseChange = (base: string | undefined, basePrice: number) => {
+    setSelectedBase(base);
+    setSelectedBasePrice(basePrice);
+  };
+
+  const handleAddToBasket = () => {
+    addToBasket(selectedPizza, selectedSize || "", selectedBase || "");
+    setIsModalOpen(false);
+  };
+
   return (
     <>
       <div className="addPizzaContainer">
@@ -51,14 +69,8 @@ const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
       <div className="PizzaObtions-Container">
         <PizzaOptionsContainer
           pizzaId={selectedPizza.id_pizza}
-          onSizePriceChange={(price, size) => {
-            setSelectedSize(size);
-            setSelectedSizePrice(price);
-          }}
-          onBaseChange={(base, basePrice) => {
-            setSelectedBase(base);
-            setSelectedBasePrice(basePrice);
-          }}
+          onSizePriceChange={handleSizePriceChange}
+          onBaseChange={handleBaseChange}
           onAddTopping={addToppingToBasket}
           onRemoveTopping={removeToppingFromBasket}
         />
@@ -69,14 +81,7 @@ const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
           conditionToShowTooltip={isButtonDisabled}
         >
           <Button
-            onClick={() => {
-              addToBasket(
-                selectedPizza,
-                selectedSize || "",
-                selectedBase || ""
-              );
-              setIsModalOpen(false);
-            }}
+            onClick={handleAddToBasket}
             disabled={isButtonDisabled}
             size="md"
             colorscheme="primary"
