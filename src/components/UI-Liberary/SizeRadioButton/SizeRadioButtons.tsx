@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { SizeType } from "../../SharedTypes";
+import { SizeWithPrice } from "../../SharedTypes";
 import "./SizeRadioButtons.scss";
 
 interface SizeRadioButtonsProps {
-  sizes: SizeType[];
+  sizes: SizeWithPrice[];
   onSizeChange: (newSize: number, sizeName: string) => void;
   initialCheckedSize?: string | null | undefined;
 }

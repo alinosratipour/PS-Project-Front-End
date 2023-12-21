@@ -6,12 +6,11 @@ import { useBaseContext } from "../../Context/BaseContext";
 import { useAllAvailableToppingsStore } from "../../store/AllAvailableToppingsStore";
 import BaseRadioButtons from "../../UI-Liberary/BaseRadioButton/BaseRadioButtons";
 import SizePrice from "../../AddPizza/SizePrice";
-import { BasketItem, SizeType, ToppingType } from "../../SharedTypes";
+import { BasketItem, SizeWithPrice, ToppingType } from "../../SharedTypes";
 import ToppingsList from "../../AddPizza/ToppingsList";
 import useAddToppings from "../../hooks/useAddToppingsHook";
 import "./EditBasketModal.scss";
 import Button from "../../UI-Liberary/Button/Button";
-import useSize from "../../hooks/StateHooks/useSize";
 
 interface EditBasketModalProps {
   item: BasketItem | null;
@@ -33,15 +32,13 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
   onSizeChange,
   onBaseChange,
 }) => {
-  const { availableSizes } = useSizeContext();
+  const { availableSizes, setSizes, sizesData } = useSizeContext();
   const { availableBases, refetchBases } = useBaseContext();
-  //const { availableToppings, refetchToppings } = useToppingContext();
   const { availableToppings, refetchToppings } = useAllAvailableToppingsStore();
 
   const [editedPizza, setEditedPizza] = useState<BasketItem | null>(item);
-  const [selectedSize, setSelectedSize] = useState<SizeType | undefined>(
-    availableSizes.find((size) => size.p_size === item?.size)
-  );
+  const [selectedSize, setSelectedSize] = useState<SizeWithPrice | undefined>();
+  availableSizes.find((size) => size.p_size === item?.size);
   const [selectedBase, setSelectedBase] = useState<string | undefined>(
     editedPizza?.base
   );
@@ -56,11 +53,28 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
     selectedToppings,
     setSelectedToppings,
   } = useAddToppings();
+
   useEffect(() => {
-    setEditedPizza(item);
-    setSelectedSize(availableSizes.find((size) => size.p_size === item?.size));
-    setSelectedToppings(item?.toppings || []);
-  }, [item, availableSizes]);
+    const fetchData = () => {
+      setEditedPizza(item);
+
+      // Assuming the data structure in your response
+      const pizzaSizesData = sizesData?.getpizzasWithSizesAndPrices.find(
+        (pizza: any) => pizza.id_pizza === item?.id_pizza
+      );
+      const sizes = pizzaSizesData?.sizesWithPrices || [];
+
+      // Update the state with the fetched sizes
+      setSizes(sizes);
+      const selectedSizeFromAvailable = sizes.find(
+        (size) => size.p_size === item?.size
+      );
+      setSelectedSize(selectedSizeFromAvailable);
+      setSelectedToppings(item?.toppings || []);
+    };
+
+    fetchData();
+  }, [item, sizesData, setSizes]);
 
   const handleSizeChange = (newSize: number, sizeName: string) => {
     refetchBases(newSize);
@@ -108,8 +122,6 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
       onBaseChange(newBase, price);
     }
   };
-  console.log("item", item);
-  console.log("availableToppings", availableToppings);
 
   return (
     <Modal isOpen={true} onClose={onClose}>
@@ -145,7 +157,6 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
           selectedToppings={selectedToppings}
         />
         <div className="ButtonContainer1">
-          {/* <button onClick={handleSave}>Save Changes</button> */},
           <Button size="md" colorscheme="primary" onClick={handleSave}>
             Save Changes
           </Button>
