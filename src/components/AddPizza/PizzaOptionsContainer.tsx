@@ -1,15 +1,10 @@
 import { useState, useEffect } from "react";
-import { useQuery } from "@apollo/client";
 import { If } from "tsx-control-statements/components";
-import {
-  GET_PIZZAS_WITH_SIZES_AND_PRICES,
-  GET_ALL_SIZES_WITH_RELATED_BASES,
-} from "../../queries/queries";
 import SizePrice from "./SizePrice";
 import ToppingsList from "./ToppingsList";
 import SizeRadioButtons from "../UI-Liberary/SizeRadioButton/SizeRadioButtons";
 import BaseRadioButtons from "../UI-Liberary/BaseRadioButton/BaseRadioButtons";
-import { BaseWithPrice, SizeWithPrice, ToppingType } from "../SharedTypes";
+import { SizeWithPrice, ToppingType } from "../SharedTypes";
 import { useSizeContext } from "../Context/SizeContext";
 import { useBaseContext } from "../Context/BaseContext";
 import { useAllAvailableToppingsStore } from "../store/AllAvailableToppingsStore";
@@ -37,34 +32,25 @@ const PizzaOptionsContainer = ({
   onRemoveTopping,
   initialSize,
 }: PizzaOptionsContainerProps) => {
-  const { availableSizes, setSizes, sizesData,sizesLoading } = useSizeContext();
-  const { availableBases, setAvailableBases, refetchBases } = useBaseContext();
+  const { availableSizes, setSizes, sizesData, sizesLoading } =
+    useSizeContext();
+  const { availableBases, refetchBases } = useBaseContext();
   const { availableToppings, refetchToppings } = useAllAvailableToppingsStore();
   const [selectedSize, setSelectedSize] = useState<number>(1);
   const [isSizeSelected, setIsSizeSelected] = useState(false);
   const [selectedSizePrice, setSelectedSizePrice] = useState<
     number | undefined
   >(0);
-
-  // const { loading: sizesLoading, data: sizesData } = useQuery(
-  //   GET_PIZZAS_WITH_SIZES_AND_PRICES
-  // );
-  const { data: Bases } = useQuery<{ getBasesPricesBySize: BaseWithPrice[] }>(
-    GET_ALL_SIZES_WITH_RELATED_BASES,
-    {
-      variables: { id_size: Number(selectedSize) },
-    }
-  );
-
+  const LOADING_MESSAGE = "Loading sizes...";
   useEffect(() => {
     if (!sizesLoading && sizesData) {
-      const pizzaSizesData = sizesData.getpizzasWithSizesAndPrices.find(
+      const getPizzaSizesAndPrices = sizesData.getpizzasWithSizesAndPrices.find(
         (pizza: any) => pizza.id_pizza === pizzaId
       );
-      if (pizzaSizesData) {
-        const availableSizes = pizzaSizesData.sizesWithPrices;
-        setSizes(availableSizes);
 
+      if (getPizzaSizesAndPrices) {
+        const availableSizes = getPizzaSizesAndPrices.sizesWithPrices;
+        setSizes(availableSizes);
         const initialSelectedSizeData = availableSizes.find(
           (sizeData: SizeWithPrice) => sizeData.p_size === initialSize
         );
@@ -83,36 +69,37 @@ const PizzaOptionsContainer = ({
   }, [sizesLoading, sizesData, pizzaId, initialSize]);
 
   useEffect(() => {
-    if (Bases && Bases.getBasesPricesBySize) {
-      setAvailableBases(Bases.getBasesPricesBySize);
+    if (selectedSize) {
+      refetchBases(selectedSize);
     }
-  }, [Bases]);
+  }, [selectedSize, refetchBases]);
 
   const handleSizeChange = (sizeId: number) => {
     setSelectedSize(sizeId);
-    const newSelectedSizeData = availableSizes.find(
+    const getNewSelectedSizeAndPrice = availableSizes.find(
       (sizeData) => sizeData.id_size === sizeId
     );
 
-    if (newSelectedSizeData) {
-      setSelectedSizePrice(newSelectedSizeData.price);
-      onSizePriceChange(newSelectedSizeData.price, newSelectedSizeData.p_size);
+    if (getNewSelectedSizeAndPrice) {
+      setSelectedSizePrice(getNewSelectedSizeAndPrice.price);
+      onSizePriceChange(
+        getNewSelectedSizeAndPrice.price,
+        getNewSelectedSizeAndPrice.p_size
+      );
       setIsSizeSelected(true);
       refetchToppings(sizeId);
       refetchBases(sizeId);
-      onBaseChange(undefined, 0); 
+      onBaseChange(undefined, 0);
     }
   };
 
   const handleBaseChange = (newBase: string) => {
-    const selectedBase = Bases?.getBasesPricesBySize.find(
-      (item) => item.base === newBase
-    );
+    const selectedBase = availableBases.find((item) => item.base === newBase);
     const basePrice = selectedBase ? selectedBase.price : 0;
     onBaseChange(newBase, basePrice);
   };
 
-  if (sizesLoading) return "Loading sizes...";
+  if (sizesLoading) return LOADING_MESSAGE;
 
   return (
     <div>
