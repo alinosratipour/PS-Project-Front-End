@@ -37,7 +37,7 @@ const PizzaOptionsContainer = ({
   onRemoveTopping,
   initialSize,
 }: PizzaOptionsContainerProps) => {
-  const { availableSizes, setSizes } = useSizeContext();
+  const { availableSizes, setSizes, sizesData,sizesLoading } = useSizeContext();
   const { availableBases, setAvailableBases, refetchBases } = useBaseContext();
   const { availableToppings, refetchToppings } = useAllAvailableToppingsStore();
   const [selectedSize, setSelectedSize] = useState<number>(1);
@@ -46,9 +46,9 @@ const PizzaOptionsContainer = ({
     number | undefined
   >(0);
 
-  const { loading: sizesLoading, data: sizesData } = useQuery(
-    GET_PIZZAS_WITH_SIZES_AND_PRICES
-  );
+  // const { loading: sizesLoading, data: sizesData } = useQuery(
+  //   GET_PIZZAS_WITH_SIZES_AND_PRICES
+  // );
   const { data: Bases } = useQuery<{ getBasesPricesBySize: BaseWithPrice[] }>(
     GET_ALL_SIZES_WITH_RELATED_BASES,
     {
@@ -100,6 +100,7 @@ const PizzaOptionsContainer = ({
       setIsSizeSelected(true);
       refetchToppings(sizeId);
       refetchBases(sizeId);
+      onBaseChange(undefined, 0); 
     }
   };
 
@@ -130,6 +131,7 @@ const PizzaOptionsContainer = ({
             <BaseRadioButtons
               bases={availableBases}
               onBaseChange={handleBaseChange}
+              selectedSize={selectedSize}
             />
           </div>
 

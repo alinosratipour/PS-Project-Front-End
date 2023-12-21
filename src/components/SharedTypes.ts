@@ -6,10 +6,14 @@ export interface Pizza {
   image?: string;
 }
 
-// export interface CustomizablePizza extends Pizza {
-//   size?: string;
-//   base?: string;
-// }
+export type SizesData = {
+  getpizzasWithSizesAndPrices: PizzaWithSizesAndPrices[];
+};
+
+export type PizzaWithSizesAndPrices = {
+  id_pizza: number;
+  sizesWithPrices: SizeWithPrice[];
+};
 
 export interface SizePriceProps {
   selectedSizePrice: number | undefined;
@@ -36,6 +40,7 @@ export interface BasketItem {
   availableSizes?: SizeType[];
   toppingsTotal?: number;
   removedToppings?: ToppingType[];
+//  size_id?: number; 
 }
 
 export type BaseWithPrice = {

@@ -9,6 +9,7 @@ import "./PizzaMenu.scss";
 import useSize from "../hooks/StateHooks/useSize";
 import { useToppings } from "../Context/selectedTopping";
 import { usePizzaContext } from "../Context/PizzaContext";
+import { useToppingsRemovalFromPizza } from "../store/ToppingOnPizzaStore ";
 
 const PizzaMenu = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,7 +20,7 @@ const PizzaMenu = () => {
     setToppingsTotal,
     toppingsTotal,
   } = useToppings();
-
+  const { setRemovedToppings } = useToppingsRemovalFromPizza();
   const { selectedSize, setSelectedSize } = useSize();
   const {
     pizzaData,
@@ -31,10 +32,11 @@ const PizzaMenu = () => {
   } = usePizzaContext();
 
   useEffect(() => {
-    if(selectedSize){
-       setSelectedToppings([]);      
+    if (selectedSize) {
+      setSelectedToppings([]);
+      setRemovedToppings([]);
     }
-   
+
     setToppingsTotal(0);
   }, [selectedSize]);
 
