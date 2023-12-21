@@ -26,7 +26,7 @@ interface PizzaOptionsContainerProps {
 
 const PizzaOptionsContainer = ({
   pizzaId,
-  onSizePriceChange,
+  onSizeChange,
   onBaseChange,
   onAddTopping,
   onRemoveTopping,
@@ -58,7 +58,7 @@ const PizzaOptionsContainer = ({
         if (initialSelectedSizeData) {
           setSelectedSize(initialSelectedSizeData.id_size);
           setSelectedSizePrice(initialSelectedSizeData.price);
-          onSizePriceChange(
+          onSizeChange(
             initialSelectedSizeData.price,
             initialSelectedSizeData.p_size
           );
@@ -82,7 +82,7 @@ const PizzaOptionsContainer = ({
 
     if (getNewSelectedSizeAndPrice) {
       setSelectedSizePrice(getNewSelectedSizeAndPrice.price);
-      onSizePriceChange(
+      onSizeChange(
         getNewSelectedSizeAndPrice.price,
         getNewSelectedSizeAndPrice.p_size
       );

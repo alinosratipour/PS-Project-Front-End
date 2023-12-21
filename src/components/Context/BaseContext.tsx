@@ -32,7 +32,9 @@ export const useBaseContext = (): PizzaBaseContextProps => {
   return context;
 };
 
-export const BaseProvider: React.FC<PizzaBaseProviderProps> = ({ children }) => {
+export const BaseProvider: React.FC<PizzaBaseProviderProps> = ({
+  children,
+}) => {
   const [availableBases, setAvailableBases] = useState<BaseWithPrice[]>([]);
   const { data, refetch: refetchBasesQuery } = useQuery<{
     getBasesPricesBySize: BaseWithPrice[];
@@ -41,22 +43,23 @@ export const BaseProvider: React.FC<PizzaBaseProviderProps> = ({ children }) => 
   const availablePizzaBasesData = data?.getBasesPricesBySize ?? [];
 
   const refetchBases = useMemo(
-    () => async (idSize: number): Promise<void> => {
-      try {
-        const { data } = await refetchBasesQuery({ id_size: idSize });
+    () =>
+      async (idSize: number): Promise<void> => {
+        try {
+          const { data } = await refetchBasesQuery({ id_size: idSize });
 
-        if (data && data.getBasesPricesBySize) {
-          setAvailableBases(data.getBasesPricesBySize);
+          if (data && data.getBasesPricesBySize) {
+            setAvailableBases(data.getBasesPricesBySize);
+          }
+        } catch (error) {
+          console.error("Error while refetching bases:", error);
         }
-      } catch (error) {
-        console.error("Error while refetching bases:", error);
-      }
-    },
+      },
     [refetchBasesQuery]
   );
 
   useEffect(() => {
-    if (availablePizzaBasesData) {
+    if (availablePizzaBasesData.length > 0) {
       setAvailableBases(availablePizzaBasesData);
     }
   }, [availablePizzaBasesData]);

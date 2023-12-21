@@ -40,7 +40,7 @@ const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
     setRemovedToppings(updatedRemovedToppings);
   }, [updatedRemovedToppings]);
 
-  const handleSizePriceChange = (
+  const handleSizeChange = (
     price: number | undefined,
     size: string | undefined
   ) => {
@@ -69,7 +69,7 @@ const AddPizzaModal: React.FC<AddPizzaModalProps> = ({
       <div className="PizzaObtions-Container">
         <PizzaOptionsContainer
           pizzaId={selectedPizza.id_pizza}
-          onSizePriceChange={handleSizePriceChange}
+          onSizeChange={handleSizeChange}
           onBaseChange={handleBaseChange}
           onAddTopping={addToppingToBasket}
           onRemoveTopping={removeToppingFromBasket}
