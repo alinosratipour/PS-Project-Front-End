@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import Modal from "../UI-Liberary/Modal/Modal";
 import Basket from "../Basket/Basket";
-import AddPizzaModal from "../AddPizza/AddPizzaModal";
+import AddPizzaModal from "../AddPizza/AddPizzaModal/AddPizzaModal";
 import PizzaItem from "../PizzaItems/PizzaItem";
 import { Pizza } from "../SharedTypes";
-import useAddToBasket from "../hooks/useAddToBasketHook";
+import useAddToBasket from "../Hooks/useAddToBasketHook";
 import "./PizzaMenu.scss";
-import useSize from "../hooks/StateHooks/useSize";
+import useSize from "../Hooks/StateHooks/useSize";
 import { useToppings } from "../Context/selectedTopping";
 import { usePizzaContext } from "../Context/PizzaContext";
 import { useToppingsRemovalFromPizza } from "../store/ToppingOnPizzaStore ";

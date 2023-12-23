@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import { If } from "tsx-control-statements/components";
-import SizePrice from "./SizePrice";
-import ToppingsList from "./ToppingsList";
-import SizeRadioButtons from "../UI-Liberary/SizeRadioButton/SizeRadioButtons";
-import BaseRadioButtons from "../UI-Liberary/BaseRadioButton/BaseRadioButtons";
-import { SizeWithPrice, ToppingType } from "../SharedTypes";
-import { useSizeContext } from "../Context/SizeContext";
-import { useBaseContext } from "../Context/BaseContext";
-import { useAllAvailableToppingsStore } from "../store/AllAvailableToppingsStore";
-import PizzaToppings from "./PizzaToppings";
-import AccordionMenu from "../UI-Liberary/AccordionMenu/AccordionMenu";
+import SizePrice from "../SizePrice";
+import ToppingsList from "../ToppingsList/ToppingsList";
+import SizeRadioButtons from "../../UI-Liberary/SizeRadioButton/SizeRadioButtons";
+import BaseRadioButtons from "../../UI-Liberary/BaseRadioButton/BaseRadioButtons";
+import { SizeWithPrice, ToppingType } from "../../SharedTypes";
+import { useSizeContext } from "../../Context/SizeContext";
+import { useBaseContext } from "../../Context/BaseContext";
+import { useAllAvailableToppingsStore } from "../../store/AllAvailableToppingsStore";
+import PizzaToppings from "../PizzaToppings/PizzaToppings";
+import AccordionMenu from "../../UI-Liberary/AccordionMenu/AccordionMenu";
 import "./PizzaOptionsContainer.scss";
 
 interface PizzaOptionsContainerProps {

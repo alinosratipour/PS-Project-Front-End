@@ -7,8 +7,8 @@ import { useAllAvailableToppingsStore } from "../../store/AllAvailableToppingsSt
 import BaseRadioButtons from "../../UI-Liberary/BaseRadioButton/BaseRadioButtons";
 import SizePrice from "../../AddPizza/SizePrice";
 import { BasketItem, SizeWithPrice, ToppingType } from "../../SharedTypes";
-import ToppingsList from "../../AddPizza/ToppingsList";
-import useAddToppings from "../../hooks/useAddToppingsHook";
+import ToppingsList from "../../AddPizza/ToppingsList/ToppingsList";
+import useAddToppings from "../../Hooks/useAddToppingsHook";
 import "./EditBasketModal.scss";
 import Button from "../../UI-Liberary/Button/Button";
 

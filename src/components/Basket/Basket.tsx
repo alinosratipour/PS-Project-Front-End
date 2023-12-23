@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import EditBasketModal from "./EditBasketModal/EditBasketModal";
 import { BasketItem, ToppingType } from "../SharedTypes";
 import "./Basket.scss";
-import useQuantity from "../hooks/useQuantityHook";
+import useQuantity from "../Hooks/useQuantityHook";
 interface BasketProps {
   basket: BasketItem[];
   setBasket: React.Dispatch<React.SetStateAction<BasketItem[]>>;

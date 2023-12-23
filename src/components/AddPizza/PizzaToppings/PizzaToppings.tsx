@@ -1,11 +1,10 @@
 import { useQuery } from "@apollo/client";
-import { GET_TOPPINGS_ON_PIZZA } from "../../queries/queries";
+import { GET_TOPPINGS_ON_PIZZA } from "../../../queries/queries";
 import "./PizzaToppings.scss";
 import classNames from "classnames";
-import { ToppingsData, ToppingType } from "../SharedTypes";
-import { useToppingsRemovalFromPizza } from "../store/ToppingOnPizzaStore ";
-import { useToppings } from "../Context/selectedTopping";
-
+import { ToppingsData, ToppingType } from "../../SharedTypes";
+import { useToppingsRemovalFromPizza } from "../../store/ToppingOnPizzaStore ";
+import { useToppings } from "../../Context/selectedTopping";
 
 interface PizzaToppingsProps {
   pizzaId: number;

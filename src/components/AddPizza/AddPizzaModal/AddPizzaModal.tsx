@@ -1,12 +1,12 @@
 import React from "react";
-import PizzaOptionsContainer from "./PizzaOptionsContainer";
-import { Pizza } from "../SharedTypes";
-import useBaseState from "../hooks/StateHooks/useBase";
-import useAddToppings from "../hooks/useAddToppingsHook";
-import useAddToBasket from "../hooks/useAddToBasketHook";
-import Button from "../UI-Liberary/Button/Button";
+import PizzaOptionsContainer from "../PizzaOptionContainer/PizzaOptionsContainer";
+import { Pizza } from "../../SharedTypes";
+import useBaseState from "../../Hooks/StateHooks/useBase";
+import useAddToppings from "../../Hooks/useAddToppingsHook";
+import useAddToBasket from "../../Hooks/useAddToBasketHook";
+import Button from "../../UI-Liberary/Button/Button";
 import "./AddPizzaModal.scss";
-import Tooltip from "../UI-Liberary/ToolTip/ToolTip";
+import Tooltip from "../../UI-Liberary/ToolTip/ToolTip";
 interface AddPizzaModalProps {
   selectedPizza: Pizza;
   setSelectedSize: (size: string | undefined) => void;

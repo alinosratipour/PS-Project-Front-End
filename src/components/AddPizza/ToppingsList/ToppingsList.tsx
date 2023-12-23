@@ -1,10 +1,10 @@
-import { ToppingType } from "../../components/SharedTypes";
+import { ToppingType } from "../../SharedTypes";
 import { useEffect, useState } from "react";
 import classnames from "classnames";
 import "./ToppingsList.scss";
 import { GrSubtractCircle } from "react-icons/gr";
 import { IoMdAddCircleOutline } from "react-icons/io";
-import Button from "../UI-Liberary/Button/Button";
+import Button from "../../UI-Liberary/Button/Button";
 interface ToppingsListProps {
   onAddTopping: (topping: ToppingType) => void;
   onRemoveTopping: (topping: ToppingType) => void;
