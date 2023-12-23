@@ -42,7 +42,7 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
   const [selectedBase, setSelectedBase] = useState<string | undefined>(
     editedPizza?.base
   );
-
+  const isButtonDisabled = !selectedBase;
   const [selectedBasePrice, setSelectedBasePrice] = useState<
     number | undefined
   >(item?.basePrice || 0);
@@ -55,7 +55,7 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
   } = useAddToppings();
 
   useEffect(() => {
-    const fetchData = () => {
+    const fetchData = async () => {
       setEditedPizza(item);
 
       // Assuming the data structure in your response
@@ -71,6 +71,9 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
       );
       setSelectedSize(selectedSizeFromAvailable);
       setSelectedToppings(item?.toppings || []);
+      if (selectedSize) {
+        await refetchToppings(selectedSize.id_size);
+      }
     };
 
     fetchData();
@@ -78,7 +81,10 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
 
   const handleSizeChange = (newSize: number, sizeName: string) => {
     refetchBases(newSize);
+    refetchToppings(newSize);
+    setSelectedToppings([]);
     setSelectedBasePrice(newSize);
+    setSelectedBase(undefined);
     const selectedSize = availableSizes.find(
       (size) => size.p_size === sizeName
     );
@@ -157,7 +163,12 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
           selectedToppings={selectedToppings}
         />
         <div className="ButtonContainer1">
-          <Button size="md" colorscheme="primary" onClick={handleSave}>
+          <Button
+            size="md"
+            colorscheme="primary"
+            onClick={handleSave}
+            disabled={isButtonDisabled}
+          >
             Save Changes
           </Button>
         </div>

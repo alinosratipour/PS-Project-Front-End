@@ -14,7 +14,7 @@ import "./PizzaOptionsContainer.scss";
 
 interface PizzaOptionsContainerProps {
   pizzaId: number;
-  onSizePriceChange: (
+  onSizeChange: (
     price: number | undefined,
     sizeName: string | undefined
   ) => void;
