@@ -7,7 +7,7 @@ import { useToppingsRemovalFromPizza } from "../../store/ToppingOnPizzaStore ";
 import { useToppings } from "../../Context/selectedTopping";
 
 interface PizzaToppingsProps {
-  pizzaId: number;
+  pizzaId: number | undefined;
 }
 
 const PizzaToppings: React.FC<PizzaToppingsProps> = ({ pizzaId }) => {

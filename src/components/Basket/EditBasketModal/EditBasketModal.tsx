@@ -11,6 +11,7 @@ import ToppingsList from "../../AddPizza/ToppingsList/ToppingsList";
 import useAddToppings from "../../Hooks/useAddToppingsHook";
 import "./EditBasketModal.scss";
 import Button from "../../UI-Liberary/Button/Button";
+import PizzaToppings from "../../AddPizza/PizzaToppings/PizzaToppings";
 
 interface EditBasketModalProps {
   item: BasketItem | null;
@@ -155,6 +156,12 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
           size={selectedSize?.p_size || ""}
         />
 
+        <div className="AccordionMenu-Wrapper">
+          <div className="PizzaToppings">
+            <h3 className="PizzaToppingTitle">Your Toppings</h3>
+            <PizzaToppings pizzaId={item?.id_pizza} />
+          </div>
+        </div>
         <ToppingsList
           availableToppings={availableToppings}
           refetchToppings={refetchToppings}

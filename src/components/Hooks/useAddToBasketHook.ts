@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { Pizza, ToppingType, ToppingsData } from "../SharedTypes";
+import { Pizza, ToppingType } from "../SharedTypes";
 import { calculateToppingsTotal } from "../../utils";
 import { useToppingsRemovalFromPizza } from "../store/ToppingOnPizzaStore ";
 import { useBasketContext } from "../Context/BasketContext";
-import { usePizzaContext } from "../Context/PizzaContext";
-import { useQuery } from "@apollo/client";
-import { GET_TOPPINGS_ON_PIZZA } from "../../queries/queries";
+
 interface UseAddToBasketProps {
   selectedToppings?: ToppingType[];
 }
@@ -21,27 +19,14 @@ const useAddToBasket = ({ selectedToppings }: UseAddToBasketProps) => {
 
   const { basket, setBasket } = useBasketContext();
 
-  const { selectedPizza } = usePizzaContext();
-
-  const { data } = useQuery<ToppingsData>(
-    GET_TOPPINGS_ON_PIZZA,
-    {
-      variables: { id_pizza: selectedPizza?.id_pizza },
-    }
-  );
-
-
- // const existingToppings = data?.getToppingsOnPizza.length ?? 0;
-  const numberOfFreeToppings = selectedPizza?.top_quantity ?? 0;
- 
   const addToBasket = (pizza: Pizza, size: string, base: string) => {
     if (size !== undefined) {
       const existingPizzaIndex = basket.findIndex(
         (item) =>
           item.id_pizza === pizza.id_pizza &&
           item.size === size &&
-          item.base === base 
-         // && item.size_id === item.size_id
+          item.base === base
+        // && item.size_id === item.size_id
       );
 
       if (existingPizzaIndex !== -1) {
@@ -50,20 +35,16 @@ const useAddToBasket = ({ selectedToppings }: UseAddToBasketProps) => {
         updatedBasket[existingPizzaIndex].quantity += 1;
         setBasket(updatedBasket);
       } else {
-
         const extraToppingsQuantity = calculateToppingsTotal(
           selectedToppings ?? [],
           removedToppings.length
         );
 
-
-      
         const extraToppingsCost: number = selectedToppings
           ? selectedToppings
               .map((topping) => (topping.price || 0) * extraToppingsQuantity)
               .find((cost) => cost !== 0) || 0
           : 0;
-
 
         // Add a new pizza to the basket
         const pizzaWithPrice = {
@@ -72,7 +53,7 @@ const useAddToBasket = ({ selectedToppings }: UseAddToBasketProps) => {
           price: selectedSizePrice || 0,
           quantity: 1,
           size: size,
-         // size_id: sizeId, 
+          // size_id: sizeId,
           base: base,
           basePrice: selectedBasePrice,
           toppings: selectedToppings,
