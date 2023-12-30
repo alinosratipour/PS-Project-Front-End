@@ -9,7 +9,9 @@ export const calculateToppingsTotal = (
     0
   );
 
-  return totalToppingsQuantity > removedToppings
-    ? totalToppingsQuantity - removedToppings
-    : 0;
+  // return totalToppingsQuantity > removedToppings
+  //   ? totalToppingsQuantity - removedToppings
+  //   : 0;
+
+  return Math.max(0, totalToppingsQuantity - removedToppings);
 };
