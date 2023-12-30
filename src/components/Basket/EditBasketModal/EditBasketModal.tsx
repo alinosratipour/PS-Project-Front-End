@@ -12,6 +12,7 @@ import useAddToppings from "../../Hooks/useAddToppingsHook";
 import "./EditBasketModal.scss";
 import Button from "../../UI-Liberary/Button/Button";
 import PizzaToppings from "../../AddPizza/PizzaToppings/PizzaToppings";
+import useAddToBasket from "../../Hooks/useAddToBasketHook";
 
 interface EditBasketModalProps {
   item: BasketItem | null;
@@ -54,6 +55,11 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
     selectedToppings,
     setSelectedToppings,
   } = useAddToppings();
+
+  const { setRemovedToppings, removedToppings: updatedRemovedToppings } =
+    useAddToBasket({
+      selectedToppings,
+    });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -115,8 +121,10 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
             : editedPizza.basePrice,
         price: selectedSize?.price || 0,
         toppings: selectedToppings, // Include selected toppings
+        removedToppings: updatedRemovedToppings,
       };
       onSave(updatedItem);
+      setRemovedToppings([]);
       onClose();
     }
   };
