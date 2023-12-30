@@ -56,10 +56,9 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
     setSelectedToppings,
   } = useAddToppings();
 
-  const { setRemovedToppings, removedToppings: updatedRemovedToppings } =
-    useAddToBasket({
-      selectedToppings,
-    });
+  const { removedToppings: updatedRemovedToppings } = useAddToBasket({
+    selectedToppings,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -108,7 +107,7 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
       }
     }
   };
-
+  console.log(updatedRemovedToppings);
   const handleSave = () => {
     if (editedPizza) {
       const updatedItem = {
@@ -124,7 +123,6 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
         removedToppings: updatedRemovedToppings,
       };
       onSave(updatedItem);
-      setRemovedToppings([]);
       onClose();
     }
   };

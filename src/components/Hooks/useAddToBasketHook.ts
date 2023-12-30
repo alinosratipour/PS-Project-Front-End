@@ -62,7 +62,7 @@ const useAddToBasket = ({ selectedToppings }: UseAddToBasketProps) => {
         };
 
         setBasket([...basket, pizzaWithPrice]);
-        setRemovedToppings([]); // Clear removed toppings after adding to the basket
+       // setRemovedToppings([]); // Clear removed toppings after adding to the basket
       }
     }
   };
