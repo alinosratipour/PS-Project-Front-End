@@ -49,12 +49,13 @@ function Basket({
   }, [basket]);
 
   const handleSaveChanges = (updatedItem: BasketItem) => {
-    const toppingsTotal = updatedItem.toppings
-      ? updatedItem.toppings.reduce((total, topping) => {
-          const toppingTotal = (topping.price || 0) * (topping.quantity || 1);
-          return total + toppingTotal;
-        }, 0)
-      : 0;
+    // const toppingsTotal = updatedItem.toppings
+    //   ? updatedItem.toppings.reduce((total, topping) => {
+    //       const toppingTotal = (topping.price || 0) * (topping.quantity || 1);
+    //       return total + toppingTotal;
+    //     }, 0)
+    //   : 0;
+
 
     const updatedBasket = basket.map((item) =>
       item.id_pizza === updatedItem.id_pizza
@@ -64,7 +65,7 @@ function Basket({
             base: updatedItem.base,
             price: updatedItem.price,
             basePrice: updatedItem.basePrice,
-            toppingsTotal: toppingsTotal,
+            toppingsTotal: updatedItem.extraToppingsCost,
           }
         : item
     );
@@ -110,7 +111,6 @@ function Basket({
                     iconPosition="right"
                   ></Button>
                 </div>
-              
                 {item.toppings && item.toppings.length > 0 && (
                   <div>
                     <strong>Extra Toppings : £{item.toppingsTotal}</strong>

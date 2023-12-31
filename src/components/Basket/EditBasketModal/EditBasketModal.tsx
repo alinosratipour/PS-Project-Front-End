@@ -57,7 +57,7 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
     setSelectedToppings,
   } = useAddToppings();
 
-  const { removedToppings: updatedRemovedToppings, setRemovedToppings } =
+  const { removedToppings: updatedRemovedToppings, setRemovedToppings,calculateExtraToppingsCost } =
     useAddToBasket({
       selectedToppings,
     });
@@ -113,7 +113,7 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
     }
   };
 
-
+const extraToppingsCost =calculateExtraToppingsCost();
 
   const handleSave = () => {
     if (editedPizza) {
@@ -128,6 +128,8 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
         price: selectedSize?.price || 0,
         toppings: selectedToppings, // Include selected toppings
         removedToppings: updatedRemovedToppings,
+        extraToppingsCost:extraToppingsCost
+
         
       };
       onSave(updatedItem);

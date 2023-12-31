@@ -32,6 +32,20 @@ const useAddToBasket = ({ selectedToppings }: UseAddToBasketProps) => {
     localStorage.setItem(EDITE_TOPPINGS_STORAGE_KEY, JSON.stringify(removedToppings));
   }, [removedToppings]);
 
+
+  const calculateExtraToppingsCost = () => {
+    const extraToppingsQuantity = calculateToppingsTotal(
+      selectedToppings ?? [],
+      removedToppings.length
+    );
+    return selectedToppings
+      ? selectedToppings
+          .map((topping) => (topping.price || 0) * extraToppingsQuantity)
+          .find((cost) => cost !== 0) || 0
+      : 0;
+  };
+
+
   const addToBasket = (pizza: Pizza, size: string, base: string) => {
     if (size !== undefined) {
       const existingPizzaIndex = basket.findIndex(
@@ -48,17 +62,17 @@ const useAddToBasket = ({ selectedToppings }: UseAddToBasketProps) => {
         updatedBasket[existingPizzaIndex].quantity += 1;
         setBasket(updatedBasket);
       } else {
-        const extraToppingsQuantity = calculateToppingsTotal(
-          selectedToppings ?? [],
-          removedToppings.length
-        );
+        // const extraToppingsQuantity = calculateToppingsTotal(
+        //   selectedToppings ?? [],
+        //   removedToppings.length
+        // );
 
-        const extraToppingsCost: number = selectedToppings
-          ? selectedToppings
-              .map((topping) => (topping.price || 0) * extraToppingsQuantity)
-              .find((cost) => cost !== 0) || 0
-          : 0;
-
+        // const extraToppingsCost: number = selectedToppings
+        //   ? selectedToppings
+        //       .map((topping) => (topping.price || 0) * extraToppingsQuantity)
+        //       .find((cost) => cost !== 0) || 0
+        //   : 0;
+        const extraToppingsCost = calculateExtraToppingsCost();
         // Add a new pizza to the basket
         const pizzaWithPrice = {
           id_pizza: pizza.id_pizza,
@@ -95,6 +109,7 @@ const useAddToBasket = ({ selectedToppings }: UseAddToBasketProps) => {
   return {
     addToBasket,
     calculateTotalPrice,
+    calculateExtraToppingsCost,
     removedToppings,
     setRemovedToppings,
     basket,
