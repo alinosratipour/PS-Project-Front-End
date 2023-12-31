@@ -56,9 +56,25 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
     setSelectedToppings,
   } = useAddToppings();
 
-  const { removedToppings: updatedRemovedToppings } = useAddToBasket({
-    selectedToppings,
-  });
+  const { removedToppings: updatedRemovedToppings, setRemovedToppings } =
+    useAddToBasket({
+      selectedToppings,
+    });
+
+  useEffect(() => {
+    const storedRemovedToppings = localStorage.getItem(
+      "updatedRemovedToppings"
+    );
+    if (storedRemovedToppings) {
+      setRemovedToppings(JSON.parse(storedRemovedToppings));
+    }
+  }, []);
+  useEffect(() => {
+    localStorage.setItem(
+      "updatedRemovedToppings",
+      JSON.stringify(updatedRemovedToppings)
+    );
+  }, [updatedRemovedToppings]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -107,7 +123,7 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
       }
     }
   };
-  console.log(updatedRemovedToppings);
+
   const handleSave = () => {
     if (editedPizza) {
       const updatedItem = {
@@ -165,6 +181,7 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
         <div className="AccordionMenu-Wrapper">
           <div className="PizzaToppings">
             <h3 className="PizzaToppingTitle">Your Toppings</h3>
+
             <PizzaToppings pizzaId={item?.id_pizza} />
           </div>
         </div>

@@ -67,7 +67,7 @@ const PizzaToppings: React.FC<PizzaToppingsProps> = ({ pizzaId }) => {
         <div
           key={extraToppings.id}
           className={classNames("box", {
-            ExtraTopping: selectedToppings.length > 0, // Updated this line
+            ExtraTopping: selectedToppings.length > 0, 
           })}
         
         >
