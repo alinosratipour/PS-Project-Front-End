@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pizza, ToppingType } from "../SharedTypes";
 import { calculateToppingsTotal } from "../../utils";
 import { useToppingsRemovalFromPizza } from "../store/ToppingOnPizzaStore ";
 import { useBasketContext } from "../Context/BasketContext";
 
+
 interface UseAddToBasketProps {
   selectedToppings?: ToppingType[];
 }
-
+const EDITE_TOPPINGS_STORAGE_KEY = "toppings";
 const useAddToBasket = ({ selectedToppings }: UseAddToBasketProps) => {
   const { removedToppings, setRemovedToppings } = useToppingsRemovalFromPizza();
   const [selectedSizePrice, setSelectedSizePrice] = useState<
@@ -18,6 +19,18 @@ const useAddToBasket = ({ selectedToppings }: UseAddToBasketProps) => {
   >(0);
 
   const { basket, setBasket } = useBasketContext();
+
+     useEffect(() => {
+    const storedRemovedToppings = localStorage.getItem(EDITE_TOPPINGS_STORAGE_KEY);
+    if (storedRemovedToppings) {
+      setRemovedToppings(JSON.parse(storedRemovedToppings));
+    }
+
+
+  }, []);
+  useEffect(() => {
+    localStorage.setItem(EDITE_TOPPINGS_STORAGE_KEY, JSON.stringify(removedToppings));
+  }, [removedToppings]);
 
   const addToBasket = (pizza: Pizza, size: string, base: string) => {
     if (size !== undefined) {

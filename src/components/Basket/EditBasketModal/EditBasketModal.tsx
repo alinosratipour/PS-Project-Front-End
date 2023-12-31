@@ -14,6 +14,7 @@ import Button from "../../UI-Liberary/Button/Button";
 import PizzaToppings from "../../AddPizza/PizzaToppings/PizzaToppings";
 import useAddToBasket from "../../Hooks/useAddToBasketHook";
 
+
 interface EditBasketModalProps {
   item: BasketItem | null;
   onClose: () => void;
@@ -61,20 +62,7 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
       selectedToppings,
     });
 
-  useEffect(() => {
-    const storedRemovedToppings = localStorage.getItem(
-      "updatedRemovedToppings"
-    );
-    if (storedRemovedToppings) {
-      setRemovedToppings(JSON.parse(storedRemovedToppings));
-    }
-  }, []);
-  useEffect(() => {
-    localStorage.setItem(
-      "updatedRemovedToppings",
-      JSON.stringify(updatedRemovedToppings)
-    );
-  }, [updatedRemovedToppings]);
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -106,6 +94,7 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
     refetchToppings(newSize);
     setSelectedToppings([]);
     setSelectedBasePrice(newSize);
+    setRemovedToppings([]);
     setSelectedBase(undefined);
     const selectedSize = availableSizes.find(
       (size) => size.p_size === sizeName
@@ -124,6 +113,8 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
     }
   };
 
+
+
   const handleSave = () => {
     if (editedPizza) {
       const updatedItem = {
@@ -137,6 +128,7 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
         price: selectedSize?.price || 0,
         toppings: selectedToppings, // Include selected toppings
         removedToppings: updatedRemovedToppings,
+        
       };
       onSave(updatedItem);
       onClose();
