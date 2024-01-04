@@ -2,30 +2,58 @@
   text-align: center;
   font-family: var(--font-roboto-condensed);
   height: auto;
-
 }
 
-.title{
+.title {
   padding-bottom: 20px;
 }
-.pizzaTitle{
+.pizzaTitle {
   text-decoration: none;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: left;
 }
-.NoTopping{
-  color:red
+.NoTopping {
+  color: red;
 }
 
-hr{
+hr {
   border: 0.8px solid rgb(224, 216, 216);
   margin-top: 5px;
- margin-bottom: 5px;
+  margin-bottom: 5px;
 }
-.buttonContainer{
+.buttonContainer {
   display: flex;
   justify-content: center;
   align-items: center;
-  
+}
+.pizzaNameContainer{
+  padding-left: 20px;
+  padding-right: 20px;
+  display: flex;
+  justify-content: space-between;
 }
 
+.ex{
+  text-align: left;
+  //padding-left: 20px;
+}
+.topping{
+  display: flex;
+  padding-right: 20px;
+  padding-left: 20px;
+justify-content: space-between;
 
+}
+.extraToppingTotal{
+  background-color: rgb(246, 245, 244);
+  padding: 10px;
+  text-align: center;
+  margin: auto;
+  font-weight: 900;
+}
+.removedTopping{
+  padding-left: 20px;
+}

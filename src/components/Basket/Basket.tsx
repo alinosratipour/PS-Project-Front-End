@@ -56,7 +56,6 @@ function Basket({
     //     }, 0)
     //   : 0;
 
-
     const updatedBasket = basket.map((item) =>
       item.id_pizza === updatedItem.id_pizza
         ? {
@@ -86,13 +85,18 @@ function Basket({
           <ul>
             {basket.map((item) => (
               <li key={item.id_pizza}>
-                <span
-                  className="pizzaTitle"
-                  onClick={() => handlePizzaClick(item)}
-                >
-                  {item.name}
-                </span>{" "}
-                ({item.size} {item.base}) £{(item.price || 0) * item.quantity}
+                <div className="pizzaNameContainer">
+                  <span
+                    className="pizzaTitle"
+                    onClick={() => handlePizzaClick(item)}
+                  >
+                    {item.name}
+                    <span>{item.size}</span>
+                    <span>{item.base}</span>
+                  </span>
+                  <span>£{(item.price || 0) * item.quantity}</span>
+                </div>
+
                 <div className="buttonContainer">
                   <Button
                     onClick={() => increaseQuantity(item)}
@@ -111,33 +115,37 @@ function Basket({
                     iconPosition="right"
                   ></Button>
                 </div>
-                {item.toppings && item.toppings.length > 0 && (
-                  <div>
-                    <strong>Extra Toppings : £{item.toppingsTotal}</strong>
-                    <ul>
-                      {item.toppings.map((topping, index) => (
-                        <li key={index}>
-                          {topping.name}: Quantity: {topping.quantity} - £
-                          {topping.price}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {item.removedToppings && item.removedToppings.length > 0 && (
-                  <div>
-                    <ul>
-                      {item.removedToppings.map((removedTopping, index) => (
-                        <li key={index}>
-                          No--{" "}
-                          <span className="NoTopping">
-                            {removedTopping.name}
-                          </span>{" "}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                <div className="ex">
+                  {item.toppings && item.toppings.length > 0 && (
+                    <div>
+                      <div className="extraToppingTotal">Extra Toppings : £{item.toppingsTotal}</div>
+                      <ul>
+                        {item.toppings.map((topping, index) => (
+                          <li key={index} className="topping">
+                            <span className="qty">{topping.name} </span>
+                            <span className="qty"> {topping.quantity} </span>
+                            {/* {topping.price} */}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {item.removedToppings && item.removedToppings.length > 0 && (
+                    <div className="removedTopping">
+                      <ul>
+                        {item.removedToppings.map((removedTopping, index) => (
+                          <li key={index}>
+                            No--{" "}
+                            <span className="NoTopping">
+                              {removedTopping.name}
+                            </span>{" "}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+
                 <hr></hr>
               </li>
             ))}

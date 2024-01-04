@@ -76,24 +76,23 @@ const PizzaMenu = () => {
             ))}
         </div>
         <div className="basket-container">
-          <Basket
-            basket={basket}
-            calculateTotalPrice={calculateTotalPrice}
-            toppingsTotal={toppingsTotal}
-            setBasket={setBasket}
-            onBasketToppingsChange={(updatedToppings) =>
-              setSelectedToppings(updatedToppings)
-            }
-            onBasketToppingsTotalChange={(total) => setToppingsTotal(total)}
-          />
-         <div className="basketFooter">
-          <span>Total</span>
-          <span> £{calculateTotalPrice()}</span>
+          <div className="basket-content">
+            <Basket
+              basket={basket}
+              calculateTotalPrice={calculateTotalPrice}
+              toppingsTotal={toppingsTotal}
+              setBasket={setBasket}
+              onBasketToppingsChange={(updatedToppings) =>
+                setSelectedToppings(updatedToppings)
+              }
+              onBasketToppingsTotalChange={(total) => setToppingsTotal(total)}
+            />
+          </div>
 
-         </div>
-         
-       
-         
+          <div className="basketFooter">
+            <span>Total</span>
+            <span> £{calculateTotalPrice()}</span>
+          </div>
         </div>
       </div>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
