@@ -142,7 +142,6 @@ function Basket({
               </li>
             ))}
           </ul>
-          {/* <p className="totalPrice">Total Price: £{calculateTotalPrice()}</p> */}
         </>
       )}
 
