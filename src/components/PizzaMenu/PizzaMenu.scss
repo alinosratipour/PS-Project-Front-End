@@ -52,13 +52,30 @@
   .basket-container {
     display: block;
     background-color: #ffffff;
-    height: 400px;
+
+    max-height: 400px;
     min-width: 28%;
     max-width: 28%;
     border-radius: 8px;
     margin-top: 30px;
     margin-right: 50px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    overflow-y: scroll;
+    overflow-y: auto;
+    position: relative; /* Add position: relative */
+    display: flex;
+    flex-direction: column;
+  }
+  .basketFooter {
+    position: absolute;
+    background-color: #ffffff;
+    box-shadow: 0px -4px 8px -4px rgba(170, 166, 166, 0.75);
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.3rem;
+    font-weight: 900;
+    font-family: var(--font-roboto-condensed);
+    bottom: 0;
+    width: 100%;
   }
 }

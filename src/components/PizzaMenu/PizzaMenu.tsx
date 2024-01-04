@@ -86,6 +86,14 @@ const PizzaMenu = () => {
             }
             onBasketToppingsTotalChange={(total) => setToppingsTotal(total)}
           />
+         <div className="basketFooter">
+          <span>Total</span>
+          <span> £{calculateTotalPrice()}</span>
+
+         </div>
+         
+       
+         
         </div>
       </div>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>

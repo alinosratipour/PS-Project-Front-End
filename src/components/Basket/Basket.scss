@@ -1,10 +1,8 @@
 .BasketContainer {
   text-align: center;
   font-family: var(--font-roboto-condensed);
-  //height: 100vh;
+  height: auto;
 
-  background-color: antiquewhite;
- 
 }
 
 .title{
@@ -30,12 +28,4 @@ hr{
   
 }
 
-.totalPrice {
-  //position: absolute;
-  //bottom: 0;
 
-width: 100%;
-border-radius: 10px;
-font-size: 1.3rem;
-font-weight: 900;
-}
