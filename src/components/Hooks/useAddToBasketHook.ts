@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pizza, ToppingType } from "../SharedTypes";
 import { calculateToppingsTotal } from "../../utils";
 import { useToppingsRemovalFromPizza } from "../store/ToppingOnPizzaStore ";
 import { useBasketContext } from "../Context/BasketContext";
-import { usePizzaContext } from "../Context/PizzaContext";
+
+
 interface UseAddToBasketProps {
   selectedToppings?: ToppingType[];
 }
-
+const EDITE_TOPPINGS_STORAGE_KEY = "toppings";
 const useAddToBasket = ({ selectedToppings }: UseAddToBasketProps) => {
   const { removedToppings, setRemovedToppings } = useToppingsRemovalFromPizza();
   const [selectedSizePrice, setSelectedSizePrice] = useState<
@@ -19,17 +20,40 @@ const useAddToBasket = ({ selectedToppings }: UseAddToBasketProps) => {
 
   const { basket, setBasket } = useBasketContext();
 
-  const { selectedPizza } = usePizzaContext();
-//sizeId: number | undefined
-  const numberOfFreeToppings = selectedPizza?.top_quantity ?? 0;
+     useEffect(() => {
+    const storedRemovedToppings = localStorage.getItem(EDITE_TOPPINGS_STORAGE_KEY);
+    if (storedRemovedToppings) {
+      setRemovedToppings(JSON.parse(storedRemovedToppings));
+    }
+
+
+  }, []);
+  useEffect(() => {
+    localStorage.setItem(EDITE_TOPPINGS_STORAGE_KEY, JSON.stringify(removedToppings));
+  }, [removedToppings]);
+
+
+  const calculateExtraToppingsCost = () => {
+    const extraToppingsQuantity = calculateToppingsTotal(
+      selectedToppings ?? [],
+      removedToppings.length
+    );
+    return selectedToppings
+      ? selectedToppings
+          .map((topping) => (topping.price || 0) * extraToppingsQuantity)
+          .find((cost) => cost !== 0) || 0
+      : 0;
+  };
+
+
   const addToBasket = (pizza: Pizza, size: string, base: string) => {
     if (size !== undefined) {
       const existingPizzaIndex = basket.findIndex(
         (item) =>
           item.id_pizza === pizza.id_pizza &&
           item.size === size &&
-          item.base === base 
-         // && item.size_id === item.size_id
+          item.base === base
+        // && item.size_id === item.size_id
       );
 
       if (existingPizzaIndex !== -1) {
@@ -38,24 +62,17 @@ const useAddToBasket = ({ selectedToppings }: UseAddToBasketProps) => {
         updatedBasket[existingPizzaIndex].quantity += 1;
         setBasket(updatedBasket);
       } else {
-        const freeTopping = numberOfFreeToppings + removedToppings.length;
+        // const extraToppingsQuantity = calculateToppingsTotal(
+        //   selectedToppings ?? [],
+        //   removedToppings.length
+        // );
 
-        const extraToppingsQuantity = calculateToppingsTotal(
-          selectedToppings ?? [],
-          freeTopping
-        );
-
-        // const extraToppingsCost = selectedToppings
+        // const extraToppingsCost: number = selectedToppings
         //   ? selectedToppings
         //       .map((topping) => (topping.price || 0) * extraToppingsQuantity)
-        //       .reduce((_total, cost) => cost, 0)
+        //       .find((cost) => cost !== 0) || 0
         //   : 0;
-        const extraToppingsCost: number = selectedToppings
-          ? selectedToppings
-              .map((topping) => (topping.price || 0) * extraToppingsQuantity)
-              .find((cost) => cost !== 0) || 0
-          : 0;
-
+        const extraToppingsCost = calculateExtraToppingsCost();
         // Add a new pizza to the basket
         const pizzaWithPrice = {
           id_pizza: pizza.id_pizza,
@@ -63,7 +80,7 @@ const useAddToBasket = ({ selectedToppings }: UseAddToBasketProps) => {
           price: selectedSizePrice || 0,
           quantity: 1,
           size: size,
-         // size_id: sizeId, 
+          // size_id: sizeId,
           base: base,
           basePrice: selectedBasePrice,
           toppings: selectedToppings,
@@ -72,7 +89,7 @@ const useAddToBasket = ({ selectedToppings }: UseAddToBasketProps) => {
         };
 
         setBasket([...basket, pizzaWithPrice]);
-        setRemovedToppings([]); // Clear removed toppings after adding to the basket
+       // setRemovedToppings([]); // Clear removed toppings after adding to the basket
       }
     }
   };
@@ -92,6 +109,7 @@ const useAddToBasket = ({ selectedToppings }: UseAddToBasketProps) => {
   return {
     addToBasket,
     calculateTotalPrice,
+    calculateExtraToppingsCost,
     removedToppings,
     setRemovedToppings,
     basket,

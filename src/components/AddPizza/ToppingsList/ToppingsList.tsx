@@ -1,10 +1,10 @@
-import { ToppingType } from "../../components/SharedTypes";
+import { ToppingType } from "../../SharedTypes";
 import { useEffect, useState } from "react";
 import classnames from "classnames";
 import "./ToppingsList.scss";
 import { GrSubtractCircle } from "react-icons/gr";
 import { IoMdAddCircleOutline } from "react-icons/io";
-import Button from "../UI-Liberary/Button/Button";
+import Button from "../../UI-Liberary/Button/Button";
 interface ToppingsListProps {
   onAddTopping: (topping: ToppingType) => void;
   onRemoveTopping: (topping: ToppingType) => void;
@@ -91,9 +91,6 @@ function ToppingsList({
 
               {(isToppingInBasket(topping) && (
                 <>
-                  {/* <button onClick={() => handleRemoveClick(topping)}>
-                    remove
-                  </button> */}
                   <Button
                     onClick={() => handleRemoveClick(topping)}
                     icon={<GrSubtractCircle style={{ fontSize: "22px" }} />}
@@ -101,7 +98,7 @@ function ToppingsList({
                     size="sm"
                     iconPosition="right"
                   ></Button>
-                  {/* <button onClick={() => handleAddClick(topping)}>add2</button> */}
+
                   <Button
                     onClick={() => handleAddClick(topping)}
                     icon={<IoMdAddCircleOutline style={{ fontSize: "25px" }} />}
@@ -113,10 +110,6 @@ function ToppingsList({
               )) ||
                 (toppingQuantities[topping.name] > 0 ? (
                   <>
-                    {/* <button onClick={() => handleRemoveClick(topping)}>
-                    remove
-                  </button> */}
-
                     <Button
                       onClick={() => handleRemoveClick(topping)}
                       icon={<GrSubtractCircle style={{ fontSize: "22px" }} />}
@@ -124,9 +117,7 @@ function ToppingsList({
                       size="sm"
                       iconPosition="right"
                     ></Button>
-                    {/* <button onClick={() => handleAddClick(topping)}>
-                      add2
-                    </button> */}
+
                     <Button
                       onClick={() => handleAddClick(topping)}
                       icon={
@@ -136,11 +127,8 @@ function ToppingsList({
                       size="sm"
                       iconPosition="right"
                     ></Button>
-                    {/* <IoIosAddCircle onClick={() => handleAddClick(topping)} /> */}
                   </>
                 ) : (
-                  // <button onClick={() => handleAddClick(topping)}>add</button>
-
                   <Button
                     onClick={() => handleAddClick(topping)}
                     icon={<IoMdAddCircleOutline style={{ fontSize: "25px" }} />}

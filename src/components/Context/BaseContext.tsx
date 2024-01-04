@@ -1,47 +1,73 @@
-import React, { createContext, useContext, useState, ReactNode, Dispatch, SetStateAction } from 'react';
-import { BaseWithPrice } from '../SharedTypes';
-import { useQuery } from '@apollo/client';
-import { GET_ALL_SIZES_WITH_RELATED_BASES } from '../../queries/queries';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useMemo,
+} from "react";
+import { BaseWithPrice } from "../SharedTypes";
+import { useQuery } from "@apollo/client";
+import { GET_ALL_SIZES_WITH_RELATED_BASES } from "../../queries/queries";
 
-interface BaseContextProps {
+interface PizzaBaseContextProps {
   availableBases: BaseWithPrice[];
   setAvailableBases: Dispatch<SetStateAction<BaseWithPrice[]>>;
   refetchBases: (idSize: number) => Promise<void>;
 }
 
-interface BaseProviderProps {
+interface PizzaBaseProviderProps {
   children: ReactNode;
 }
 
-const BaseContext = createContext<BaseContextProps | undefined>(undefined);
+const BaseContext = createContext<PizzaBaseContextProps | undefined>(undefined);
 
-export const useBaseContext = (): BaseContextProps => {
+export const useBaseContext = (): PizzaBaseContextProps => {
   const context = useContext(BaseContext);
   if (!context) {
-    throw new Error('useBaseContext must be used within a BaseProvider');
+    throw new Error("useBaseContext must be used within a BaseProvider");
   }
   return context;
 };
 
-export const BaseProvider: React.FC<BaseProviderProps> = ({ children }) => {
+export const BaseProvider: React.FC<PizzaBaseProviderProps> = ({
+  children,
+}) => {
   const [availableBases, setAvailableBases] = useState<BaseWithPrice[]>([]);
-
-  // Use the useQuery hook to fetch bases
-  const { refetch: refetchBasesQuery } = useQuery<{
+  const { data, refetch: refetchBasesQuery } = useQuery<{
     getBasesPricesBySize: BaseWithPrice[];
   }>(GET_ALL_SIZES_WITH_RELATED_BASES);
 
-  // Define the refetchBases function
-  const refetchBases = async (idSize: number): Promise<void> => {
-    const { data } = await refetchBasesQuery({ id_size: idSize });
-    if (data && data.getBasesPricesBySize) {
-      setAvailableBases(data.getBasesPricesBySize);
+  const availablePizzaBasesData = data?.getBasesPricesBySize ?? [];
+
+  const refetchBases = useMemo(
+    () =>
+      async (idSize: number): Promise<void> => {
+        try {
+          const { data } = await refetchBasesQuery({ id_size: idSize });
+
+          if (data && data.getBasesPricesBySize) {
+            setAvailableBases(data.getBasesPricesBySize);
+          }
+        } catch (error) {
+          console.error("Error while refetching bases:", error);
+        }
+      },
+    [refetchBasesQuery]
+  );
+
+  useEffect(() => {
+    if (availablePizzaBasesData.length > 0) {
+      setAvailableBases(availablePizzaBasesData);
     }
-    return Promise.resolve();
-  };
+  }, [availablePizzaBasesData]);
 
   return (
-    <BaseContext.Provider value={{ availableBases, setAvailableBases, refetchBases }}>
+    <BaseContext.Provider
+      value={{ availableBases, setAvailableBases, refetchBases }}
+    >
       {children}
     </BaseContext.Provider>
   );

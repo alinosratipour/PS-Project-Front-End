@@ -18,13 +18,19 @@
   color: #ffffff;
   font-weight: 600;
   font-family: var(--font-roboto-condensed);
+  &.selected {
+    background-color: #ffcccc;
+    text-decoration: line-through;
+  
+  }
+
 }
 
-.selected {
-  background-color: #ffcccc;
-  text-decoration: line-through;
-  //display: none;
-}
+// .selected {
+//   background-color: #ffcccc;
+//   text-decoration: line-through;
+//   //display: none;
+// }
 
 .ExtraTopping {
   background-color: #e9b108;

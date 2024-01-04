@@ -7,10 +7,13 @@ import { useAllAvailableToppingsStore } from "../../store/AllAvailableToppingsSt
 import BaseRadioButtons from "../../UI-Liberary/BaseRadioButton/BaseRadioButtons";
 import SizePrice from "../../AddPizza/SizePrice";
 import { BasketItem, SizeWithPrice, ToppingType } from "../../SharedTypes";
-import ToppingsList from "../../AddPizza/ToppingsList";
-import useAddToppings from "../../hooks/useAddToppingsHook";
+import ToppingsList from "../../AddPizza/ToppingsList/ToppingsList";
+import useAddToppings from "../../Hooks/useAddToppingsHook";
 import "./EditBasketModal.scss";
 import Button from "../../UI-Liberary/Button/Button";
+import PizzaToppings from "../../AddPizza/PizzaToppings/PizzaToppings";
+import useAddToBasket from "../../Hooks/useAddToBasketHook";
+
 
 interface EditBasketModalProps {
   item: BasketItem | null;
@@ -42,7 +45,7 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
   const [selectedBase, setSelectedBase] = useState<string | undefined>(
     editedPizza?.base
   );
-
+  const isButtonDisabled = !selectedBase;
   const [selectedBasePrice, setSelectedBasePrice] = useState<
     number | undefined
   >(item?.basePrice || 0);
@@ -54,8 +57,15 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
     setSelectedToppings,
   } = useAddToppings();
 
+  const { removedToppings: updatedRemovedToppings, setRemovedToppings,calculateExtraToppingsCost } =
+    useAddToBasket({
+      selectedToppings,
+    });
+
+  
+
   useEffect(() => {
-    const fetchData = () => {
+    const fetchData = async () => {
       setEditedPizza(item);
 
       // Assuming the data structure in your response
@@ -71,6 +81,9 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
       );
       setSelectedSize(selectedSizeFromAvailable);
       setSelectedToppings(item?.toppings || []);
+      if (selectedSize) {
+        await refetchToppings(selectedSize.id_size);
+      }
     };
 
     fetchData();
@@ -78,7 +91,11 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
 
   const handleSizeChange = (newSize: number, sizeName: string) => {
     refetchBases(newSize);
+    refetchToppings(newSize);
+    setSelectedToppings([]);
     setSelectedBasePrice(newSize);
+    setRemovedToppings([]);
+    setSelectedBase(undefined);
     const selectedSize = availableSizes.find(
       (size) => size.p_size === sizeName
     );
@@ -96,6 +113,8 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
     }
   };
 
+const extraToppingsCost =calculateExtraToppingsCost();
+
   const handleSave = () => {
     if (editedPizza) {
       const updatedItem = {
@@ -108,6 +127,10 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
             : editedPizza.basePrice,
         price: selectedSize?.price || 0,
         toppings: selectedToppings, // Include selected toppings
+        removedToppings: updatedRemovedToppings,
+        extraToppingsCost:extraToppingsCost
+
+        
       };
       onSave(updatedItem);
       onClose();
@@ -149,6 +172,13 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
           size={selectedSize?.p_size || ""}
         />
 
+        <div className="AccordionMenu-Wrapper">
+          <div className="PizzaToppings">
+            <h3 className="PizzaToppingTitle">Your Toppings</h3>
+
+            <PizzaToppings pizzaId={item?.id_pizza} />
+          </div>
+        </div>
         <ToppingsList
           availableToppings={availableToppings}
           refetchToppings={refetchToppings}
@@ -157,7 +187,12 @@ const EditBasketModal: React.FC<EditBasketModalProps> = ({
           selectedToppings={selectedToppings}
         />
         <div className="ButtonContainer1">
-          <Button size="md" colorscheme="primary" onClick={handleSave}>
+          <Button
+            size="md"
+            colorscheme="primary"
+            onClick={handleSave}
+            disabled={isButtonDisabled}
+          >
             Save Changes
           </Button>
         </div>

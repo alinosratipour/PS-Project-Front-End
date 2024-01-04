@@ -2,7 +2,10 @@ import React, { useEffect } from "react";
 import EditBasketModal from "./EditBasketModal/EditBasketModal";
 import { BasketItem, ToppingType } from "../SharedTypes";
 import "./Basket.scss";
-import useQuantity from "../hooks/useQuantityHook";
+import useQuantity from "../Hooks/useQuantityHook";
+import Button from "../UI-Liberary/Button/Button";
+import { IoMdAddCircleOutline } from "react-icons/io";
+import { GrSubtractCircle } from "react-icons/gr";
 interface BasketProps {
   basket: BasketItem[];
   setBasket: React.Dispatch<React.SetStateAction<BasketItem[]>>;
@@ -46,12 +49,13 @@ function Basket({
   }, [basket]);
 
   const handleSaveChanges = (updatedItem: BasketItem) => {
-    const toppingsTotal = updatedItem.toppings
-      ? updatedItem.toppings.reduce((total, topping) => {
-          const toppingTotal = (topping.price || 0) * (topping.quantity || 1);
-          return total + toppingTotal;
-        }, 0)
-      : 0;
+    // const toppingsTotal = updatedItem.toppings
+    //   ? updatedItem.toppings.reduce((total, topping) => {
+    //       const toppingTotal = (topping.price || 0) * (topping.quantity || 1);
+    //       return total + toppingTotal;
+    //     }, 0)
+    //   : 0;
+
 
     const updatedBasket = basket.map((item) =>
       item.id_pizza === updatedItem.id_pizza
@@ -61,7 +65,7 @@ function Basket({
             base: updatedItem.base,
             price: updatedItem.price,
             basePrice: updatedItem.basePrice,
-            toppingsTotal: toppingsTotal,
+            toppingsTotal: updatedItem.extraToppingsCost,
           }
         : item
     );
@@ -73,7 +77,7 @@ function Basket({
 
   return (
     <div className="BasketContainer">
-      <h1>Basket</h1>
+      <h1 className="title">Basket</h1>
 
       {basket.length === 0 ? (
         <p>Your basket is empty.</p>
@@ -83,15 +87,30 @@ function Basket({
             {basket.map((item) => (
               <li key={item.id_pizza}>
                 <span
-                  style={{ cursor: "pointer", textDecoration: "underline" }}
+                  className="pizzaTitle"
                   onClick={() => handlePizzaClick(item)}
                 >
                   {item.name}
                 </span>{" "}
-                (Size: {item.size} Base: {item.base}) - Quantity:{" "}
-                {item.quantity} - £{(item.price || 0) * item.quantity}
-                <button onClick={() => increaseQuantity(item)}>+</button>
-                <button onClick={() => decreaseQuantity(item)}>-</button>
+                ({item.size} {item.base}) £{(item.price || 0) * item.quantity}
+                <div className="buttonContainer">
+                  <Button
+                    onClick={() => increaseQuantity(item)}
+                    icon={<IoMdAddCircleOutline style={{ fontSize: "25px" }} />}
+                    colorscheme="gost-primary"
+                    size="sm"
+                    iconPosition="right"
+                  ></Button>
+                  <span>{item.quantity}</span>
+
+                  <Button
+                    onClick={() => decreaseQuantity(item)}
+                    icon={<GrSubtractCircle style={{ fontSize: "22px" }} />}
+                    colorscheme="gost-primary"
+                    size="sm"
+                    iconPosition="right"
+                  ></Button>
+                </div>
                 {item.toppings && item.toppings.length > 0 && (
                   <div>
                     <strong>Extra Toppings : £{item.toppingsTotal}</strong>
@@ -107,7 +126,6 @@ function Basket({
                 )}
                 {item.removedToppings && item.removedToppings.length > 0 && (
                   <div>
-                    <strong>Removed Toppings:</strong>
                     <ul>
                       {item.removedToppings.map((removedTopping, index) => (
                         <li key={index}>
@@ -120,10 +138,10 @@ function Basket({
                     </ul>
                   </div>
                 )}
+                <hr></hr>
               </li>
             ))}
           </ul>
-          <p>Total Price: £{calculateTotalPrice()}</p>
         </>
       )}
 

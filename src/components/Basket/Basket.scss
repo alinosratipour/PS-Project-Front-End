@@ -1,7 +1,31 @@
 .BasketContainer {
   text-align: center;
+  font-family: var(--font-roboto-condensed);
+  height: auto;
+
 }
 
+.title{
+  padding-bottom: 20px;
+}
+.pizzaTitle{
+  text-decoration: none;
+  cursor: pointer;
+}
 .NoTopping{
   color:red
 }
+
+hr{
+  border: 0.8px solid rgb(224, 216, 216);
+  margin-top: 5px;
+ margin-bottom: 5px;
+}
+.buttonContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+
